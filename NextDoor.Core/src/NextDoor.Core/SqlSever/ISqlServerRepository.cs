@@ -17,7 +17,7 @@ namespace NextDoor.Core.SqlSever
          Task DeleteAsync(Guid id);
          Task<bool> ExistedAsync(Expression<Func<TEntity, bool>> predicate);
          
-         // Get List with pagination feature
+         // Get List with pagination feature returned as IEnumerable
          Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : PagedQueryBase;
     }
 }
