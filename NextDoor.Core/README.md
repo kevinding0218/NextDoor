@@ -9,4 +9,7 @@
 #dotnet add package Newtonsoft.Json
 #dotnet restore
 
+##Microsoft.EntityFrameworkCore
+#dotnet add package Microsoft.EntityFrameworkCore
+#dotnet restore
 -------------------------------------------------------

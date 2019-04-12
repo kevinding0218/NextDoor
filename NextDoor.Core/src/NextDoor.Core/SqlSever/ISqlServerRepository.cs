@@ -7,7 +7,7 @@ using NextDoor.Core.Types.Pagination;
 
 namespace NextDoor.Core.SqlSever
 {
-    public interface ISqlServerRepository<TEntity> where TEntity : IIdentifiable
+    public interface ISqlServerRepository<TEntity> where TEntity : class, IIdentifiable
     {
          Task<TEntity> GetSingleAsync(Guid id);
          Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate);
