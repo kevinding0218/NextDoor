@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using NextDoor.Core.Types;
 using NextDoor.Core.Types.Pagination;
 
-namespace NextDoor.Core.SqlSever
+namespace NextDoor.Core.MSSQL
 {
-    public interface ISqlServerRepository<TEntity> where TEntity : class, IIdentifiable
+    public interface IMSSQLRepository<TEntity> where TEntity : class, IIdentifiable
     {
          #region CRUD
          Task<TEntity> GetSingleAsync(Guid id);

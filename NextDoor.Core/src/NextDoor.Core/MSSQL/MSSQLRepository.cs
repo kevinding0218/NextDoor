@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using NextDoor.Core.Types;
 using NextDoor.Core.Types.Pagination;
 
-namespace NextDoor.Core.SqlSever
+namespace NextDoor.Core.MSSQL
 {
-    public class SqlServerRepository<TEntity> : ISqlServerRepository<TEntity> where TEntity : class, IIdentifiable
+    public class MSSQLRepository<TEntity> : IMSSQLRepository<TEntity> where TEntity : class, IIdentifiable
     {
         protected DbContext _dbContext;
         private readonly DbSet<TEntity> _collection;
 
-        public SqlServerRepository(DbContext dbContext, string collectionName)
+        public MSSQLRepository(DbContext dbContext, string collectionName)
         {
             this._dbContext = dbContext;
             this._collection = dbContext.Set<TEntity>();
