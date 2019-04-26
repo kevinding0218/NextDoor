@@ -1,5 +1,7 @@
 namespace NextDoor.Core.Types.Pagination
 {
+    /// specified as a separate abstract class, mostly due to the fact that it’s sometimes useful to be able to 
+    /// have access to its properties without taking into consideration the Items.
     public abstract class PagedResultBase
     {
         public int CurrentPage { get; }

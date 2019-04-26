@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace NextDoor.Core.Types.Pagination
 {
+    /// why the PagedResult is immutable while PagedQueryBase is not?
+    /// Well, because e.g. in an HTTP API I would parse the incoming request directly into 
+    /// the derived type of PagedQueryBase and the setters come in handy in this occasion.
     public class PagedResult<T> : PagedResultBase
     {
         public IEnumerable<T> Items { get; }

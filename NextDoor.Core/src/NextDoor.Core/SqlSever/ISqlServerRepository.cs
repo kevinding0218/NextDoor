@@ -9,15 +9,20 @@ namespace NextDoor.Core.SqlSever
 {
     public interface ISqlServerRepository<TEntity> where TEntity : class, IIdentifiable
     {
+         #region CRUD
          Task<TEntity> GetSingleAsync(Guid id);
          Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate);
          Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate);
-         Task AddAsync(TEntity entity);
-         Task UpdateAsync(TEntity entity);
-         Task DeleteAsync(Guid id);
-         Task<bool> ExistedAsync(Expression<Func<TEntity, bool>> predicate);
+         void Add(TEntity entity);
+         void Update(TEntity entity);
+         void Delete(Guid id);
+         #endregion
+
+         #region Helper
+         Task<bool> IsExistedAsync(Expression<Func<TEntity, bool>> predicate);
          
          // TODO: Get List returned as IEnumerable which will implement pagination feature 
          Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : PagedQueryBase;
+         #endregion
     }
 }
