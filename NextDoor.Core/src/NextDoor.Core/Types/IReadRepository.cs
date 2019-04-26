@@ -5,20 +5,17 @@ using System.Threading.Tasks;
 using NextDoor.Core.Types;
 using NextDoor.Core.Types.Pagination;
 
-namespace NextDoor.Core.MSSQL
+namespace NextDoor.Core.Types
 {
-    public interface IMSSQLRepository<TEntity> where TEntity : class, IIdentifiable
+    public interface IReadRepository<TEntity> where TEntity : class, IIdentifiable
     {
-         #region CRUD
+         #region READ
          Task<TEntity> GetSingleAsync(Guid id);
          Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate);
          Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate);
-         void Add(TEntity entity);
-         void Update(TEntity entity);
-         void Delete(Guid id);
          #endregion
 
-         #region Helper
+         #region HELPER
          Task<bool> IsExistedAsync(Expression<Func<TEntity, bool>> predicate);
          
          // TODO: Get List returned as IEnumerable which will implement pagination feature 

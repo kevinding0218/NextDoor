@@ -12,4 +12,8 @@
 ##Microsoft.EntityFrameworkCore
 #dotnet add package Microsoft.EntityFrameworkCore
 #dotnet restore
+
+##Mongo.Driver
+#dotnet add package MongoDB.Driver
+#dotnet restore
 -------------------------------------------------------
