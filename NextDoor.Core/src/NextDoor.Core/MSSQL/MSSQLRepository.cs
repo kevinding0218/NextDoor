@@ -9,12 +9,12 @@ using NextDoor.Core.Types.Pagination;
 
 namespace NextDoor.Core.MSSQL
 {
-    public class MSSQLRepository<TEntity> : IMSSQLRepository<TEntity> where TEntity : class, IIdentifiable
+    public class MSSqlRepository<TEntity> : INonAsyncCUDRepository<TEntity> where TEntity : class, IIdentifiable
     {
         protected DbContext _dbContext;
         private readonly DbSet<TEntity> _collection;
 
-        public MSSQLRepository(DbContext dbContext, string collectionName)
+        public MSSqlRepository(DbContext dbContext, string collectionName)
         {
             this._dbContext = dbContext;
             this._collection = dbContext.Set<TEntity>();
@@ -57,7 +57,7 @@ namespace NextDoor.Core.MSSQL
         }
         #endregion
 
-        #region Helper
+        #region HELPER
         public async Task<bool> IsExistedAsync(Expression<Func<TEntity, bool>> predicate)
             => await this._collection.Where(predicate).AnyAsync();
         
