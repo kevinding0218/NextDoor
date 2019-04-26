@@ -279,3 +279,6 @@ __pycache__/
 
 NuGet.config
 appsettings.local.json
+.vs/NextDoor/v15/.suo
+NextDoor.Core/obj/Debug/netstandard2.0/NextDoor.Core.csproj.CoreCompileInputs.cache
+NextDoor.Core/obj/Debug/netstandard2.0/NextDoor.Core.csprojAssemblyReference.cache
