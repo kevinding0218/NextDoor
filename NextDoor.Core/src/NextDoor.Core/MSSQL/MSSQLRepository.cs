@@ -15,7 +15,7 @@ namespace NextDoor.Core.MSSQL
         protected DbContext _dbContext;
         private readonly DbSet<TEntity> _collection;
 
-        public MSSqlRepository(DbContext dbContext, string collectionName)
+        public MsSqlRepository(DbContext dbContext, string collectionName)
         {
             this._dbContext = dbContext;
             this._collection = dbContext.Set<TEntity>();
