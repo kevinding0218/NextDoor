@@ -1,6 +1,6 @@
 using System;
 
-namespace NextDoor.Core.Types
+namespace NextDoor.Core.Types.Repository
 {
     public interface INonAsyncCUDRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IIdentifiable
     {

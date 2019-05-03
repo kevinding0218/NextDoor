@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace NextDoor.Core.Types
+namespace NextDoor.Core.Types.Repository
 {
     public interface IAsyncCUDRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IIdentifiable
     {
