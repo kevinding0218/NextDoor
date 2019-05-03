@@ -10,7 +10,7 @@ using NextDoor.Core.Types.Pagination;
 
 namespace NextDoor.Core.MSSQL
 {
-    public class MSSqlRepository<TEntity> : INonAsyncCUDRepository<TEntity> where TEntity : class, IIdentifiable
+    public class MsSqlRepository<TEntity> : INonAsyncCUDRepository<TEntity> where TEntity : class, IIdentifiable
     {
         protected DbContext _dbContext;
         private readonly DbSet<TEntity> _collection;
