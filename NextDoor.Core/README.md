@@ -26,6 +26,10 @@
 --#dotnet add package Microsoft.Extensions.Configuration.FileExtensions
 --#dotnet add package Microsoft.Extensions.Configuration.Json
 #dotnet restore
+
+##Microsoft.AspNetCore.Http
+#dotnet add package Microsoft.AspNetCore
+#dotnet restore
 -------------------------------------------------------
 -------------------------------------------------------
 -------------------------------------------------------
