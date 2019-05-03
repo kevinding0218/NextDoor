@@ -279,7 +279,9 @@ __pycache__/
 
 NuGet.config
 appsettings.local.json
-NextDoor.Core/obj
+NextDoor.Core/obj/
+NextDoor.Core/bin/
+
 NextDoor.Core/obj/NextDoor.Core.csproj.nuget.cache
 NextDoor.Core/obj/NextDoor.Core.csproj.nuget.cache
 NextDoor.Core/obj/NextDoor.Core.csproj.nuget.g.props
