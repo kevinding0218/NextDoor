@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using NextDoor.Core.Types;
 using NextDoor.Core.Types.Pagination;
 
-namespace NextDoor.Core.Types
+namespace NextDoor.Core.Types.Repository
 {
     public interface IReadRepository<TEntity> where TEntity : class, IIdentifiable
     {

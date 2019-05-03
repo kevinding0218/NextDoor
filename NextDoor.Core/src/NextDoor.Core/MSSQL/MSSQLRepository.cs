@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NextDoor.Core.Types;
+using NextDoor.Core.Types.Repository;
 using NextDoor.Core.Types.Pagination;
 
 namespace NextDoor.Core.MSSQL

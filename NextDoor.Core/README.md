@@ -16,4 +16,14 @@
 ##Mongo.Driver
 #dotnet add package MongoDB.Driver
 #dotnet restore
+
+##Autofac
+#dotnet add package Autofac
+#dotnet restore
+
+##Microsoft.Extension.Configuration
+#dotnet add package Microsoft.Extensions.Configuration
+--#dotnet add package Microsoft.Extensions.Configuration.FileExtensions
+--#dotnet add package Microsoft.Extensions.Configuration.Json
+#dotnet restore
 -------------------------------------------------------

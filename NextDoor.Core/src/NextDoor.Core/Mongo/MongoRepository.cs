@@ -1,4 +1,5 @@
 using NextDoor.Core.Types;
+using NextDoor.Core.Types.Repository;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using System;
