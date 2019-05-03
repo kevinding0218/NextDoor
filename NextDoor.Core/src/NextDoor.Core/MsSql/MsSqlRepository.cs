@@ -8,7 +8,7 @@ using NextDoor.Core.Types;
 using NextDoor.Core.Types.Repository;
 using NextDoor.Core.Types.Pagination;
 
-namespace NextDoor.Core.MSSQL
+namespace NextDoor.Core.MsSql
 {
     public class MsSqlRepository<TEntity> : INonAsyncCUDRepository<TEntity> where TEntity : class, IIdentifiable
     {

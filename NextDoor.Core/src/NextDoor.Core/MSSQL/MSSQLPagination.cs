@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NextDoor.Core.Types.Pagination;
 
-namespace NextDoor.Core.MSSQL
+namespace NextDoor.Core.MsSql
 {
     /// https://piotrgankiewicz.com/2016/04/19/pagination-for-mssql-mongodb/
     public static class MsSqlPagination
