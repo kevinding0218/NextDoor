@@ -21,7 +21,7 @@ namespace NextDoor.Core.Mongo
             this._seeder = seeder;
             this._seed = options.Seed;
         }
-        public async Task InitilizeAsync()
+        public async Task InitializeAsync()
         {
             if (_initialized)
             {

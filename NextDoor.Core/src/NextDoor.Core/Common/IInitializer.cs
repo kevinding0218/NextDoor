@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 
-namespace NextDoor.Core
+namespace NextDoor.Core.Common
 {
     public interface IInitializer
     {
-         Task InitilizeAsync();
+         Task InitializeAsync();
     }
 }

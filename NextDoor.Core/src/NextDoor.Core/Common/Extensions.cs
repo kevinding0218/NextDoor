@@ -1,7 +1,7 @@
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 
-namespace NextDoor.Core.Types
+namespace NextDoor.Core.Common
 {
     public static class Extensions
     {
