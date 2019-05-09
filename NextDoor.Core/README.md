@@ -21,7 +21,7 @@ dotnet add package Microsoft.EntityFrameworkCore
 dotnet restore
 ```
 
-### dev-01-mongo-repository-design
+### dev-02-mongo-repository-design
 #### Mongo.Driver
 ```
 dotnet add package MongoDB.Driver
@@ -58,6 +58,14 @@ dotnet restore
 dotnet add package Microsoft.Extensions.Configuration
 dotnet add package Microsoft.Extensions.DependencyInjection
 dotnet restore
+```
+
+### dev-04-logging-design
+#### Serilog
+```
+dotnet add package Serilog
+dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Extensions.Logging
 ```
 -------------------------------------------------------
 ## Git Command
