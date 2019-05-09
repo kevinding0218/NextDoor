@@ -8,31 +8,34 @@ dotnet sln list
 ```
 ## Packages Included
 
-### Newtonsoft.Json
+### dev-01-mssql-repository-design
+#### Newtonsoft.Json
 ```
 dotnet add package Newtonsoft.Json
 dotnet restore
 ```
 
-### Microsoft.EntityFrameworkCore
+#### Microsoft.EntityFrameworkCore
 ```
 dotnet add package Microsoft.EntityFrameworkCore
 dotnet restore
 ```
 
-### Mongo.Driver
+### dev-01-mongo-repository-design
+#### Mongo.Driver
 ```
 dotnet add package MongoDB.Driver
 dotnet restore
 ```
 
-### Autofac
+### dev-03-webapi-core-design
+#### Autofac
 ```
 dotnet add package Autofac
 dotnet restore
 ```
 
-### Microsoft.Extension.Configuration
+#### Microsoft.Extension.Configuration
 ```
 dotnet add package Microsoft.Extensions.Configuration
 // dotnet add package Microsoft.Extensions.Configuration.FileExtensions
@@ -40,7 +43,7 @@ dotnet add package Microsoft.Extensions.Configuration
 dotnet restore
 ```
 
-### Microsoft.AspNetCore.Http
+#### Microsoft.AspNetCore.Http
 ```
 dotnet add package Microsoft.AspNetCore
 dotnet add package Microsoft.AspNetCore.Mvc
@@ -50,14 +53,12 @@ dotnet add package Microsoft.AspNetCore.Mvc.Formatters.Json
 dotnet restore
 ```
 
-### Microsoft.Extensions
+#### Microsoft.Extensions
 ```
 dotnet add package Microsoft.Extensions.Configuration
 dotnet add package Microsoft.Extensions.DependencyInjection
 dotnet restore
 ```
--------------------------------------------------------
--------------------------------------------------------
 -------------------------------------------------------
 ## Git Command
 ```
@@ -86,7 +87,7 @@ git checkout -b <branchname>
 
 ### Rename a branch
 
-- 1. Rename your local branch.
+- Rename your local branch.
 * If you are on the branch you want to rename:
 ```
 git branch -m new-name
@@ -97,12 +98,12 @@ git branch -m new-name
 git branch -m old-name new-name
 
 ```
-- 2. Delete the old-name remote branch and push the new-name local branch.
+- Delete the old-name remote branch and push the new-name local branch.
 ```
 git push origin :old-name new-name
 ```
 
-- 3. Reset the upstream branch for the new-name local branch.
+- Reset the upstream branch for the new-name local branch.
 * Switch to the branch and then:
 ```
 git push origin -u new-name
