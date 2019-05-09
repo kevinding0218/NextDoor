@@ -1,6 +1,7 @@
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using NextDoor.Core.Common;
 using NextDoor.Core.Types;
 
 namespace NextDoor.Core.Mongo
