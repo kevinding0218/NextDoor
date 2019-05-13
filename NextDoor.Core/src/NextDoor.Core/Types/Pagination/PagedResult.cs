@@ -18,7 +18,7 @@ namespace NextDoor.Core.Types.Pagination
             Items = Enumerable.Empty<T>();
         }
 
-        //To specify that a constructor should be used to create a class during deserialization
+        // To specify that a constructor should be used to create a class during deserialization
         [JsonConstructor]
         protected PagedResult(IEnumerable<T> items, int currentPage, int resultsPerPage, int totalPages, long totalResults)
          : base(currentPage, resultsPerPage, totalPages, totalResults)
