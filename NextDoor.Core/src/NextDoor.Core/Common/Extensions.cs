@@ -11,6 +11,11 @@ namespace NextDoor.Core.Common
         #endregion
 
         #region IConfiguration Extensions
+        // bind properties of node in appsetting.json with class "TModel" property name
+        // e.g: 
+        // appsetting.json-> "serilog": {"consoleEnabled": true}
+        // var serilogOptions = context.Configuration.GetOptions<SerilogOptions>("serilog");
+        // create a new instance of C# class "SerilogOptions" and bind the value of JSON "consoleEnabled" in appsetting.json to its C# property "ConsoleEnabled"
         public static TModel GetOptions<TModel>(this IConfiguration configuration, string section) where TModel : new()
         {
             var model = new TModel();

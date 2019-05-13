@@ -66,6 +66,10 @@ dotnet restore
 dotnet add package Serilog
 dotnet add package Serilog.AspNetCore
 dotnet add package Serilog.Extensions.Logging
+dotnet add package Serilog.Sinks.Console
+dotnet add package Serilog.Sinks.File
+dotnet add package Serilog.Sinks.Seq
+dotnet restore
 ```
 -------------------------------------------------------
 ## Git Command
