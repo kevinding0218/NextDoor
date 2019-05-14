@@ -18,7 +18,9 @@ namespace NextDoor.Core.Messages
             this.Code = code;
         }
 
+        #region Using "Factory Pattern" execute appropriate creation
         public static IRejectedEvent For(string name)
             => new RejectedEvent($"There was an error when executing: " + $"{name}", $"{name}_error");
+        #endregion
     }
 }
