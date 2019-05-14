@@ -71,6 +71,34 @@ dotnet add package Serilog.Sinks.File
 dotnet add package Serilog.Sinks.Seq
 dotnet restore
 ```
+
+### dev-06-rabbitmq-design
+#### RawRabbit
+```
+https://rawrabbit.readthedocs.io/en/master/
+<PackageReference Include="RawRabbit" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.DependencyInjection.ServiceCollection" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.Enrichers.Attributes" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.Enrichers.Polly" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.Enrichers.MessageContext" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.Enrichers.MessageContext.Subscribe" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.DependencyInjection.Autofac" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.Enrichers.RetryLater" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.Operations.Publish" Version="2.0.0-rc5" />
+<PackageReference Include="RawRabbit.Operations.Subscribe" Version="2.0.0-rc5" />
+dotnet restore
+```
+#### Polly
+```
+dotnet add package Polly
+dotnet restore
+```
+#### OpenTracing
+```
+dotnet add package OpenTracing
+dotnet add package OpenTracing.Tag
+dotnet restore
+```
 -------------------------------------------------------
 ## Git Command
 ```
