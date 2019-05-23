@@ -12,6 +12,7 @@ namespace NextDoor.Core.Mongo
         {
             // Similar with AddSingleton
             // One instance is returned from all requests in the root and all nested scopes
+            // Register a concrete type <MongoDbOptions> with lambda initiation
             builder.Register(context => {
                 var configuration = context.Resolve<IConfiguration>();
                 var options = configuration.GetOptions<MongoDbOptions>("mongo");
@@ -32,6 +33,14 @@ namespace NextDoor.Core.Mongo
                 return client.GetDatabase(options.Database);
             }).InstancePerLifetimeScope();
 
+            /* 
+                    Register by Type - When using reflection-based components, 
+                    Autofac automatically uses the constructor for your class with the most parameters 
+                    that are able to be obtained from the container.
+                    Any component type you register via RegisterType must be a concrete type. 
+                    While components can expose abstract classes or interfaces as services, 
+                    you can’t register an abstract/interface component.
+            */ 
             builder.RegisterType<MongoDbInitializer>()
                 .As<IMongoDbInitializer>()
                 .InstancePerLifetimeScope();

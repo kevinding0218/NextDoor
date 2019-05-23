@@ -26,25 +26,39 @@ dotnet add package MongoDB.Driver
 dotnet restore
 ```
 ### dev-03-webapi-core-design
-#### [Autofac](https://autofac.org/)
+#### [Autofac]([https://autofaccn.readthedocs.io/en/latest/integration/aspnetcore.html](https://autofaccn.readthedocs.io/en/latest/integration/aspnetcore.html))
 ```
 dotnet add package Autofac
 dotnet restore
 ```
 **Autofac Examples**:
-1. Manually registration with Class as Interface
-```
-builder.RegisterType<MyClass>().As<IMyClass>()
-```
-<b>Explain</b>: Whenever you're looking for the Interface "IMyClass", return a instance of class "MyClass" in response
-2. Automate registration by tracking assembly
-```
-builder.RegisterAssemblyTypes(Assembly.Load(nameof(DemoLibrary)))
-.Where(t => t.Namespace.Contains("Utilities))
-.As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
-```
-<b>Explain</b>: In "DemoLibrary" C# Class project, give me all the classes within 'Utilities' namespace
-and register them, then link them up to matching (I + class name) interface
+1. *Reflection-based component*
+- When using reflection-based components, Autofac automatically uses the constructor for your class with the most parameters that are able to be obtained from the container. 
+- Any component type you register via RegisterType must be a concrete type. While components can expose abstract classes or interfaces as services, you can’t register an abstract/interface component.
+	- Manually registration with Class as Interface ()
+	```
+	builder.RegisterType<MyClass>().As<IMyClass>()
+	```
+	<b>Explain</b>: Whenever you're looking for the Interface "IMyClass", return a instance of class "MyClass" in response
+	- Parameters with Lambd	a Expression Component
+	```
+	builder.Register((c, p) =>
+                 new ConfigReader(p.Named<string>("configSectionName"))).As<IConfigReader>();
+    ```
+	**Explain**: With lambda expression component registrations, rather than passing the parameter value _at registration time_ you enable the ability to pass the value _at service resolution time. 
+			- Use TWO parameters to the registration delegate:
+			- c = The current IComponentContext to dynamically resolve dependencies
+			- p = An IEnumerable<Parameter> with the incoming parameter set
+		```var reader = scope.Resolve<IConfigReader>(new NamedParameter("configSectionName", "sectionName"));```
+**Explain**: The Resolve() methods accept [the same parameter types available at registration time]
+2. *Automate registration by tracking assembly*
+	```
+	builder.RegisterAssemblyTypes(Assembly.Load(nameof(DemoLibrary)))
+	.Where(t => t.Namespace.Contains("Utilities))
+	.As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
+	```
+	<b>Explain</b>: In "DemoLibrary" C# Class project, give me all the classes within 'Utilities' namespace
+	and register them, then link them up to matching (I + class name) interface
 
  [**.Net Core self dependency injection lifetime types**](https://devblogs.microsoft.com/cesardelatorre/comparing-asp-net-core-ioc-service-life-times-and-autofac-ioc-instance-scopes/):
 1. *AddSingleton* - creates a single instance throughout the application. It creates the instance for the first time and reuses the same object in the all calls.
@@ -65,6 +79,7 @@ and register them, then link them up to matching (I + class name) interface
 - **SingleInstance()**
 	- One instance is returned from all requests in the root and all nested scopes
 > eg. in MVC it creates 1 instance per each http request but uses the same instance in the other calls within the same web request.
+> 
 #### Microsoft.Extension.Configuration
 ```
 dotnet add package Microsoft.Extensions.Configuration
