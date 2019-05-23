@@ -8,12 +8,13 @@ dotnet sln list
 ```
 ## Packages Included
 ### dev-01-mssql-repository-design
+[Repository Design Related](https://deviq.com/repository-pattern/)
 #### Newtonsoft.Json
 ```
 dotnet add package Newtonsoft.Json
 dotnet restore
 ```
-#### Microsoft.EntityFrameworkCore
+#### [EntityFrameworkCore](https://www.learnentityframeworkcore.com/)
 ```
 dotnet add package Microsoft.EntityFrameworkCore
 dotnet restore
@@ -25,7 +26,7 @@ dotnet add package MongoDB.Driver
 dotnet restore
 ```
 ### dev-03-webapi-core-design
-#### Autofac
+#### [Autofac](https://autofac.org/)
 ```
 dotnet add package Autofac
 dotnet restore
@@ -45,7 +46,7 @@ builder.RegisterAssemblyTypes(Assembly.Load(nameof(DemoLibrary)))
 <b>Explain</b>: In "DemoLibrary" C# Class project, give me all the classes within 'Utilities' namespace
 and register them, then link them up to matching (I + class name) interface
 
-**.Net Core self dependency injection lifetime types** [Documentation](https://devblogs.microsoft.com/cesardelatorre/comparing-asp-net-core-ioc-service-life-times-and-autofac-ioc-instance-scopes/):
+ [**.Net Core self dependency injection lifetime types**](https://devblogs.microsoft.com/cesardelatorre/comparing-asp-net-core-ioc-service-life-times-and-autofac-ioc-instance-scopes/):
 1. *AddSingleton* - creates a single instance throughout the application. It creates the instance for the first time and reuses the same object in the all calls.
 > similar with using **InstancePerDependency()** in Autofac
 - **InstancePerDependency()**
@@ -87,7 +88,7 @@ dotnet add package Microsoft.Extensions.DependencyInjection
 dotnet restore
 ```
 ### dev-04-logging-design
-#### Serilog
+#### [Serilog](https://serilog.net/)
 ```
 dotnet add package Serilog
 dotnet add package Serilog.AspNetCore
@@ -98,7 +99,7 @@ dotnet add package Serilog.Sinks.Seq
 dotnet restore
 ```
 ### dev-06-rabbitmq-design
-#### RawRabbit [Documentation](https://rawrabbit.readthedocs.io/en/master/)
+#### [RawRabbit ](https://rawrabbit.readthedocs.io/en/master/)
 ```
 <PackageReference Include="RawRabbit" Version="2.0.0-rc5" />
 <PackageReference Include="RawRabbit.DependencyInjection.ServiceCollection" Version="2.0.0-rc5" />
@@ -112,22 +113,19 @@ dotnet restore
 <PackageReference Include="RawRabbit.Operations.Subscribe" Version="2.0.0-rc5" />
 dotnet restore
 ```
-#### Polly
+#### [Polly](https://github.com/App-vNext/Polly)
 ```
 dotnet add package Polly
 dotnet restore
 ```
-#### OpenTracing
+#### [OpenTracing](https://www.olivercoding.com/2018-12-14-jaeger-csharp/)
 ```
 dotnet add package OpenTracing
 dotnet add package OpenTracing.Tag
 dotnet restore
 ```
 -------------------------------------------------------
-## Git Command
-```
-https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html
-```
+## [Git Command](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 ### Show all remote and local branches
 ```
 git branch -a
