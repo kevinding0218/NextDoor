@@ -10,6 +10,8 @@ namespace NextDoor.Core.Mongo
     {
         public static void AddMongo(this ContainerBuilder builder)
         {
+            // Similar with AddSingleton
+            // One instance is returned from all requests in the root and all nested scopes
             builder.Register(context => {
                 var configuration = context.Resolve<IConfiguration>();
                 var options = configuration.GetOptions<MongoDbOptions>("mongo");
@@ -23,6 +25,7 @@ namespace NextDoor.Core.Mongo
                 return new MongoClient(options.ConnectionString);
             }).SingleInstance();
 
+            // Similar with AddScoped
             builder.Register(context =>{
                 var options = context.Resolve<MongoDbOptions>();
                 var client = context.Resolve<MongoClient>();

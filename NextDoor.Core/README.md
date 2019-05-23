@@ -1,5 +1,5 @@
-# NextDoor.Core - class library project
 
+# NextDoor.Core - class library project
 ## How to create the project
 ```
 dotnet new classlib -n NextDoor.Core -o NextDoor.Core
@@ -7,34 +7,63 @@ dotnet sln add .\NextDoor.Core\NextDoor.Core.csproj
 dotnet sln list
 ```
 ## Packages Included
-
 ### dev-01-mssql-repository-design
 #### Newtonsoft.Json
 ```
 dotnet add package Newtonsoft.Json
 dotnet restore
 ```
-
 #### Microsoft.EntityFrameworkCore
 ```
 dotnet add package Microsoft.EntityFrameworkCore
 dotnet restore
 ```
-
 ### dev-02-mongo-repository-design
 #### Mongo.Driver
 ```
 dotnet add package MongoDB.Driver
 dotnet restore
 ```
-
 ### dev-03-webapi-core-design
 #### Autofac
 ```
 dotnet add package Autofac
 dotnet restore
 ```
+**Autofac Examples**:
+1. Manually registration with Class as Interface
+```
+builder.RegisterType<MyClass>().As<IMyClass>()
+```
+<b>Explain</b>: Whenever you're looking for the Interface "IMyClass", return a instance of class "MyClass" in response
+2. Automate registration by tracking assembly
+```
+builder.RegisterAssemblyTypes(Assembly.Load(nameof(DemoLibrary)))
+.Where(t => t.Namespace.Contains("Utilities))
+.As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
+```
+<b>Explain</b>: In "DemoLibrary" C# Class project, give me all the classes within 'Utilities' namespace
+and register them, then link them up to matching (I + class name) interface
 
+**.Net Core self dependency injection lifetime types** [Documentation](https://devblogs.microsoft.com/cesardelatorre/comparing-asp-net-core-ioc-service-life-times-and-autofac-ioc-instance-scopes/):
+1. *AddSingleton* - creates a single instance throughout the application. It creates the instance for the first time and reuses the same object in the all calls.
+> similar with using **InstancePerDependency()** in Autofac
+- **InstancePerDependency()**
+	- A unique instance will be returned from each object request.
+2. *AddTransient* - created each time they are requested, a new instance is provided to every controller and every service. This lifetime works best for lightweight, stateless services.
+> similar with using **InstancePerLifetimeScope()**/**InstancePerRequest()** in Autofac
+- **InstancePerLifetimeScope()**
+	- A component with per-lifetime scope will have at most a single instance per nested lifetime scope.
+	- This is useful for objects specific to a single unit of work that may need to nest additional logical units of work. Each nested lifetime scope will get a new instance of the registered dependency.
+	- For example, this type of lifetime scope is useful for Entity Framework DbContext objects (Unit of Work pattern) to be shared across the object scope so you can run transactions across multiple objects.
+- **InstancePerRequest()**
+	- Application types like ASP.NET Core naturally lend themselves to “request” type semantics. You have the ability to have a sort of “singleton per request.”
+	- Instance per request builds on top of instance per matching lifetime scope by providing a well-known lifetime scope tag, a registration convenience method, and integration for common application types. Behind the scenes, though, it’s still just instance per matching lifetime scope.
+3. *AddScoped* - same within a request, but different across different requests lifetime services are created once per request within the scope. It is equivalent to Singleton in the current scope.
+> similar with using **SingleInstance()** in Autofac
+- **SingleInstance()**
+	- One instance is returned from all requests in the root and all nested scopes
+> eg. in MVC it creates 1 instance per each http request but uses the same instance in the other calls within the same web request.
 #### Microsoft.Extension.Configuration
 ```
 dotnet add package Microsoft.Extensions.Configuration
@@ -42,7 +71,6 @@ dotnet add package Microsoft.Extensions.Configuration
 // dotnet add package Microsoft.Extensions.Configuration.Json
 dotnet restore
 ```
-
 #### Microsoft.AspNetCore.Http
 ```
 dotnet add package Microsoft.AspNetCore
@@ -52,14 +80,12 @@ dotnet add package Microsoft.AspNetCore.Mvc.DataAnnotations
 dotnet add package Microsoft.AspNetCore.Mvc.Formatters.Json
 dotnet restore
 ```
-
 #### Microsoft.Extensions
 ```
 dotnet add package Microsoft.Extensions.Configuration
 dotnet add package Microsoft.Extensions.DependencyInjection
 dotnet restore
 ```
-
 ### dev-04-logging-design
 #### Serilog
 ```
@@ -71,11 +97,9 @@ dotnet add package Serilog.Sinks.File
 dotnet add package Serilog.Sinks.Seq
 dotnet restore
 ```
-
 ### dev-06-rabbitmq-design
-#### RawRabbit
+#### RawRabbit [Documentation](https://rawrabbit.readthedocs.io/en/master/)
 ```
-https://rawrabbit.readthedocs.io/en/master/
 <PackageReference Include="RawRabbit" Version="2.0.0-rc5" />
 <PackageReference Include="RawRabbit.DependencyInjection.ServiceCollection" Version="2.0.0-rc5" />
 <PackageReference Include="RawRabbit.Enrichers.Attributes" Version="2.0.0-rc5" />
@@ -104,46 +128,39 @@ dotnet restore
 ```
 https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html
 ```
-
 ### Show all remote and local branches
 ```
 git branch -a
 ```
-
 ### figure out what branches are on your remote by actually using the remote related commands
 ```
 git remote show origin
 ```
-
 ### Switch from one branch to another
 ```
 git checkout <branchname>
 ```
-
 ### Create a new branch and switch to it:
 ```
 git checkout -b <branchname>
 ```
-
 ### Rename a branch
-
 - Rename your local branch.
-* If you are on the branch you want to rename:
+
+- If you are on the branch you want to rename:
 ```
 git branch -m new-name
 ```
-
-* If you are on a different branch:
+- If you are on a different branch:
 ```
 git branch -m old-name new-name
-
 ```
 - Delete the old-name remote branch and push the new-name local branch.
 ```
 git push origin :old-name new-name
 ```
-
 - Reset the upstream branch for the new-name local branch.
+
 * Switch to the branch and then:
 ```
 git push origin -u new-name

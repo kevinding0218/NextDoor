@@ -30,6 +30,7 @@ namespace NextDoor.Core.RabbitMq
 
         public BusSubscriber(IApplicationBuilder app)
         {
+            // IServiceProvider.GetService(): retrieve an instance of an object within IServiceCollection in the DI Container
             _logger = app.ApplicationServices.GetService<ILogger<BusSubscriber>>();
             _serviceProvider = app.ApplicationServices.GetService<IServiceProvider>();
             _busClient = _serviceProvider.GetService<IBusClient>();
@@ -40,6 +41,8 @@ namespace NextDoor.Core.RabbitMq
             _retryInterval = options.RetryInterval > 0 ? options.RetryInterval : 2;
         }
         
+        // Based on the message type/command, create a new subscription
+        // Usage: busSubscriber.SubscribeCommand<UserCreated>();
         public IBusSubscriber SubscribeCommand<TCommand>(string @namespace = null, string queueName = null, 
             Func<TCommand, NextDoorException, IRejectedEvent> onError = null) where TCommand : ICommand
         {
@@ -56,6 +59,8 @@ namespace NextDoor.Core.RabbitMq
                 return this;
         }
 
+        // Based on the message type/event, create a new subscription
+        // Usage: busSubscriber.SubscribeEvent<UserCreated>();
         public IBusSubscriber SubscribeEvent<TEvent>(string @namespace = null, string queueName = null, 
             Func<TEvent, NextDoorException, IRejectedEvent> onError = null) where TEvent : IEvent
         {
@@ -72,7 +77,13 @@ namespace NextDoor.Core.RabbitMq
             return this;
         }
 
-        // Get full command path from top level
+        /* 
+        * Get full command path from top level
+        * Get the unique queues per instance of a different application that subscribes to the same event.
+        * Not just return a typeof(T).Name because on the regular server this pattern works just fine, 
+          but once you put .NET Core application into Docker container it will get the same Assembly name as the other applications 
+          (e.g. “app” depending on the WORKDIR)
+        */
         private string GetQueueName<TCommand>(string @namespace = null, string name = null)
         {
             @namespace = string.IsNullOrWhiteSpace(@namespace)
