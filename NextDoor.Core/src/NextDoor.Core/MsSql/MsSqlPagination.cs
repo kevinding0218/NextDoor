@@ -26,7 +26,7 @@ namespace NextDoor.Core.MsSql
         *  IQueryable<T> normally represents an operation that will be performed later (e.g. with LINQ to SQL). 
         * A separate interface is needed because the next operation might be another sort, which needs to be treated differently to the IOrderedQueryable<T>
          */
-        public static async Task<PagedResult<T>> Paginate<T>(this IQueryable<T> collection, PagedQueryBase query)
+        public static async Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> collection, PagedQueryBase query)
             => await collection.PaginateAsync(query.Page, query.Results);
         public static async Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> collection,
             int page = 1, int resultsPerPage = 10)

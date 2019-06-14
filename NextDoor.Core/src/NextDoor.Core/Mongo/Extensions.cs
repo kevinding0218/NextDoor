@@ -13,21 +13,24 @@ namespace NextDoor.Core.Mongo
             // Similar with AddSingleton
             // One instance is returned from all requests in the root and all nested scopes
             // Register a concrete type <MongoDbOptions> with lambda initiation
-            builder.Register(context => {
+            builder.Register(context =>
+            {
                 var configuration = context.Resolve<IConfiguration>();
                 var options = configuration.GetOptions<MongoDbOptions>("mongo");
 
                 return options;
             }).SingleInstance();
 
-            builder.Register(context => {
+            builder.Register(context =>
+            {
                 var options = context.Resolve<MongoDbOptions>();
 
                 return new MongoClient(options.ConnectionString);
             }).SingleInstance();
 
             // Similar with AddScoped
-            builder.Register(context =>{
+            builder.Register(context =>
+            {
                 var options = context.Resolve<MongoDbOptions>();
                 var client = context.Resolve<MongoClient>();
                 return client.GetDatabase(options.Database);
@@ -40,18 +43,18 @@ namespace NextDoor.Core.Mongo
                     Any component type you register via RegisterType must be a concrete type. 
                     While components can expose abstract classes or interfaces as services, 
                     you can’t register an abstract/interface component.
-            */ 
+            */
             builder.RegisterType<MongoDbInitializer>()
                 .As<IMongoDbInitializer>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<MongoDbSeeder>()
-                .As<IMongoDbSeeder>()
+                .As<IDataSeeder>()
                 .InstancePerLifetimeScope();
         }
 
         public static void AddMongoRepository<TEntity>(this ContainerBuilder builder, string collectionName)
-            where TEntity : class, IIdentifiable
+            where TEntity : class, IGuidentifiable
             => builder.Register(ctx => new MongoRepository<TEntity>(ctx.Resolve<IMongoDatabase>(), collectionName))
                 .As<IMongoRepository<TEntity>>()
                 .InstancePerLifetimeScope();
