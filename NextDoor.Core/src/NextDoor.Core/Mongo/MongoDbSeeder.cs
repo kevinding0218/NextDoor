@@ -1,12 +1,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using NextDoor.Core.Types;
 
 namespace NextDoor.Core.Mongo
 {
-    public class MongoDbSeeder : IMongoDbSeeder
+    public class MongoDbSeeder : IDataSeeder
     {
-        
+
         public readonly IMongoDatabase Database;
         public MongoDbSeeder(IMongoDatabase database)
         {

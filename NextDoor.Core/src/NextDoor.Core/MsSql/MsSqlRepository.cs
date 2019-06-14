@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using NextDoor.Core.Types;
 using NextDoor.Core.Types.Repository;
 using NextDoor.Core.Types.Pagination;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace NextDoor.Core.MsSql
 {
-    public class MsSqlRepository<TEntity> : INonAsyncCUDRepository<TEntity> where TEntity : class, IIdentifiable
+    public class MsSqlRepository<TEntity> : IMsSqlRepository<TEntity> where TEntity : class, IIdIdentifiable
     {
         protected DbContext _dbContext;
         private readonly DbSet<TEntity> _collection;
@@ -21,14 +22,48 @@ namespace NextDoor.Core.MsSql
             this._collection = dbContext.Set<TEntity>();
         }
         #region CRUD
-        public async Task<TEntity> GetSingleAsync(Guid id)
-            => await GetSingleAsync(e => e.Id == id);
+        public async Task<TEntity> GetSingleAsync(int id)
+            => await GetSingleAsync(selector: (TEntity) => TEntity, predicate: e => e.Id == id);
 
-        public async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate)
-            => await (this._collection as IQueryable<TEntity>).Where(predicate).AsNoTracking().SingleOrDefaultAsync();
+        public async Task<TResult> GetSingleAsync<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true)
+        {
+            IQueryable<TEntity> query = this._collection;
 
-        public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate)
-            => await (this._collection as IQueryable<TEntity>).Where(predicate).AsNoTracking().ToListAsync();
+            if (disableTracking) query = query.AsNoTracking();
+
+            if (include != null) query = include(query);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null)
+                return await orderBy(query).Select(selector).SingleOrDefaultAsync();
+            return await query.Select(selector).SingleOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<TResult>> GetListAsync<TResult>(
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true)
+        {
+            IQueryable<TEntity> query = this._collection;
+
+            if (disableTracking) query = query.AsNoTracking();
+
+            if (include != null) query = include(query);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null)
+                return await orderBy(query).Select(selector).ToListAsync();
+            return await query.Select(selector).ToListAsync();
+        }
 
         /// The method AddAsync() is async only to allow special value generators, such as the one used by 'Microsoft.EntityFrameworkCore.Metadata.SqlServerValueGenerationStrategy.SequenceHiLo', 
         /// to access the database asynchronously. For all other cases the non async method should be used.
@@ -40,13 +75,14 @@ namespace NextDoor.Core.MsSql
             => this._collection.Update(entity);
 
         ///If you dont want to query for it just create an entity through constructor, and then delete it.
-        public void Delete(Guid id) {
+        public void Delete(int id)
+        {
             // => this._collection.Remove(this._collection.SingleOrDefault(e => e.Id == id));
             var instance = Activator.CreateInstance(typeof(TEntity), new object[] { id }) as TEntity;
             this._collection.Attach(instance);
             this._collection.Remove(instance);
         }
-            
+
         public void Delete(TEntity entity)
             => this._collection.Remove(entity);
         #endregion
@@ -61,12 +97,9 @@ namespace NextDoor.Core.MsSql
         #region HELPER
         public async Task<bool> IsExistedAsync(Expression<Func<TEntity, bool>> predicate)
             => await this._collection.Where(predicate).AnyAsync();
-        
-        public Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : PagedQueryBase
-        {
-            // => this._collection.AsQueryable().Where(predicate).PaginateAsync(query);
-            throw new NotImplementedException();
-        }
+
+        public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : PagedQueryBase
+            => await this._collection.AsQueryable().Where(predicate).PaginateAsync(query);
         #endregion
 
         #region Dispose
