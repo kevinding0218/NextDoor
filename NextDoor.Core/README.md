@@ -61,11 +61,11 @@ dotnet restore
 	and register them, then link them up to matching (I + class name) interface
 
  [**.Net Core self dependency injection lifetime types**](https://devblogs.microsoft.com/cesardelatorre/comparing-asp-net-core-ioc-service-life-times-and-autofac-ioc-instance-scopes/):
-1. *AddSingleton* - creates a single instance throughout the application. It creates the instance for the first time and reuses the same object in the all calls.
+1. **AddSingleton** - creates a single instance throughout the application. It creates the instance for the first time and reuses the same object in the all calls.
 > similar with using **InstancePerDependency()** in Autofac
 - **InstancePerDependency()**
 	- A unique instance will be returned from each object request.
-2. *AddTransient* - created each time they are requested, a new instance is provided to every controller and every service. This lifetime works best for lightweight, stateless services.
+2. **AddTransient** - created each time they are requested, a new instance is provided to every controller and every service. This lifetime works best for lightweight, stateless services.
 > similar with using **InstancePerLifetimeScope()**/**InstancePerRequest()** in Autofac
 - **InstancePerLifetimeScope()**
 	- A component with per-lifetime scope will have at most a single instance per nested lifetime scope.
@@ -74,7 +74,7 @@ dotnet restore
 - **InstancePerRequest()**
 	- Application types like ASP.NET Core naturally lend themselves to “request” type semantics. You have the ability to have a sort of “singleton per request.”
 	- Instance per request builds on top of instance per matching lifetime scope by providing a well-known lifetime scope tag, a registration convenience method, and integration for common application types. Behind the scenes, though, it’s still just instance per matching lifetime scope.
-3. *AddScoped* - same within a request, but different across different requests lifetime services are created once per request within the scope. It is equivalent to Singleton in the current scope.
+3. **AddScoped** - same within a request, but different across different requests lifetime services are created once per request within the scope. It is equivalent to Singleton in the current scope.
 > similar with using **SingleInstance()** in Autofac
 - **SingleInstance()**
 	- One instance is returned from all requests in the root and all nested scopes
@@ -137,6 +137,24 @@ dotnet restore
 ```
 dotnet add package OpenTracing
 dotnet add package OpenTracing.Tag
+dotnet restore
+```
+### dev-07-codereview-repositorydesign
+- Refactor IReadRepository into INoSqlRepository and ISqlreadRepository
+- Refacotr IIdentifiable into IIdIdentifiable and IGuidIdentifiable
+- Add DataSeeder for MsSql
+- Add Initilizer for MsSql
+- Add extension for add Entity Framework based on dbContext
+```
+<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.0" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
+dotnet restore
+```
+### dev-08-redis-extension
+- Add Redis as extension
+```
+<PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
+<PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
 dotnet restore
 ```
 -------------------------------------------------------

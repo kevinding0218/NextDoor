@@ -10,7 +10,7 @@ using MongoDB.Driver.Linq;
 
 namespace NextDoor.Core.Mongo
 {
-    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : class, IGuidentifiable
+    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : class, IGuidIdentifiable
     {
         protected IMongoCollection<TEntity> _collection { get; }
 

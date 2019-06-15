@@ -7,7 +7,7 @@ using NextDoor.Core.Types.Pagination;
 
 namespace NextDoor.Core.Types.Repository
 {
-    public interface INoSqlReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IGuidentifiable
+    public interface INoSqlReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IGuidIdentifiable
     {
         #region READ BY GUID
         Task<TEntity> GetSingleAsync(Guid guid);
