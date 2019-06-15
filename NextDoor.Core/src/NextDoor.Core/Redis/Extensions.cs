@@ -18,6 +18,8 @@ namespace NextDoor.Core.src.NextDoor.Core.Redis
 
             services.Configure<RedisOptions>(configuration.GetSection(SectionName));
             var options = configuration.GetOptions<RedisOptions>(SectionName);
+
+            // setting up Redis distributed cache related services
             services.AddDistributedRedisCache(o =>
             {
                 o.Configuration = options.ConnectionString;

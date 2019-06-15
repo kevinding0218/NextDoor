@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NextDoor.Core.Types
 {
-    public interface IGuidentifiable : IEntity
+    public interface IGuidIdentifiable : IEntity
     {
         Guid Guid { get; }
     }
