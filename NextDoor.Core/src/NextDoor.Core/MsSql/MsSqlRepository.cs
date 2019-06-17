@@ -46,13 +46,15 @@ namespace NextDoor.Core.MsSql
         }
 
         public async Task<IEnumerable<TResult>> GetListAsync<TResult>(
-            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, TResult>> selector = null,
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             bool disableTracking = true)
         {
             IQueryable<TEntity> query = this._collection;
+
+            if (selector == null) selector = (entity) => default(TResult);
 
             if (disableTracking) query = query.AsNoTracking();
 

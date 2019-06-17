@@ -2,8 +2,10 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/DShop/v15/Server/sqlite3
-/.vs/DShop/v15/.suo
+## VS code files
+/.vs/NextDoor/v15/
+/.vs/NextDoor/v15/Server/sqlite3
+/.vs/NextDoor/v15/.suo
 /.vs/ProjectSettings.json
 
 ## Ignore Visual Studio temporary files, build results, and
@@ -281,6 +283,8 @@ NuGet.config
 appsettings.local.json
 NextDoor.Core/obj/
 NextDoor.Core/bin/
+NextDoor.Services.Billbook/obj/
+NextDoor.Services.Billbook/bin/
 
 NextDoor.Core/obj/NextDoor.Core.csproj.nuget.cache
 NextDoor.Core/obj/NextDoor.Core.csproj.nuget.cache

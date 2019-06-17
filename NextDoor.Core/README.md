@@ -157,6 +157,40 @@ dotnet restore
 <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
 dotnet restore
 ```
+### dev-09-first-microservice
+#### Create a web api project and solution
+1. Create web api project under _src_ subfolder
+```
+mkdir NextDoor.Services.Customers
+cd .\NextDoor.Services.Customers\
+mkdir src
+dotnet new webapi -n NextDoor.Services.Customers -o src\NextDoor.Services.Customers
+```
+2. Create new solution file and add above project inside solution
+```
+dotnet new sln --name NextDoor.Services.Customers
+dotnet sln add src/NextDoor.Services.Customers/NextDoor.Services.Customers.csproj
+```
+3. repeat above for additional micro services
+	- NextDoor.Services.Customers
+	- NextDoor.Services.Identity
+	- NextDoor.Services.Accounts (Later)
+	- NextDoor.Services.Billbooks (Later)
+	- NextDoor.Services.Transactions (Later)
+	- NextDoor.Services.Notifications (Later)
+#### Re-organize a solution by adding all projects inside using Powershell script
+- Create powershell script to handle all projects into one solution
+```
+$projects = Get-ChildItem -Recurse | Where-Object { $_.Name -match '^.+\.(csproj|vbproj)$' }
+$uniqueProjects = $projects | Group-Object -Property Name | Where Count -EQ 1 | select -ExpandProperty Group | % { $_.FullName }
+Invoke-Expression -Command "dotnet new sln -n NextDoor"
+$uniqueProjects | % { Invoke-Expression -Command "dotnet sln NextDoor.sln add ""$_""" }
+```
+- Listing the projects in a solution file
+```
+dotnet sln list
+```
+
 -------------------------------------------------------
 ## [Git Command](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 ### Show all remote and local branches
