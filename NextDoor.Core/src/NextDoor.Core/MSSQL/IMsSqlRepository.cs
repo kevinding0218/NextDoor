@@ -6,9 +6,9 @@ using NextDoor.Core.Types;
 using NextDoor.Core.Types.Pagination;
 using NextDoor.Core.Types.Repository;
 
-namespace NextDoor.Core.Mongo
+namespace NextDoor.Core.MsSql
 {
-    public interface IMongoRepository<TEntity> : INoSqlReadRepository<TEntity>, IAsyncCUDRepository<TEntity> where TEntity : class, IGuidIdentifiable
+    public interface IMsSqlRepository<TEntity> : ISqlReadRepository<TEntity>, INonAsyncCUDRepository<TEntity> where TEntity : class, IIdIdentifiable
     {
     }
 }

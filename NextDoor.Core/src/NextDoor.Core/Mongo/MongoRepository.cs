@@ -10,9 +10,9 @@ using MongoDB.Driver.Linq;
 
 namespace NextDoor.Core.Mongo
 {
-    public class MongoRepository<TEntity> : IAsyncCUDRepository<TEntity> where TEntity : class, IIdentifiable
+    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : class, IGuidIdentifiable
     {
-        protected IMongoCollection<TEntity> _collection {get;}
+        protected IMongoCollection<TEntity> _collection { get; }
 
         public MongoRepository(IMongoDatabase database, string collectionName)
         {
@@ -20,18 +20,18 @@ namespace NextDoor.Core.Mongo
         }
 
         #region CRUD
-        public async Task<TEntity> GetSingleAsync(Guid id)
-            => await GetSingleAsync(e => e.Id == id);
+        public async Task<TEntity> GetSingleAsync(Guid guid)
+            => await GetSingleAsync(e => e.Guid == guid);
 
         public async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate)
             => await this._collection.Find(predicate).SingleOrDefaultAsync();
-        
+
         public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate)
             => await this._collection.Find(predicate).ToListAsync();
 
         public async Task AddAsync(TEntity entity) => await this._collection.InsertOneAsync(entity);
-        public async Task UpdateAsync(TEntity entity) => await this._collection.ReplaceOneAsync(e => e.Id == entity.Id, entity);
-        public async Task DeleteAsync(Guid id) => await this._collection.DeleteOneAsync(e => e.Id == id);    
+        public async Task UpdateAsync(TEntity entity) => await this._collection.ReplaceOneAsync(e => e.Guid == entity.Guid, entity);
+        public async Task DeleteAsync(Guid guid) => await this._collection.DeleteOneAsync(e => e.Guid == guid);
         #endregion
 
         #region HELPER

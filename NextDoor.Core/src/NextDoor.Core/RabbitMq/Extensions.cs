@@ -26,6 +26,8 @@ namespace NextDoor.Core.RabbitMq
 
         public static void AddRabbitMq(this ContainerBuilder builder)
         {
+            // Similar with AddSingleton
+            // Register from customed <RabbitMqOptions>
             builder.Register(context =>
             {
                 var configuration = context.Resolve<IConfiguration>();
@@ -34,6 +36,7 @@ namespace NextDoor.Core.RabbitMq
                 return options;
             }).SingleInstance();
 
+            // Register from <RawRabbitConfiguration>
             builder.Register(context =>
             {
                 var configuration = context.Resolve<IConfiguration>();
@@ -43,6 +46,8 @@ namespace NextDoor.Core.RabbitMq
             }).SingleInstance();
 
             var assembly = Assembly.GetCallingAssembly();
+
+            // Similar with AddTransient()
             builder.RegisterAssemblyTypes(assembly)
                 .AsClosedTypesOf(typeof(IEventHandler<>))
                 .InstancePerDependency();

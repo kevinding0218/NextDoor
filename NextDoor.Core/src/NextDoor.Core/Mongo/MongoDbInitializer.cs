@@ -5,6 +5,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using NextDoor.Core.Types;
 
 namespace NextDoor.Core.Mongo
 {
@@ -12,10 +13,10 @@ namespace NextDoor.Core.Mongo
     {
         private static bool _initialized;
         private readonly IMongoDatabase _database;
-        private readonly IMongoDbSeeder _seeder;
+        private readonly IDataSeeder _seeder;
         private readonly bool _seed;
 
-        public MongoDbInitializer(IMongoDatabase database, IMongoDbSeeder seeder, MongoDbOptions options)
+        public MongoDbInitializer(IMongoDatabase database, IDataSeeder seeder, MongoDbOptions options)
         {
             this._database = database;
             this._seeder = seeder;
