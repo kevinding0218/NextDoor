@@ -159,28 +159,38 @@ dotnet restore
 ```
 ### dev-09-first-microservice
 #### Create a web api project and solution
-- Create web api project under _src_ subfolder
+1. Create web api project under _src_ subfolder
 ```
-mkdir NextDoor.Services.Billbook
+mkdir NextDoor.Services.Customers
+cd .\NextDoor.Services.Customers\
 mkdir src
-dotnet new webapi -n NextDoor.Services.Billbook -o src\NextDoor.Services.Billbook
+dotnet new webapi -n NextDoor.Services.Customers -o src\NextDoor.Services.Customers
 ```
-- Create new solution file and add above project inside solution
+2. Create new solution file and add above project inside solution
 ```
-dotnet new sln --name NextDoor.Services.Billbook
-dotnet sln add src/NextDoor.Services.Billbook/NextDoor.Services.Billbook.csproj
+dotnet new sln --name NextDoor.Services.Customers
+dotnet sln add src/NextDoor.Services.Customers/NextDoor.Services.Customers.csproj
 ```
-- Listing the projects in a solution file
-```
-dotnet sln list
-```
+3. repeat above for additional micro services
+	- NextDoor.Services.Customers
+	- NextDoor.Services.Identity
+	- NextDoor.Services.Accounts (Later)
+	- NextDoor.Services.Billbooks (Later)
+	- NextDoor.Services.Transactions (Later)
+	- NextDoor.Services.Notifications (Later)
 #### Re-organize a solution by adding all projects inside using Powershell script
+- Create powershell script to handle all projects into one solution
 ```
 $projects = Get-ChildItem -Recurse | Where-Object { $_.Name -match '^.+\.(csproj|vbproj)$' }
 $uniqueProjects = $projects | Group-Object -Property Name | Where Count -EQ 1 | select -ExpandProperty Group | % { $_.FullName }
 Invoke-Expression -Command "dotnet new sln -n NextDoor"
 $uniqueProjects | % { Invoke-Expression -Command "dotnet sln NextDoor.sln add ""$_""" }
 ```
+- Listing the projects in a solution file
+```
+dotnet sln list
+```
+
 -------------------------------------------------------
 ## [Git Command](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 ### Show all remote and local branches
