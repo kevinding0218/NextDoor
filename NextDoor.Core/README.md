@@ -157,6 +157,29 @@ dotnet restore
 <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
 dotnet restore
 ```
+### dev-09-first-microservice
+#### Create a web api project and solution
+- Create web api project under _src_ subfolder
+```
+mkdir src
+dotnet new webapi -n NextDoor.Services.Billbook -o src\NextDoor.Services.Billbook
+```
+- Create new solution file and add above project inside solution
+```
+dotnet new sln --name NextDoor.Services.Billbook
+dotnet sln add src/NextDoor.Services.Billbook/NextDoor.Services.Billbook.csproj
+```
+- Listing the projects in a solution file
+```
+dotnet sln list
+```
+#### Re-organize a solution by adding all projects inside using Powershell script
+```
+$projects = Get-ChildItem -Recurse | Where-Object { $_.Name -match '^.+\.(csproj|vbproj)$' }
+$uniqueProjects = $projects | Group-Object -Property Name | Where Count -EQ 1 | select -ExpandProperty Group | % { $_.FullName }
+Invoke-Expression -Command "dotnet new sln -n NextDoor"
+$uniqueProjects | % { Invoke-Expression -Command "dotnet sln NextDoor.sln add ""$_""" }
+```
 -------------------------------------------------------
 ## [Git Command](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 ### Show all remote and local branches
