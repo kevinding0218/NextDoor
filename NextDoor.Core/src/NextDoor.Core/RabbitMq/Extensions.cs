@@ -21,6 +21,8 @@ namespace NextDoor.Core.RabbitMq
 {
     public static class Extensions
     {
+        private static readonly string SectionName = "rabbitMq";
+
         public static IBusSubscriber UseRabbitMq(this IApplicationBuilder app)
             => new BusSubscriber(app);
 
@@ -31,7 +33,7 @@ namespace NextDoor.Core.RabbitMq
             builder.Register(context =>
             {
                 var configuration = context.Resolve<IConfiguration>();
-                var options = configuration.GetOptions<RabbitMqOptions>("rabbitMq");
+                var options = configuration.GetOptions<RabbitMqOptions>(SectionName);
 
                 return options;
             }).SingleInstance();
@@ -40,7 +42,7 @@ namespace NextDoor.Core.RabbitMq
             builder.Register(context =>
             {
                 var configuration = context.Resolve<IConfiguration>();
-                var options = configuration.GetOptions<RawRabbitConfiguration>("rabbitMq");
+                var options = configuration.GetOptions<RawRabbitConfiguration>(SectionName);
 
                 return options;
             }).SingleInstance();
@@ -66,7 +68,7 @@ namespace NextDoor.Core.RabbitMq
 
         private static void ConfigureBus(ContainerBuilder builder)
         {
-            builder.Register<IInstanceFactory>(context => 
+            builder.Register<IInstanceFactory>(context =>
             {
                 var options = context.Resolve<RabbitMqOptions>();
                 var configuration = context.Resolve<RawRabbitConfiguration>();
@@ -89,7 +91,7 @@ namespace NextDoor.Core.RabbitMq
                             .UpdateRetryInfo()
                             .UseMessageContext<CorrelationContext>()
                             .UseContextForwarding()
-                            // .UseJaeger(tracer)
+                        // .UseJaeger(tracer)
                     }
                 );
             }).SingleInstance();
@@ -109,11 +111,11 @@ namespace NextDoor.Core.RabbitMq
             public CustomNamingConventions(string defaultNamespace)
             {
                 ExchangeNamingConvention = (Type type) => GetNamespace(type, defaultNamespace).ToLowerInvariant();
-                RoutingKeyConvention = (Type type) => 
+                RoutingKeyConvention = (Type type) =>
                     $"#.{GetRoutingKeyNamespace(type, defaultNamespace)}{type.Name.Underscore()}".ToLowerInvariant();
                 ErrorExchangeNamingConvention = () => $"{defaultNamespace}.error";
                 RetryLaterExchangeConvention = (TimeSpan span) => $"{defaultNamespace}.retry";
-                RetryLaterQueueNameConvetion = (string exchange, TimeSpan span) => 
+                RetryLaterQueueNameConvetion = (string exchange, TimeSpan span) =>
                     $"{defaultNamespace}.retry_for_{exchange.Replace(".", "_")}_in_{span.TotalMilliseconds}_ms".ToLowerInvariant();
             }
 
@@ -146,13 +148,13 @@ namespace NextDoor.Core.RabbitMq
             public override async Task InvokeAsync(IPipeContext context,
                 CancellationToken token = new CancellationToken())
             {
-                 var retry = context.GetRetryInformation();
-                 if (context.GetMessageContext() is CorrelationContext message)
-                 {
-                     message.Retries = retry.NumberOfRetries;
-                 }   
+                var retry = context.GetRetryInformation();
+                if (context.GetMessageContext() is CorrelationContext message)
+                {
+                    message.Retries = retry.NumberOfRetries;
+                }
 
-                 await Next.InvokeAsync(context, token);
+                await Next.InvokeAsync(context, token);
             }
         }
         #endregion

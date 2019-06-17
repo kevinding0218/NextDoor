@@ -186,18 +186,32 @@ dotnet sln add src/NextDoor.Services.Customers/NextDoor.Services.Customers.cspro
 	- NextDoor.Services.Transactions (Later)
 	- NextDoor.Services.Notifications (Later)
 #### Re-organize a solution by adding all projects inside using Powershell script
-- Create powershell script to handle all projects into one solution
-```
-$projects = Get-ChildItem -Recurse | Where-Object { $_.Name -match '^.+\.(csproj|vbproj)$' }
-$uniqueProjects = $projects | Group-Object -Property Name | Where Count -EQ 1 | select -ExpandProperty Group | % { $_.FullName }
-Invoke-Expression -Command "dotnet new sln -n NextDoor"
-$uniqueProjects | % { Invoke-Expression -Command "dotnet sln NextDoor.sln add ""$_""" }
-```
 - Listing the projects in a solution file
 ```
 dotnet sln list
 ```
-
+### dev-10-authentication-jwt-api
+#### Add Jwt package
+```
+<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.2.0" />
+<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.0" />
+<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.3.0" />
+dotnet restore
+```
+#### [Refresh token](https://piotrgankiewicz.com/2017/12/07/jwt-refresh-tokens-and-net-core/)
+#### [Cancelling token](https://piotrgankiewicz.com/2018/04/25/canceling-jwt-tokens-in-net-core/)
+- what can we do in terms of canceling the active tokens? We have a few options:
+	1. Remove token on the client side (e.g. local storage) – will do the trick, but doesn’t really cancel the token.
+	2. Keep the token lifetime relatively short (5 minutes or so) – most likely we should do it anyway.
+	3. Create a blacklist of tokens that were deactivated – this is what we are going to focus on.
+- why are we use _IDistributedCache/Redis_?
+	- use the Redis to store the deactivated tokens on an extremely fast caching server. 
+	- If you're certain that you will hold your app on a single server and there will be only a single instance of your app, you can try with more default memory cahche
+	- However, it's not reliable at first if you have more than a single instance, you may have a blacklist of expired or cancel tokens on server A or instance A then on instance B there is a different list, so whether your load balancer decides that the request goes to server A or B, you cannot be certain if the token was expired at A or B.
+	– otherwise, when server goes down, you will lose all of the deactivated tokens blacklist being kept in a default server cache (not to mention the different data if each server would keep its own cache).
 -------------------------------------------------------
 ## [Git Command](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 ### Show all remote and local branches
