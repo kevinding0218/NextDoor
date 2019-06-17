@@ -1,10 +1,17 @@
 
 # NextDoor.Core - class library project
 ## How to create the project
+1. Create web api project under _src_ subfolder
 ```
-dotnet new classlib -n NextDoor.Core -o NextDoor.Core
-dotnet sln add .\NextDoor.Core\NextDoor.Core.csproj
-dotnet sln list
+mkdir NextDoor.Core
+cd .\NextDoor.Core\
+mkdir src
+dotnet new classlib -n NextDoor.Core -o src\NextDoor.Core
+```
+2. Create new solution file and add above project inside solution
+```
+dotnet new sln --name NextDoor.Core
+dotnet sln add src/NextDoor.Core/NextDoor.Core.csproj
 ```
 ## Packages Included
 ### dev-01-mssql-repository-design
