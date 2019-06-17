@@ -14,6 +14,8 @@ namespace NextDoor.Core.MSSQL
 {
     public static class Extensions
     {
+        private static readonly string SectionName = "mssql";
+
         public static IServiceCollection AddEfMsSqlContext<msSqlContext>(this IServiceCollection service)
             where msSqlContext : DbContext
             => service.AddEntityFrameworkInMemoryDatabase()
@@ -26,7 +28,7 @@ namespace NextDoor.Core.MSSQL
             builder.Register(context =>
             {
                 var configuration = context.Resolve<IConfiguration>();
-                var options = configuration.GetOptions<MsSqlDbOptions>("mssql");
+                var options = configuration.GetOptions<MsSqlDbOptions>(SectionName);
 
                 return options;
             }).SingleInstance();
