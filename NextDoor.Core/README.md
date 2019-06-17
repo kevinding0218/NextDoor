@@ -161,6 +161,7 @@ dotnet restore
 #### Create a web api project and solution
 - Create web api project under _src_ subfolder
 ```
+mkdir NextDoor.Services.Billbook
 mkdir src
 dotnet new webapi -n NextDoor.Services.Billbook -o src\NextDoor.Services.Billbook
 ```
