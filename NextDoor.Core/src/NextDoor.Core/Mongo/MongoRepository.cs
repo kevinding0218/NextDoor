@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Collections.Generic;
 using NextDoor.Core.Types.Pagination;
 using MongoDB.Driver.Linq;
+using NextDoor.Core.Types.Domain;
 
 namespace NextDoor.Core.Mongo
 {

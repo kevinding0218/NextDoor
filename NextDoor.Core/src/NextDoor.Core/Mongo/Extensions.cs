@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using NextDoor.Core.Common;
 using NextDoor.Core.Types;
+using NextDoor.Core.Types.Domain;
 
 namespace NextDoor.Core.Mongo
 {

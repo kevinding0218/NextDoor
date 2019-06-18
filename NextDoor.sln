@@ -7,19 +7,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NextDoor.Core", "NextDoor.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7F4F29F5-5B1F-46DF-9A76-23C901559882}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDoor.Core", "NextDoor.Core\src\NextDoor.Core\NextDoor.Core.csproj", "{3B1D7F5B-06AF-4A0B-ACB4-C43D60C29310}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDoor.Core", "NextDoor.Core\src\NextDoor.Core\NextDoor.Core.csproj", "{3B1D7F5B-06AF-4A0B-ACB4-C43D60C29310}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NextDoor.Services.Customers", "NextDoor.Services.Customers", "{5EE1C06A-88D3-4DFF-85B3-E0C47FFE9B0C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5F8B0FF1-6D07-4578-B723-62F43A6A9DAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDoor.Services.Customers", "NextDoor.Services.Customers\src\NextDoor.Services.Customers\NextDoor.Services.Customers.csproj", "{BDBA4F04-1EC6-410C-BC02-BE1330440668}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDoor.Services.Customers", "NextDoor.Services.Customers\src\NextDoor.Services.Customers\NextDoor.Services.Customers.csproj", "{BDBA4F04-1EC6-410C-BC02-BE1330440668}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NextDoor.Services.Identity", "NextDoor.Services.Identity", "{CA68619C-7601-4683-8125-F0361879AE0C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7423FD42-22A6-41C1-A7D6-6C36F2F06048}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDoor.Services.Identity", "NextDoor.Services.Identity\src\NextDoor.Services.Identity\NextDoor.Services.Identity.csproj", "{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDoor.Services.Identity", "NextDoor.Services.Identity\src\NextDoor.Services.Identity\NextDoor.Services.Identity.csproj", "{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,9 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3B1D7F5B-06AF-4A0B-ACB4-C43D60C29310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -71,6 +68,9 @@ Global
 		{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6}.Release|x86.ActiveCfg = Release|Any CPU
 		{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7F4F29F5-5B1F-46DF-9A76-23C901559882} = {EC0A0288-4AFE-4DC1-9ED1-1453BF1C0738}
 		{3B1D7F5B-06AF-4A0B-ACB4-C43D60C29310} = {7F4F29F5-5B1F-46DF-9A76-23C901559882}
@@ -78,5 +78,8 @@ Global
 		{BDBA4F04-1EC6-410C-BC02-BE1330440668} = {5F8B0FF1-6D07-4578-B723-62F43A6A9DAF}
 		{7423FD42-22A6-41C1-A7D6-6C36F2F06048} = {CA68619C-7601-4683-8125-F0361879AE0C}
 		{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6} = {7423FD42-22A6-41C1-A7D6-6C36F2F06048}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {478A69C5-64B4-4512-BFD9-2E6BDC9FDD39}
 	EndGlobalSection
 EndGlobal

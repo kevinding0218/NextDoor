@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using NextDoor.Core.Types;
-using NextDoor.Core.Types.Pagination;
+using NextDoor.Core.Types.Domain;
 
 namespace NextDoor.Core.Types.Repository
 {

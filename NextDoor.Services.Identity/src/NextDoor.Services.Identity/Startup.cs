@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,12 +12,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NextDoor.Core.Common;
+using NextDoor.Core.MSSQL;
 using NextDoor.Core.Mvc;
+using NextDoor.Services.Identity.Infrastructure.EF;
 
 namespace NextDoor.Services.Identity
 {
     public class Startup
     {
+        public IContainer Container { get; private set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,12 +34,24 @@ namespace NextDoor.Services.Identity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCustomMvc();
+            services.Configure<AppOptions>(Configuration.GetSection("app"));
+        }
+
+        private IServiceProvider BuildContainer(IServiceCollection services)
+        {
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            builder.AddEfDatabase<NextDoorDbContext>(services);
+
+            Container = builder.Build();
+
+            return new AutofacServiceProvider(Container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("local"))
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -42,6 +61,7 @@ namespace NextDoor.Services.Identity
                 app.UseHsts();
             }
 
+            app.UseErrorHandler();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
