@@ -4,8 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Query;
-using NextDoor.Core.Types;
-using NextDoor.Core.Types.Pagination;
+using NextDoor.Core.Types.Domain;
 
 namespace NextDoor.Core.Types.Repository
 {
