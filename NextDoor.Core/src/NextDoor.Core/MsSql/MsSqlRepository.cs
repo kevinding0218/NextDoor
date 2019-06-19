@@ -4,22 +4,29 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using NextDoor.Core.Types;
-using NextDoor.Core.Types.Repository;
 using NextDoor.Core.Types.Pagination;
 using Microsoft.EntityFrameworkCore.Query;
+using NextDoor.Core.Types.Domain;
 
 namespace NextDoor.Core.MsSql
 {
-    public class MsSqlRepository<TEntity> : IMsSqlRepository<TEntity> where TEntity : class, IIdIdentifiable
+    public class MsSqlRepository<TEntity> : IMsSqlRepository<TEntity> where TEntity : class, IIdIdentifiable, IAuditableEntity
     {
+        protected IUserInfo _userInfo;
         protected DbContext _dbContext;
         private readonly DbSet<TEntity> _collection;
 
-        public MsSqlRepository(DbContext dbContext, string collectionName)
+        public MsSqlRepository(DbContext dbContext)
         {
             this._dbContext = dbContext;
             this._collection = dbContext.Set<TEntity>();
+        }
+
+        public MsSqlRepository(DbContext dbContext, IUserInfo userInfo)
+        {
+            _dbContext = dbContext;
+            this._collection = dbContext.Set<TEntity>();
+            _userInfo = userInfo;
         }
         #region CRUD
         public async Task<TEntity> GetSingleAsync(int id)
@@ -71,10 +78,27 @@ namespace NextDoor.Core.MsSql
         /// to access the database asynchronously. For all other cases the non async method should be used.
         /// Update and Remove are the same as Add in as much as they only affect the internal tracking until you save the changes you've made.
         public void Add(TEntity entity)
-            => this._collection.Add(entity);
+        {
+            var auditEntity = entity as IAuditableEntity;
+            if (auditEntity != null)
+            {
+                auditEntity.CreatedBy = auditEntity.LastUpdatedBy = _userInfo.UID ?? auditEntity.CreatedBy;
+                auditEntity.CreatedOn = auditEntity.LastUpdatedOn = DateTime.UtcNow;
+            }
+
+            this._collection.Add(entity);
+        }
 
         public void Update(TEntity entity)
-            => this._collection.Update(entity);
+        {
+            var auditEntity = entity as IAuditableEntity;
+            if (auditEntity != null)
+            {
+                auditEntity.LastUpdatedBy = _userInfo.UID ?? auditEntity.LastUpdatedBy;
+                auditEntity.LastUpdatedOn = DateTime.UtcNow;
+            }
+            this._collection.Update(entity);
+        }
 
         ///If you dont want to query for it just create an entity through constructor, and then delete it.
         public void Delete(int id)
