@@ -7,7 +7,6 @@ using NextDoor.Core.Types.Pagination;
 namespace NextDoor.Core.MsSql
 {
     /// https://piotrgankiewicz.com/2016/04/19/pagination-for-mssql-mongodb/
-    // Rename to MsSqlPagination
     public static class MsSqlPagination
     {
         #region Dealing with IOrderedQueryable
