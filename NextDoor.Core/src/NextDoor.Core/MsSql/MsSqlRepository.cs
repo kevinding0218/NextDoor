@@ -10,6 +10,7 @@ using NextDoor.Core.Types.Domain;
 
 namespace NextDoor.Core.MsSql
 {
+    // Rename to MsSqlRepository
     public class MsSqlRepository<TEntity> : IMsSqlRepository<TEntity> where TEntity : class, IIdIdentifiable, IAuditableEntity
     {
         protected IUserInfo _userInfo;
