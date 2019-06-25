@@ -1,6 +1,3 @@
-using System;
-using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,6 +11,9 @@ using Polly;
 using RawRabbit;
 using RawRabbit.Common;
 using RawRabbit.Enrichers.MessageContext;
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NextDoor.Core.RabbitMq
 {
@@ -21,7 +21,7 @@ namespace NextDoor.Core.RabbitMq
     {
         private readonly ILogger _logger;
         private readonly IBusClient _busClient;
-        private readonly IServiceProvider _serviceProvider;        
+        private readonly IServiceProvider _serviceProvider;
         // OpenTracing: for span creation and propagation across arbitrary transports.
         private readonly ITracer _tracer;
         private readonly string _defaultNamespace;
@@ -40,28 +40,28 @@ namespace NextDoor.Core.RabbitMq
             _retries = options.Retries >= 0 ? options.Retries : 3;
             _retryInterval = options.RetryInterval > 0 ? options.RetryInterval : 2;
         }
-        
+
         // Based on the message type/command, create a new subscription
         // Usage: busSubscriber.SubscribeCommand<UserCreated>();
-        public IBusSubscriber SubscribeCommand<TCommand>(string @namespace = null, string queueName = null, 
+        public IBusSubscriber SubscribeCommand<TCommand>(string @namespace = null, string queueName = null,
             Func<TCommand, NextDoorException, IRejectedEvent> onError = null) where TCommand : ICommand
         {
-            this._busClient.SubscribeAsync<TCommand, CorrelationContext>(async (command, correlationContext) => 
+            this._busClient.SubscribeAsync<TCommand, CorrelationContext>(async (command, correlationContext) =>
                 {
                     var commandHandler = this._serviceProvider.GetService<ICommandHandler<TCommand>>();
-                    
+
                     return await TryHandleAsync(command, correlationContext,
                             () => commandHandler.HandleAsync(command, correlationContext), onError);
                 },
                 ctx => ctx.UseSubscribeConfiguration(cfg =>
                     cfg.FromDeclaredQueue(q => q.WithName(GetQueueName<TCommand>(@namespace, queueName)))));
 
-                return this;
+            return this;
         }
 
         // Based on the message type/event, create a new subscription
         // Usage: busSubscriber.SubscribeEvent<UserCreated>();
-        public IBusSubscriber SubscribeEvent<TEvent>(string @namespace = null, string queueName = null, 
+        public IBusSubscriber SubscribeEvent<TEvent>(string @namespace = null, string queueName = null,
             Func<TEvent, NextDoorException, IRejectedEvent> onError = null) where TEvent : IEvent
         {
             this._busClient.SubscribeAsync<TEvent, CorrelationContext>(async (@event, correlationContext) =>
@@ -73,7 +73,7 @@ namespace NextDoor.Core.RabbitMq
                 },
                 ctx => ctx.UseSubscribeConfiguration(cfg =>
                     cfg.FromDeclaredQueue(q => q.WithName(GetQueueName<TEvent>(@namespace, queueName)))));
-            
+
             return this;
         }
 
@@ -89,7 +89,7 @@ namespace NextDoor.Core.RabbitMq
             @namespace = string.IsNullOrWhiteSpace(@namespace)
                 ? (string.IsNullOrWhiteSpace(this._defaultNamespace) ? string.Empty : this._defaultNamespace)
                 : @namespace;
-            
+
             var separatedNamespace = string.IsNullOrWhiteSpace(@namespace) ? string.Empty : $"{@namespace}.";
 
             return (string.IsNullOrWhiteSpace(name)
@@ -107,7 +107,7 @@ namespace NextDoor.Core.RabbitMq
             var retryPolicy = Policy
                 .Handle<Exception>()
                 .WaitAndRetryAsync(this._retries, i => TimeSpan.FromSeconds(this._retryInterval));
-            
+
             var messageName = message.GetType().Name;
 
             return await retryPolicy.ExecuteAsync<Acknowledgement>(async () =>
@@ -116,7 +116,7 @@ namespace NextDoor.Core.RabbitMq
                     .BuildSpan("executing-handler")
                     .AsChildOf(this._tracer.ActiveSpan)
                     .StartActive(true);
-                
+
                 using (scope)
                 {
                     var span = scope.Span;
@@ -127,7 +127,7 @@ namespace NextDoor.Core.RabbitMq
 
                         var preLogMessage = $"Handling a message: '{messageName}' " +
                                             $"with correlation id: '{correlationContext.Id}'. {retryMessage}";
-                        
+
                         this._logger.LogInformation(preLogMessage);
                         span.Log(preLogMessage);
 
@@ -142,7 +142,7 @@ namespace NextDoor.Core.RabbitMq
                     }
                     catch (Exception exception)
                     {
-                        currentRetry ++;
+                        currentRetry++;
                         this._logger.LogError(exception, exception.Message);
                         span.Log(exception.Message);
                         span.SetTag(Tags.Error, true);

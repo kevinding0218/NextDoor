@@ -57,8 +57,10 @@ namespace NextDoor.Services.Identity
             // Whenever registered by asp.net by default in this services object, move to our container builder
             builder.Populate(services);
             builder.RegisterType<PasswordHasher<UserDto>>().As<IPasswordHasher<UserDto>>();
+            builder.RegisterType<PasswordHasher<User>>().As<IPasswordHasher<User>>();
 
             builder.AddMongo();
+            // Create Mongodb collection based on class
             builder.AddMongoRepository<RefreshToken>("RefreshTokens");
             builder.AddMongoRepository<User>("Users");
             #endregion

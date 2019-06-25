@@ -1,14 +1,16 @@
 ﻿using Newtonsoft.Json;
+using NextDoor.Core.Messages;
 
-namespace NextDoor.Services.Identity.Services.Dto
+namespace NextDoor.Services.Identity.Messages.Commands
 {
-    public class SignInDto
+    // Immutable
+    public class SignInCmd : ICommand
     {
         public string Email { get; }
         public string Password { get; }
 
         [JsonConstructor]
-        public SignInDto(string email, string password)
+        public SignInCmd(string email, string password)
         {
             Email = email;
             Password = password;

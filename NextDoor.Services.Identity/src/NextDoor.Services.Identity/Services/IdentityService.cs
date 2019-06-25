@@ -16,7 +16,7 @@ namespace NextDoor.Services.Identity.Services
         private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<UserDto> _passwordHasher;
         private readonly IJwtHandler _jwtHandler;
-        private readonly ITokenService _refreshTokenService;
+        private readonly ITokenService _tokenService;
         private readonly IOptionalClaimsProvider _claimsProvider;
         private readonly IMapper _mapper;
 
@@ -25,7 +25,7 @@ namespace NextDoor.Services.Identity.Services
             IUserMongoRepository userMongoRepository,
             IPasswordHasher<UserDto> passwordHasher,
             IJwtHandler jwtHandler,
-            ITokenService refreshTokenService,
+            ITokenService tokenService,
             IOptionalClaimsProvider claimsProvider,
             IMapper mapper)
         {
@@ -33,7 +33,7 @@ namespace NextDoor.Services.Identity.Services
             _userMongoRepository = userMongoRepository;
             _passwordHasher = passwordHasher;
             _jwtHandler = jwtHandler;
-            _refreshTokenService = refreshTokenService;
+            _tokenService = tokenService;
             _claimsProvider = claimsProvider;
             _mapper = mapper;
         }
@@ -80,10 +80,10 @@ namespace NextDoor.Services.Identity.Services
                 }
 
                 // Create New Refresh Token
-                var refreshTokenDto = await _refreshTokenService.CreateNewRefreshTokenAsync(userDto.Id);
+                var refreshTokenDto = await _tokenService.CreateNewRefreshTokenAsync(userDto.Id);
 
                 // Create New Jwt Access Token and bind with Refresh Token
-                var jwt = await _refreshTokenService.CreateNewJwtAccessTokenAsync(userDto.Id, userDto.Role, refreshTokenDto.Token);
+                var jwt = await _tokenService.CreateNewJwtAccessTokenAsync(userDto.Id, userDto.Role, refreshTokenDto.Token);
 
                 return jwt;
             }

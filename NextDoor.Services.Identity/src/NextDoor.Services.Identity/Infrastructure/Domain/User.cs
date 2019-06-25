@@ -1,4 +1,6 @@
-﻿using NextDoor.Core.Types.Domain;
+﻿using Microsoft.AspNetCore.Identity;
+using NextDoor.Core.Types;
+using NextDoor.Core.Types.Domain;
 using System;
 
 namespace NextDoor.Services.Identity.Infrastructure.Domain
@@ -27,5 +29,18 @@ namespace NextDoor.Services.Identity.Infrastructure.Domain
             Role = role;
             PasswordHash = passwordHash;
         }
+
+        public void SetPassword(string passwordTyped, IPasswordHasher<User> passwordHasher)
+        {
+            if (string.IsNullOrWhiteSpace(passwordTyped))
+            {
+                throw new NextDoorException(IdentityExceptionCode.InvalidPassword,
+                    "Password can not be empty.");
+            }
+            PasswordHash = passwordHasher.HashPassword(this, passwordTyped);
+        }
+
+        public bool ValidatePassword(string passwordTyped, IPasswordHasher<User> passwordHasher)
+            => passwordHasher.VerifyHashedPassword(this, PasswordHash, passwordTyped) != PasswordVerificationResult.Failed;
     }
 }
