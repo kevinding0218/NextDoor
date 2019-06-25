@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NextDoor.Services.Identity.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using NextDoor.Services.Identity.Infrastructure.Domain;
 
 namespace NextDoor.Services.Identity.Infrastructure.EF.Configurations
 {
@@ -13,7 +9,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             // Mapping for table
-            builder.ToTable("Users", "Indentity");
+            builder.ToTable("Users", "Identity");
 
             // Set identity for entity (auto increment)
             builder.Property(u => u.Id).HasColumnName("UID").UseSqlServerIdentityColumn();
@@ -24,10 +20,6 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Configurations
             builder.Property(p => p.Email).HasColumnType("nvarchar(100)").IsRequired();
             builder.Property(p => p.Role).HasColumnType("nvarchar(15)").IsRequired();
             builder.Property(p => p.PasswordHash).HasColumnType("nvarchar(200)").IsRequired();
-            //builder.Property(p => p.FirstName).HasColumnType("nvarchar(30)").IsRequired();
-            //builder.Property(p => p.MiddleInitial).HasColumnType("nvarchar(10)");
-            //builder.Property(p => p.LastName).HasColumnType("nvarchar(30)").IsRequired();
-            //builder.Property(p => p.Active).HasColumnType("bit").IsRequired().HasDefaultValue(1);
             builder.Property(p => p.LastLogin).HasColumnType("datetime").IsRequired();
 
             builder.Property(p => p.CreatedBy).HasColumnType("int");

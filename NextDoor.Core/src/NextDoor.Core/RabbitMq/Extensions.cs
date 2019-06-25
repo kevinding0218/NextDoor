@@ -1,28 +1,27 @@
-using System.Threading;
-using System;
-using System.Reflection;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using NextDoor.Core.Common;
+using NextDoor.Core.Handlers;
 using NextDoor.Core.Messages;
+using NextDoor.Core.Types;
 using OpenTracing;
 using RawRabbit;
 using RawRabbit.Common;
 using RawRabbit.Configuration;
-using RawRabbit.Instantiation;
-using RawRabbit.Pipe.Middleware;
-using System.Threading.Tasks;
-using RawRabbit.Pipe;
 using RawRabbit.Enrichers.MessageContext;
-using Microsoft.Extensions.Configuration;
-using NextDoor.Core.Handlers;
+using RawRabbit.Instantiation;
+using RawRabbit.Pipe;
+using RawRabbit.Pipe.Middleware;
+using System;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NextDoor.Core.RabbitMq
 {
     public static class Extensions
     {
-        private static readonly string SectionName = "rabbitMq";
-
         public static IBusSubscriber UseRabbitMq(this IApplicationBuilder app)
             => new BusSubscriber(app);
 
@@ -33,7 +32,7 @@ namespace NextDoor.Core.RabbitMq
             builder.Register(context =>
             {
                 var configuration = context.Resolve<IConfiguration>();
-                var options = configuration.GetOptions<RabbitMqOptions>(SectionName);
+                var options = configuration.GetOptions<RabbitMqOptions>(ConfigOptions.rabbitMqSectionName);
 
                 return options;
             }).SingleInstance();
@@ -42,7 +41,7 @@ namespace NextDoor.Core.RabbitMq
             builder.Register(context =>
             {
                 var configuration = context.Resolve<IConfiguration>();
-                var options = configuration.GetOptions<RawRabbitConfiguration>(SectionName);
+                var options = configuration.GetOptions<RawRabbitConfiguration>(ConfigOptions.rabbitMqSectionName);
 
                 return options;
             }).SingleInstance();

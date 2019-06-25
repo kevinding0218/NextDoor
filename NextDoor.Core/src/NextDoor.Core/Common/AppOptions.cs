@@ -1,6 +1,6 @@
 namespace NextDoor.Core.Common
 {
-    public class AppOptions
+    public class MvcOptions
     {
         public string Name { get; set; }
     }

@@ -3,38 +3,40 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NextDoor.Core.Common;
-using NextDoor.Core.MsSql;
-using NextDoor.Core.MSSQL;
 using NextDoor.Core.Types;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NextDoor.Core.MSSQL
 {
     public static class Extensions
     {
-        private static readonly string SectionName = "mssql";
-
-        public static IServiceCollection AddEfMsSqlContext<msSqlContext>(this IServiceCollection service)
-            where msSqlContext : DbContext
+        public static IServiceCollection AddEntityFrameworkMsSql<myDbContext>(this IServiceCollection service)
+            where myDbContext : DbContext
             => service.AddEntityFrameworkInMemoryDatabase()
                 .AddEntityFrameworkSqlServer()
-                .AddDbContext<msSqlContext>();
+                .AddDbContext<myDbContext>();
 
         public static void AddEfDatabase<myDbContext>(this ContainerBuilder builder, IServiceCollection services)
             where myDbContext : DbContext
         {
-            builder.Register(context =>
+            //builder.Register(context =>
+            //{
+            //    var configuration = context.Resolve<IConfiguration>();
+            //    var options = configuration.GetOptions<MsSqlDbOptions>(ConfigOptions.mssqlSectionName);
+
+            //    return options;
+            //}).SingleInstance();
+
+            IConfiguration configuration;
+            using (var serviceProvider = services.BuildServiceProvider())
             {
-                var configuration = context.Resolve<IConfiguration>();
-                var options = configuration.GetOptions<MsSqlDbOptions>(SectionName);
+                configuration = serviceProvider.GetService<IConfiguration>();
+            }
+            var options = configuration.GetOptions<MsSqlDbOptions>(ConfigOptions.mssqlSectionName);
+            services.AddSingleton(options);
+            services.AddEntityFrameworkMsSql<myDbContext>();
 
-                return options;
-            }).SingleInstance();
-
-            services.AddEfMsSqlContext<myDbContext>();
-
+            /*
+             * For SeedData Injection
             builder.RegisterType<MsSqlInitializer>()
                 .As<IInitializer>()
                 .InstancePerLifetimeScope();
@@ -42,6 +44,7 @@ namespace NextDoor.Core.MSSQL
             builder.RegisterType<MsSqlDataSeeder<myDbContext>>()
                 .As<IDataSeeder>()
                 .InstancePerLifetimeScope();
+            */
         }
     }
 }

@@ -1,12 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NextDoor.Core.MSSQL;
-using NextDoor.Services.Identity.Core.Domain;
+using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF.Configurations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Infrastructure.EF
 {
@@ -20,6 +16,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,6 +39,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
         }
     }
 }

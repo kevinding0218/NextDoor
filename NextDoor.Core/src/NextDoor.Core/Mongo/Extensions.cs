@@ -9,8 +9,6 @@ namespace NextDoor.Core.Mongo
 {
     public static class Extensions
     {
-        private static readonly string SectionName = "mongo";
-
         public static void AddMongo(this ContainerBuilder builder)
         {
             // Similar with AddSingleton
@@ -19,7 +17,7 @@ namespace NextDoor.Core.Mongo
             builder.Register(context =>
             {
                 var configuration = context.Resolve<IConfiguration>();
-                var options = configuration.GetOptions<MongoDbOptions>(SectionName);
+                var options = configuration.GetOptions<MongoDbOptions>(ConfigOptions.mongoSectionName);
 
                 return options;
             }).SingleInstance();

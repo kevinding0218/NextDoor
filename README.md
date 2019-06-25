@@ -58,6 +58,21 @@ Invoke-Expression -Command "dotnet new sln -n NextDoor"
 $uniqueProjects | % { Invoke-Expression -Command "dotnet sln NextDoor.sln add ""$_""" }
 ```
 -------------------------------------------------------
+## [dotnet run error](http://www.waynethompson.com.au/blog/dotnet-dev-certs-https/)
+### Unable to configure HTTPS endpoint. No server certificate was specified, and the default developer certificate could not be found.
+- Steps to fix the problem
+	1. Close your browsers so that they do not cache the certificate because that will cause other issues. 
+	2. On the commandline run
+	```
+	dotnet dev-certs https --clean
+	```
+	3. run
+	```
+	dotnet dev-certs https -t
+	```
+	4. You can then check the certificate with dotnet dev-certs https --check but this returned nothing which I assume means everything is ok.
+	5. then ran dotnet run the project ran as expected.
+-------------------------------------------------------
 ## [Git Command](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 ### Show all remote and local branches
 ```

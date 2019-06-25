@@ -3,26 +3,24 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NextDoor.Core.Common;
-using System;
-using System.Collections.Generic;
+using NextDoor.Core.Types;
 using System.Text;
 
 namespace NextDoor.Core.Authentication
 {
     public static class Extensions
     {
-        private static readonly string SectionName = "jwt";
-
         public static void AddJwt(this IServiceCollection services)
         {
             IConfiguration configuration;
             using (var serviceProvider = services.BuildServiceProvider())
             {
                 configuration = serviceProvider.GetService<IConfiguration>();
-                services.Configure<JwtOptions>(configuration.GetSection(SectionName));
+                services.Configure<JwtOptions>(configuration.GetSection(ConfigOptions.jwtSectionName));
             }
             // Get jwt from app.config, bind to JwtOptions class model then inject as singleton
-            services.AddSingleton(configuration.GetOptions<JwtOptions>(SectionName));
+            var options = configuration.GetOptions<JwtOptions>(ConfigOptions.jwtSectionName);
+            services.AddSingleton(options);
             // DI JwtHandler
             services.AddSingleton<IJwtHandler, JwtHandler>();
             // Add cancelling token service
@@ -30,7 +28,7 @@ namespace NextDoor.Core.Authentication
             services.AddTransient<AccessTokenValidatorMiddleware>();
 
             // get JwtOptions for validation
-            var options = configuration.GetOptions<JwtOptions>(SectionName);
+
             services.AddAuthentication()
                 .AddJwtBearer(cfg =>
                 {

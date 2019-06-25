@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace NextDoor.Core.Authentication
 {
@@ -12,11 +9,11 @@ namespace NextDoor.Core.Authentication
         Task<bool> IsCurrentActiveToken();
         // Helper method - based on our Http context of the current user we'll check if his token is active 
         // and will deactive his token if he wishes so
-        Task DeactivateCurrentAsync(string userId);
+        Task DeactivateCurrentAsync(int userId);
 
         // Determine whether our authorization or authentication token is active or not
         Task<bool> IsActiveAsync(string token);
         // Deactivate our token
-        Task DeactivateAsync(string userId, string token);
+        Task DeactivateAsync(int userId, string token);
     }
 }
