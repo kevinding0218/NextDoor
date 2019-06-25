@@ -54,6 +54,7 @@ namespace NextDoor.Core.Mongo
                 .InstancePerLifetimeScope();
         }
 
+        // DI for each  mongo db repository
         public static void AddMongoRepository<TEntity>(this ContainerBuilder builder, string collectionName)
             where TEntity : class, IGuidIdentifiable
             => builder.Register(ctx => new MongoRepository<TEntity>(ctx.Resolve<IMongoDatabase>(), collectionName))

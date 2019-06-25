@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
+using NextDoor.Core.Messages;
 using NextDoor.Core.Types;
 using System.Text.RegularExpressions;
 
-namespace NextDoor.Services.Identity.Services.Dto
+namespace NextDoor.Services.Identity.Messages.Commands
 {
-    public class SignUpDto
+    // Immutable
+    public class SignUpCmd : ICommand
     {
         private static readonly Regex EmailRegex = new Regex(
             @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
@@ -16,7 +18,7 @@ namespace NextDoor.Services.Identity.Services.Dto
         public string Role { get; } = "user";
 
         [JsonConstructor]
-        public SignUpDto(string email, string password, string role)
+        public SignUpCmd(string email, string password, string role)
         {
             if (!EmailRegex.IsMatch(email))
             {

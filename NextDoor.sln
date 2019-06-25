@@ -16,6 +16,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDoor.Services.Customers", "NextDoor.Services.Customers\src\NextDoor.Services.Customers\NextDoor.Services.Customers.csproj", "{BDBA4F04-1EC6-410C-BC02-BE1330440668}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NextDoor.Services.Identity", "NextDoor.Services.Identity", "{CA68619C-7601-4683-8125-F0361879AE0C}"
+	ProjectSection(SolutionItems) = preProject
+		Identity.rest = Identity.rest
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7423FD42-22A6-41C1-A7D6-6C36F2F06048}"
 EndProject
