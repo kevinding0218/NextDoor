@@ -12,6 +12,7 @@ namespace NextDoor.Services.Identity.Services.Dto
         public string Role { get; set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime? RevokedAt { get; private set; }
+        public string Guid { get; set; }
         public bool Revoked => RevokedAt.HasValue;
 
         protected RefreshTokenDto()
@@ -26,7 +27,7 @@ namespace NextDoor.Services.Identity.Services.Dto
         }
 
         private static string CreateToken(UserDto userDto, IPasswordHasher<UserDto> passwordHasher)
-            => passwordHasher.HashPassword(userDto, Guid.NewGuid().ToString("N"))
+            => passwordHasher.HashPassword(userDto, System.Guid.NewGuid().ToString("N"))
                 .Replace("=", string.Empty)
                 .Replace("+", string.Empty)
                 .Replace("/", string.Empty);

@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NextDoor.Core.Authentication;
+using NextDoor.Core.Mongo;
 using NextDoor.Core.MSSQL;
 using NextDoor.Core.Mvc;
 using NextDoor.Core.Types;
 using NextDoor.Services.Identity.Infrastructure;
+using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF;
 using NextDoor.Services.Identity.Services.AutoMapper;
 using NextDoor.Services.Identity.Services.Dto;
@@ -55,6 +57,10 @@ namespace NextDoor.Services.Identity
             // Whenever registered by asp.net by default in this services object, move to our container builder
             builder.Populate(services);
             builder.RegisterType<PasswordHasher<UserDto>>().As<IPasswordHasher<UserDto>>();
+
+            builder.AddMongo();
+            builder.AddMongoRepository<RefreshToken>("RefreshTokens");
+            builder.AddMongoRepository<User>("Users");
             #endregion
 
             Container = builder.Build();

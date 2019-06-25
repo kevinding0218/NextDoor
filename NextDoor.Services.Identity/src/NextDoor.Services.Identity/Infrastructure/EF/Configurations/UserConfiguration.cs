@@ -17,15 +17,17 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Configurations
             builder.HasKey(u => u.Id);
 
             // Set mapping for columns
-            builder.Property(p => p.Email).HasColumnType("nvarchar(100)").IsRequired();
-            builder.Property(p => p.Role).HasColumnType("nvarchar(15)").IsRequired();
-            builder.Property(p => p.PasswordHash).HasColumnType("nvarchar(200)").IsRequired();
-            builder.Property(p => p.LastLogin).HasColumnType("datetime").IsRequired();
+            builder.Property(u => u.Email).HasColumnType("nvarchar(100)").IsRequired();
+            builder.Property(u => u.Role).HasColumnType("nvarchar(15)").IsRequired();
+            builder.Property(u => u.PasswordHash).HasColumnType("nvarchar(200)").IsRequired();
+            builder.Property(u => u.LastLogin).HasColumnType("datetime").IsRequired();
 
-            builder.Property(p => p.CreatedBy).HasColumnType("int");
-            builder.Property(p => p.CreatedOn).HasColumnType("datetime");
-            builder.Property(p => p.LastUpdatedBy).HasColumnType("int");
-            builder.Property(p => p.LastUpdatedOn).HasColumnType("datetime");
+            builder.Property(u => u.CreatedBy).HasColumnType("int");
+            builder.Property(u => u.CreatedOn).HasColumnType("datetime");
+            builder.Property(u => u.LastUpdatedBy).HasColumnType("int");
+            builder.Property(u => u.LastUpdatedOn).HasColumnType("datetime");
+
+            builder.Property(u => u.Guid).HasColumnType("nvarchar(150)").IsRequired();
         }
     }
 }

@@ -4,6 +4,7 @@ using NextDoor.Core.Authentication;
 using NextDoor.Core.Types;
 using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF.Repositories;
+using NextDoor.Services.Identity.Infrastructure.Mongo;
 using NextDoor.Services.Identity.Services.Dto;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace NextDoor.Services.Identity.Services
     public class TokenService : ITokenService
     {
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IRefreshTokenMongoRepository _refreshTokenMongoRepository;
         private readonly IUserRepository _userRepository;
         private readonly IJwtHandler _jwtHandler;
         private readonly IPasswordHasher<UserDto> _passwordHasher;
@@ -20,6 +22,7 @@ namespace NextDoor.Services.Identity.Services
 
         public TokenService(
             IRefreshTokenRepository refreshTokenRepository,
+            IRefreshTokenMongoRepository refreshTokenMongoRepository,
             IUserRepository userRepository,
             IJwtHandler jwtHandler,
             IPasswordHasher<UserDto> passwordHasher,
@@ -27,6 +30,7 @@ namespace NextDoor.Services.Identity.Services
             IMapper mapper)
         {
             _refreshTokenRepository = refreshTokenRepository;
+            _refreshTokenMongoRepository = refreshTokenMongoRepository;
             _userRepository = userRepository;
             _jwtHandler = jwtHandler;
             _passwordHasher = passwordHasher;
@@ -51,6 +55,7 @@ namespace NextDoor.Services.Identity.Services
             // Insert into Database
             var refreshTokenDomain = _mapper.Map<RefreshTokenDto, RefreshToken>(refreshTokenDto);
             await _refreshTokenRepository.AddAsync(refreshTokenDomain);
+            await _refreshTokenMongoRepository.AddAsync(refreshTokenDomain);
 
             return refreshTokenDto;
         }
@@ -102,6 +107,7 @@ namespace NextDoor.Services.Identity.Services
         private async Task RevokeRefreshTokenAsync(RefreshToken refreshTokenDomain)
         {
             await _refreshTokenRepository.RevokeAsync(refreshTokenDomain);
+            await _refreshTokenMongoRepository.RevokeAsync(refreshTokenDomain);
         }
 
         public async Task RevokeRefreshTokenAsync(string token, int userId)
@@ -117,6 +123,7 @@ namespace NextDoor.Services.Identity.Services
             refreshTokenDto.Revoke();
 
             await _refreshTokenRepository.RevokeAsync(refreshTokenDomain);
+            await _refreshTokenMongoRepository.RevokeAsync(refreshTokenDomain);
         }
     }
 }

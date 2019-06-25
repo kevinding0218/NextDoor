@@ -4,6 +4,7 @@ using NextDoor.Core.Authentication;
 using NextDoor.Core.Types;
 using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF.Repositories;
+using NextDoor.Services.Identity.Infrastructure.Mongo;
 using NextDoor.Services.Identity.Services.Dto;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace NextDoor.Services.Identity.Services
     public class IdentityService : IIdentityService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<UserDto> _passwordHasher;
         private readonly IJwtHandler _jwtHandler;
         private readonly ITokenService _refreshTokenService;
@@ -20,6 +22,7 @@ namespace NextDoor.Services.Identity.Services
 
         public IdentityService(
             IUserRepository userRepository,
+            IUserMongoRepository userMongoRepository,
             IPasswordHasher<UserDto> passwordHasher,
             IJwtHandler jwtHandler,
             ITokenService refreshTokenService,
@@ -27,6 +30,7 @@ namespace NextDoor.Services.Identity.Services
             IMapper mapper)
         {
             _userRepository = userRepository;
+            _userMongoRepository = userMongoRepository;
             _passwordHasher = passwordHasher;
             _jwtHandler = jwtHandler;
             _refreshTokenService = refreshTokenService;
@@ -53,6 +57,7 @@ namespace NextDoor.Services.Identity.Services
             userDomain = _mapper.Map<UserDto, User>(userDto);
 
             await _userRepository.AddAsync(userDomain);
+            await _userMongoRepository.AddAsync(userDomain);
         }
 
         public async Task<JsonWebToken> SignInAsync(string email, string password)
@@ -106,6 +111,7 @@ namespace NextDoor.Services.Identity.Services
             userDomain = _mapper.Map<UserDto, User>(userDto);
 
             await _userRepository.UpdateAsync(userDomain);
+            await _userMongoRepository.UpdateAsync(userDomain);
         }
     }
 }

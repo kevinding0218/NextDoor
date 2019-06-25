@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Core.MsSql
 {
-    public class MsSqlRepository<TEntity> : IMsSqlRepository<TEntity> where TEntity : class, IIdIdentifiable
+    public class MsSqlRepository<TEntity> : IMsSqlRepository<TEntity> where TEntity : class, IIdIdentifiable, IGuidIdentifiable
     {
         protected IUserInfo _userInfo;
         protected DbContext _dbContext;
@@ -94,6 +94,9 @@ namespace NextDoor.Core.MsSql
         /// Update and Remove are the same as Add in as much as they only affect the internal tracking until you save the changes you've made.
         public void Add(TEntity entity)
         {
+            var guidEntity = entity as IGuidIdentifiable;
+            guidEntity.Guid = Guid.NewGuid();
+
             var auditEntity = entity as IAuditableEntity;
 
             if (auditEntity != null)

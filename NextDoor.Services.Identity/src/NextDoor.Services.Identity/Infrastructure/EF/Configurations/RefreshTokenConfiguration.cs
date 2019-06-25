@@ -21,6 +21,8 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Configurations
             builder.Property(r => r.Token).HasColumnType("nvarchar(200)").IsRequired();
             builder.Property(r => r.CreatedAt).HasColumnType("datetime");
             builder.Property(r => r.RevokedAt).HasColumnType("datetime");
+
+            builder.Property(r => r.Guid).HasColumnType("nvarchar(150)").IsRequired();
         }
     }
 }
