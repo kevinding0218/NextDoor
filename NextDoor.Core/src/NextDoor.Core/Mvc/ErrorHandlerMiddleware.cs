@@ -1,10 +1,10 @@
-using System;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NextDoor.Core.Types;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace NextDoor.Core.Mvc
 {
@@ -22,7 +22,8 @@ namespace NextDoor.Core.Mvc
 
         public async Task Invoke(HttpContext context)
         {
-            try{
+            try
+            {
                 await this._next(context);
             }
             catch (Exception exception)
@@ -38,7 +39,7 @@ namespace NextDoor.Core.Mvc
             var statusCode = HttpStatusCode.BadRequest;
             var message = "There was an error.";
 
-            switch(exception)
+            switch (exception)
             {
                 case NextDoorException e:
                     errorCode = e.Code;
@@ -46,7 +47,11 @@ namespace NextDoor.Core.Mvc
                     break;
             }
 
-            var response = new { code = errorCode, message = exception.Message};
+            var response = new
+            {
+                code = errorCode,
+                message = exception.InnerException != null ? exception.InnerException.Message : exception.Message
+            };
             var payload = JsonConvert.SerializeObject(response);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)statusCode;

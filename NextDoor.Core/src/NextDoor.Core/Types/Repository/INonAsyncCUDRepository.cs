@@ -1,4 +1,4 @@
-using System;
+using System.Threading.Tasks;
 
 namespace NextDoor.Core.Types.Repository
 {
@@ -8,6 +8,7 @@ namespace NextDoor.Core.Types.Repository
         void Add(TEntity entity);
         void Update(TEntity entity);
         void Delete(int id);
+        Task<int> CommitChangesAsync();
         #endregion
     }
 }

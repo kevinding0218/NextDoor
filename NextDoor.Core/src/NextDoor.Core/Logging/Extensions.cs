@@ -1,23 +1,24 @@
-using System;
 using Microsoft.AspNetCore.Hosting;
 using NextDoor.Core.Common;
+using NextDoor.Core.Types;
 using Serilog;
 using Serilog.Events;
+using System;
 
 namespace NextDoor.Core.Logging
 {
     public static class Extensions
     {
         public static IWebHostBuilder UseSeriLogging(this IWebHostBuilder webHostBuilder, string applicationName = null)
-            => webHostBuilder.UseSerilog((context, loggerConfiguration) => 
+            => webHostBuilder.UseSerilog((context, loggerConfiguration) =>
             {
-                // create a new instance of "AppOptions" and bind its properties value with JSON "app" in appsetting.json
-                var appOptions = context.Configuration.GetOptions<AppOptions>("app");
+                // create a new instance of "AppOptions" and bind its properties value with JSON "mvc" in appsetting.json
+                var appOptions = context.Configuration.GetOptions<MvcOptions>(ConfigOptions.mvcSectionName);
                 // create a new instance of "SeqOptions" and bind its properties value with JSON "seq" in appsetting.json
-                var seqOptions = context.Configuration.GetOptions<SeqOptions>("seq");
+                var seqOptions = context.Configuration.GetOptions<SeqOptions>(ConfigOptions.seqSectionName);
                 // create a new instance of "SerilogOptions" and bind its properties value with JSON "serilog" in appsetting.json
-                var serilogOptions = context.Configuration.GetOptions<SerilogOptions>("serilog");
-                if(!Enum.TryParse<LogEventLevel>(serilogOptions.Level, true, out var level))
+                var serilogOptions = context.Configuration.GetOptions<SerilogOptions>(ConfigOptions.serilogSectionName);
+                if (!Enum.TryParse<LogEventLevel>(serilogOptions.Level, true, out var level))
                 {
                     level = LogEventLevel.Information;
                 }

@@ -3,9 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NextDoor.Core.Authentication
@@ -45,7 +43,7 @@ namespace NextDoor.Core.Authentication
         public async Task<bool> IsCurrentActiveToken()
             => await IsActiveAsync(GetCurrentTokenAsync());
 
-        public async Task DeactivateCurrentAsync(string userId)
+        public async Task DeactivateCurrentAsync(int userId)
             => await DeactivateAsync(userId, GetCurrentTokenAsync());
 
         /// <summary>
@@ -65,7 +63,7 @@ namespace NextDoor.Core.Authentication
         /// <param name="userId"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task DeactivateAsync(string userId, string token)
+        public async Task DeactivateAsync(int userId, string token)
         {
             // after certain time period, remove from our redis cache
             await _cache.SetStringAsync(GetKey(token),

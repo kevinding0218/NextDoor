@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -9,6 +7,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using NextDoor.Core.Common;
+using NextDoor.Core.Types;
+using System;
+using System.Linq;
 
 namespace NextDoor.Core.Mvc
 {
@@ -17,10 +18,10 @@ namespace NextDoor.Core.Mvc
         #region MVC IServiceCollection
         public static IMvcCoreBuilder AddCustomMvc(this IServiceCollection services)
         {
-            using(var serviceProvider = services.BuildServiceProvider())
+            using (var serviceProvider = services.BuildServiceProvider())
             {
                 var configuration = serviceProvider.GetService<IConfiguration>();
-                services.Configure<AppOptions>(configuration.GetSection("app"));
+                services.Configure<MvcOptions>(configuration.GetSection(ConfigOptions.mvcSectionName));
             }
 
             // AddSingleton - creates a single instance throughout the application. 
@@ -36,6 +37,8 @@ namespace NextDoor.Core.Mvc
             // eg. in MVC it creates 1 instance per each http request but uses the same instance in the other calls within the same web request.
 
 
+            // we don't need to care about MVC Razor
+            // so we can always save a few megabytes of RAM
             return services
                 .AddMvcCore()
                 .AddJsonFormatters()
@@ -48,10 +51,11 @@ namespace NextDoor.Core.Mvc
         public static IServiceCollection AddInitializers(this IServiceCollection services, params Type[] initializers)
             => initializers == null
                 ? services
-                : services.AddTransient<IStartupInitializer, StartupInitializer>(c => {
+                : services.AddTransient<IStartupInitializer, StartupInitializer>(c =>
+                {
                     var startupInitializer = new StartupInitializer();
                     var validInitializers = initializers.Where(t => typeof(IInitializer).IsAssignableFrom(t));
-                    foreach(var initializer in validInitializers)
+                    foreach (var initializer in validInitializers)
                     {
                         startupInitializer.AddInitializer(c.GetService(initializer) as IInitializer);
                     }
@@ -77,7 +81,7 @@ namespace NextDoor.Core.Mvc
         #region IApplicationBuilder
         public static IApplicationBuilder UseErrorHandler(this IApplicationBuilder builder)
             => builder.UseMiddleware<ErrorHandlerMiddleware>();
-        
+
         /*
         Why use forwarded headers?
         In the recommended configuration for ASP.NET Core, the app is hosted using IIS/ASP.NET Core Module, Nginx, or Apache. Proxy servers, load balancers, 
@@ -96,7 +100,8 @@ namespace NextDoor.Core.Mvc
 
         public static IApplicationBuilder UseServiceId(this IApplicationBuilder builder)
             => builder.Map("/id", c => c.Run(
-                async ctx => {
+                async ctx =>
+                {
                     using (var scope = c.ApplicationServices.CreateScope())
                     {
                         var id = scope.ServiceProvider.GetService<IServiceId>().Id;

@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using NextDoor.Core.Types.Domain;
+using NextDoor.Core.Types.Pagination;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using NextDoor.Core.Types.Pagination;
-using Microsoft.EntityFrameworkCore.Query;
-using NextDoor.Core.Types.Domain;
 
 namespace NextDoor.Core.MsSql
 {
-    public class MsSqlRepository<TEntity> : IMsSqlRepository<TEntity> where TEntity : class, IIdIdentifiable, IAuditableEntity
+    public class MsSqlRepository<TEntity> : IMsSqlRepository<TEntity> where TEntity : class, IIdIdentifiable
     {
         protected IUserInfo _userInfo;
         protected DbContext _dbContext;
@@ -22,24 +22,32 @@ namespace NextDoor.Core.MsSql
             this._collection = dbContext.Set<TEntity>();
         }
 
-        public MsSqlRepository(DbContext dbContext, IUserInfo userInfo)
-        {
-            _dbContext = dbContext;
-            this._collection = dbContext.Set<TEntity>();
-            _userInfo = userInfo;
-        }
+        //public MsSqlRepository(DbContext dbContext, IUserInfo userInfo)
+        //{
+        //    _dbContext = dbContext;
+        //    this._collection = dbContext.Set<TEntity>();
+        //    _userInfo = userInfo;
+        //}
         #region CRUD
-        public async Task<TEntity> GetSingleAsync(int id)
-            => await GetSingleAsync(selector: (TEntity) => TEntity, predicate: e => e.Id == id);
+        public async Task<TEntity> GetSingleAsync(int id) => await GetSingleAsync(selector: (TEntity) => TEntity, predicate: e => e.Id == id);
+
+        public async Task<TEntity> GetSingleAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true)
+            => await GetSingleAsync(selector: (TEntity) => TEntity, predicate: predicate, orderBy: orderBy, include: include, disableTracking: disableTracking);
 
         public async Task<TResult> GetSingleAsync<TResult>(
-            Expression<Func<TEntity, TResult>> selector,
-            Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, TResult>> selector = null,
+            Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
             bool disableTracking = true)
         {
             IQueryable<TEntity> query = this._collection;
+
+            if (selector == null) selector = entity => entity is TResult ? (TResult)(object)entity : default(TResult);
 
             if (disableTracking) query = query.AsNoTracking();
 
@@ -52,6 +60,13 @@ namespace NextDoor.Core.MsSql
             return await query.Select(selector).SingleOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<TEntity>> GetListAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool disableTracking = true)
+            => await GetListAsync(selector: (TEntity) => TEntity, predicate: predicate, orderBy: orderBy, include: include, disableTracking: disableTracking);
+
         public async Task<IEnumerable<TResult>> GetListAsync<TResult>(
             Expression<Func<TEntity, TResult>> selector = null,
             Expression<Func<TEntity, bool>> predicate = null,
@@ -61,7 +76,7 @@ namespace NextDoor.Core.MsSql
         {
             IQueryable<TEntity> query = this._collection;
 
-            if (selector == null) selector = (entity) => default(TResult);
+            if (selector == null) selector = entity => entity is TResult ? (TResult)(object)entity : default(TResult);
 
             if (disableTracking) query = query.AsNoTracking();
 
@@ -80,9 +95,10 @@ namespace NextDoor.Core.MsSql
         public void Add(TEntity entity)
         {
             var auditEntity = entity as IAuditableEntity;
+
             if (auditEntity != null)
             {
-                auditEntity.CreatedBy = auditEntity.LastUpdatedBy = _userInfo.UID ?? auditEntity.CreatedBy;
+                auditEntity.CreatedBy = auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.CreatedBy : _userInfo.UID ?? auditEntity.CreatedBy;
                 auditEntity.CreatedOn = auditEntity.LastUpdatedOn = DateTime.UtcNow;
             }
 
@@ -94,7 +110,7 @@ namespace NextDoor.Core.MsSql
             var auditEntity = entity as IAuditableEntity;
             if (auditEntity != null)
             {
-                auditEntity.LastUpdatedBy = _userInfo.UID ?? auditEntity.LastUpdatedBy;
+                auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.LastUpdatedBy : _userInfo.UID ?? auditEntity.LastUpdatedBy;
                 auditEntity.LastUpdatedOn = DateTime.UtcNow;
             }
             this._collection.Update(entity);
@@ -109,8 +125,7 @@ namespace NextDoor.Core.MsSql
             this._collection.Remove(instance);
         }
 
-        public void Delete(TEntity entity)
-            => this._collection.Remove(entity);
+        public void Delete(TEntity entity) => this._collection.Remove(entity);
         #endregion
 
         #region Unit Of Work
@@ -121,11 +136,9 @@ namespace NextDoor.Core.MsSql
         #endregion
 
         #region HELPER
-        public async Task<bool> IsExistedAsync(Expression<Func<TEntity, bool>> predicate)
-            => await this._collection.Where(predicate).AnyAsync();
+        public async Task<bool> IsExistedAsync(Expression<Func<TEntity, bool>> predicate) => await this._collection.Where(predicate).AnyAsync();
 
-        public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : PagedQueryBase
-            => await this._collection.AsQueryable().Where(predicate).PaginateAsync(query);
+        public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : PagedQueryBase => await this._collection.AsQueryable().Where(predicate).PaginateAsync(query);
         #endregion
 
         #region Dispose

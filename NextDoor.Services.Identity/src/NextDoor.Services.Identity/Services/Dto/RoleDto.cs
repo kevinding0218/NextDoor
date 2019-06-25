@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NextDoor.Services.Identity.Dto
+namespace NextDoor.Services.Identity.Services.Dto
 {
     public static class RoleDto
     {

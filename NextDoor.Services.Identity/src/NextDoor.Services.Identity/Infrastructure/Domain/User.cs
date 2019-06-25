@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NextDoor.Services.Identity.Core.Domain
+namespace NextDoor.Services.Identity.Infrastructure.Domain
 {
     public class User : IIdIdentifiable, IAuditableEntity
     {
@@ -19,6 +19,10 @@ namespace NextDoor.Services.Identity.Core.Domain
         public DateTime? CreatedOn { get; set; }
         public int? LastUpdatedBy { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
+
+        protected User()
+        {
+        }
 
         public User(string email, string role, string passwordHash)
         {

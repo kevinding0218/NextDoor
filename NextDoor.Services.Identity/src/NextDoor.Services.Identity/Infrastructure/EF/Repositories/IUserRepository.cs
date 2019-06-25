@@ -1,13 +1,13 @@
-﻿using NextDoor.Core.MsSql;
-using NextDoor.Services.Identity.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using NextDoor.Services.Identity.Infrastructure.Domain;
 using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
 {
-    public interface IUserRepository : IMsSqlRepository<User>
+    public interface IUserRepository
     {
+        Task<User> GetAsync(int id);
+        Task<User> GetAsync(string email);
+        Task AddAsync(User user);
+        Task UpdateAsync(User user);
     }
 }
