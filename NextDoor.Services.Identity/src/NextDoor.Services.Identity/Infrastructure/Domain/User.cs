@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using NextDoor.Core.Types.Domain;
+﻿using NextDoor.Core.Types.Domain;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Infrastructure.Domain
 {
-    public class User : IIdIdentifiable, IAuditableEntity
+    public class User : IIdIdentifiable, IAuditableEntity, IGuidIdentifiable
     {
         public int Id { get; private set; }
         public string Email { get; private set; }
@@ -19,6 +15,7 @@ namespace NextDoor.Services.Identity.Infrastructure.Domain
         public DateTime? CreatedOn { get; set; }
         public int? LastUpdatedBy { get; set; }
         public DateTime? LastUpdatedOn { get; set; }
+        public Guid Guid { get; set; }
 
         protected User()
         {

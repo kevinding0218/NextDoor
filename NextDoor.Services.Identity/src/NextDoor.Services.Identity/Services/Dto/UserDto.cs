@@ -10,6 +10,7 @@ namespace NextDoor.Services.Identity.Services.Dto
         public string Role { get; private set; }
         public string PasswordTyped { get; set; }
         public string PasswordHash { get; private set; }
+        public string Guid { get; set; }
 
         protected UserDto() { }
 
