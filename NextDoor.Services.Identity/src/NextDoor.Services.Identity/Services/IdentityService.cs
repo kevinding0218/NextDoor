@@ -79,6 +79,8 @@ namespace NextDoor.Services.Identity.Services
                         "Invalid credentials.");
                 }
 
+                // Revoke all existed tokens
+                await _tokenService.RevokeAllExistedRefreshTokenAsync(userDto.Id);
                 // Create New Refresh Token
                 var refreshTokenDto = await _tokenService.CreateNewRefreshTokenAsync(userDto.Id);
 

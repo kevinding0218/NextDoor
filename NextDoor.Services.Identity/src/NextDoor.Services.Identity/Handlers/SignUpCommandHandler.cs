@@ -37,7 +37,7 @@ namespace NextDoor.Services.Identity.Handlers
             userDomain = new User(command.Email, command.Role, string.Empty);
             userDomain.SetPassword(command.Password, _passwordHasher);
             await _userRepository.AddAsync(userDomain);
-            // await _userMongoRepository.AddAsync(userDomain);
+            await _userMongoRepository.AddAsync(userDomain);
         }
     }
 }

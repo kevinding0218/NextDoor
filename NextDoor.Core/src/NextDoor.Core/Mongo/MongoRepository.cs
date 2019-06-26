@@ -1,13 +1,11 @@
-using NextDoor.Core.Types;
-using NextDoor.Core.Types.Repository;
 using MongoDB.Driver;
-using System.Threading.Tasks;
-using System;
-using System.Linq.Expressions;
-using System.Collections.Generic;
-using NextDoor.Core.Types.Pagination;
 using MongoDB.Driver.Linq;
 using NextDoor.Core.Types.Domain;
+using NextDoor.Core.Types.Pagination;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace NextDoor.Core.Mongo
 {

@@ -44,7 +44,7 @@ namespace NextDoor.Core.Mongo
                     Any component type you register via RegisterType must be a concrete type. 
                     While components can expose abstract classes or interfaces as services, 
                     you can’t register an abstract/interface component.
-            */
+            
             builder.RegisterType<MongoDbInitializer>()
                 .As<IMongoDbInitializer>()
                 .InstancePerLifetimeScope();
@@ -52,6 +52,7 @@ namespace NextDoor.Core.Mongo
             builder.RegisterType<MongoDbSeeder>()
                 .As<IDataSeeder>()
                 .InstancePerLifetimeScope();
+            */
         }
 
         // DI for each  mongo db repository

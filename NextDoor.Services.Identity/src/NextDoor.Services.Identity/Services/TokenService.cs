@@ -125,5 +125,18 @@ namespace NextDoor.Services.Identity.Services
             await _refreshTokenRepository.RevokeAsync(refreshTokenDomain);
             await _refreshTokenMongoRepository.RevokeAsync(refreshTokenDomain);
         }
+
+        public async Task RevokeAllExistedRefreshTokenAsync(int userId)
+        {
+            var existedTokens = await _refreshTokenRepository.GetListForActiveTokenAsync(userId);
+
+            if (existedTokens != null)
+            {
+                foreach (var token in existedTokens)
+                {
+                    await RevokeRefreshTokenAsync(token.Token, userId);
+                }
+            }
+        }
     }
 }
