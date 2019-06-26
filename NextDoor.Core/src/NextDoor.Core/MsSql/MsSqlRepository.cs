@@ -95,7 +95,8 @@ namespace NextDoor.Core.MsSql
         public void Add(TEntity entity)
         {
             var guidEntity = entity as IGuidIdentifiable;
-            guidEntity.Guid = Guid.NewGuid();
+            if (guidEntity.Guid == null)
+                guidEntity.Guid = Guid.NewGuid();
 
             var auditEntity = entity as IAuditableEntity;
 
