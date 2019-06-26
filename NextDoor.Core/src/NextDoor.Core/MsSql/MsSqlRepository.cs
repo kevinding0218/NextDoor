@@ -102,7 +102,7 @@ namespace NextDoor.Core.MsSql
             if (auditEntity != null)
             {
                 auditEntity.CreatedBy = auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.CreatedBy : _userInfo.UID ?? auditEntity.CreatedBy;
-                auditEntity.CreatedOn = auditEntity.LastUpdatedOn = DateTime.UtcNow;
+                auditEntity.CreatedOn = auditEntity.LastUpdatedOn = DateTime.Now;
             }
 
             this._collection.Add(entity);
@@ -114,7 +114,7 @@ namespace NextDoor.Core.MsSql
             if (auditEntity != null)
             {
                 auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.LastUpdatedBy : _userInfo.UID ?? auditEntity.LastUpdatedBy;
-                auditEntity.LastUpdatedOn = DateTime.UtcNow;
+                auditEntity.LastUpdatedOn = DateTime.Now;
             }
             this._collection.Update(entity);
         }

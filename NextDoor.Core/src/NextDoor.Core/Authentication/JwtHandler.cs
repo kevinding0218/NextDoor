@@ -55,7 +55,7 @@ namespace NextDoor.Core.Authentication
             }
 
             // Default Claim information list
-            var tokenCreated = DateTime.UtcNow;
+            var tokenCreated = DateTime.Now;
             var tokenExpired = tokenCreated.AddMinutes(_options.ExpiryMinutes);
 
             var jwtClaims = new List<Claim>
@@ -63,7 +63,8 @@ namespace NextDoor.Core.Authentication
                 new Claim(JwtRegisteredClaimNames.Sub, userId),
                 new Claim(JwtRegisteredClaimNames.UniqueName, userId),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, tokenCreated.ToTimestamp().ToString())
+                new Claim(JwtRegisteredClaimNames.Iat, tokenCreated.ToTimestamp().ToString()),
+                new Claim(JwtRegisteredClaimNames.Aud, "nextDoor-identity-service")
             };
 
             // Add user role into Claim list

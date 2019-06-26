@@ -22,12 +22,12 @@ namespace NextDoor.Services.Identity.Services.Dto
         public RefreshTokenDto(UserDto userDto, IPasswordHasher<UserDto> passwordHasher)
         {
             Uid = userDto.Id;
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.Now;
             Token = CreateToken(userDto, passwordHasher);
         }
 
         private static string CreateToken(UserDto userDto, IPasswordHasher<UserDto> passwordHasher)
-            => passwordHasher.HashPassword(userDto, System.Guid.NewGuid().ToString("N"))
+            => passwordHasher.HashPassword(userDto, System.Guid.NewGuid().ToString())
                 .Replace("=", string.Empty)
                 .Replace("+", string.Empty)
                 .Replace("/", string.Empty);

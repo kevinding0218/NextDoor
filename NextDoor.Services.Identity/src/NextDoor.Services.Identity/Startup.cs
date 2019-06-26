@@ -123,9 +123,15 @@ namespace NextDoor.Services.Identity
                 app.UseHsts();
             }
 
+            #region Middleware
+            app.UseCors("CorsPolicy");
+            app.UseAllForwardedHeader();
             app.UseErrorHandler();
+            app.UseAuthentication();
+            app.UseAccessTokenValidator();
             app.UseHttpsRedirection();
             app.UseMvc();
+            #endregion
 
             // be sure no application steps I will dispose my container
             // so if there will be any external connections or our files being opened

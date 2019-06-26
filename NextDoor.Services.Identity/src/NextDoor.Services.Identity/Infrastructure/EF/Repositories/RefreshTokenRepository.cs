@@ -20,7 +20,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
 
         public async Task AddAsync(RefreshToken token)
         {
-            token.CreatedAt = DateTime.UtcNow;
+            token.CreatedAt = DateTime.Now;
             Add(token);
 
             await CommitChangesAsync();
@@ -28,7 +28,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
 
         public async Task RevokeAsync(RefreshToken token)
         {
-            token.RevokedAt = DateTime.UtcNow;
+            token.RevokedAt = DateTime.Now;
 
             Update(token);
 

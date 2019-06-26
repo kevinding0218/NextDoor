@@ -10,12 +10,7 @@ namespace NextDoor.Services.Identity.Services.AutoMapper
 
         public IdentityMappings()
         {
-            this.CreateMap<UserDto, User>()
-                .ForMember(tar => tar.LastLogin, src => src.Ignore())
-                .ForMember(tar => tar.CreatedBy, src => src.Ignore())
-                .ForMember(tar => tar.CreatedOn, src => src.Ignore())
-                .ForMember(tar => tar.LastUpdatedBy, src => src.Ignore())
-                .ForMember(tar => tar.LastUpdatedOn, src => src.Ignore());
+            this.CreateMap<UserDto, User>();
 
             this.CreateMap<User, UserDto>()
                 .ForMember(tar => tar.PasswordTyped, src => src.Ignore());

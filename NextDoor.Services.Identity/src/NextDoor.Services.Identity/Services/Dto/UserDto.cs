@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NextDoor.Core.Types;
+using System;
 
 namespace NextDoor.Services.Identity.Services.Dto
 {
@@ -10,6 +11,12 @@ namespace NextDoor.Services.Identity.Services.Dto
         public string Role { get; private set; }
         public string PasswordTyped { get; set; }
         public string PasswordHash { get; private set; }
+        public DateTime LastLogin { get; set; }
+
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public int? LastUpdatedBy { get; set; }
+        public DateTime? LastUpdatedOn { get; set; }
         public string Guid { get; set; }
 
         protected UserDto() { }

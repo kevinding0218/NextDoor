@@ -21,13 +21,13 @@ namespace NextDoor.Services.Identity.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpPost("access-tokens/{refreshToken}/refresh")]
+        [HttpPost("access-tokens/{refreshToken}/renew")]
         [AllowAnonymous]
-        public async Task<IActionResult> RefreshAccessToken(string refreshToken)
-            => Ok(await _tokenService.RefreshExistedJwtAccessTokenAsync(refreshToken));
+        public async Task<IActionResult> RenewJwtAccessToken(string refreshToken)
+            => Ok(await _tokenService.RenewExistedJwtAccessTokenAsync(refreshToken));
 
-        [HttpPost("access-tokens/revoke")]
-        public async Task<IActionResult> RevokeAccessToken()
+        [HttpPost("access-tokens/cancel")]
+        public async Task<IActionResult> CancelJwtAccessToken()
         {
             await _accessTokenService.DeactivateCurrentAsync(UserId);
 

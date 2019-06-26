@@ -66,7 +66,7 @@ namespace NextDoor.Services.Identity.Services
             var optionalClaims = await _optionalClaimsProvider.GetAsync(Uid);
 
             // Create new jwt access token based on Uid, Role and Optional Claims
-            var jwt = _jwtHandler.CreateToken(Uid.ToString("N"), Role, optionalClaims);
+            var jwt = _jwtHandler.CreateToken(Uid.ToString(), Role, optionalClaims);
 
             // Assign RefreshToken's token with Jwt
             jwt.RefreshToken = refreshToken;
@@ -74,7 +74,7 @@ namespace NextDoor.Services.Identity.Services
             return jwt;
         }
 
-        public async Task<JsonWebToken> RefreshExistedJwtAccessTokenAsync(string refreshToken)
+        public async Task<JsonWebToken> RenewExistedJwtAccessTokenAsync(string refreshToken)
         {
             #region Validate if received token existed or revoked
             var refreshTokenDomain = await _refreshTokenRepository.GetAsync(refreshToken);
