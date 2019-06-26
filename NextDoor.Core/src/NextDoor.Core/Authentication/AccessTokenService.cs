@@ -47,7 +47,8 @@ namespace NextDoor.Core.Authentication
             => await DeactivateAsync(userId, GetCurrentTokenAsync());
 
         /// <summary>
-        /// if we cannot get a compared string from cache meaning our token is still active
+        /// stored as {"key":"token:XXXXXXX", "value":"deactivated"} in redis
+        /// if we cannot get a compared "GetKey(token)" from cache meaning our token is still active
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
@@ -57,8 +58,8 @@ namespace NextDoor.Core.Authentication
         /// <summary>
         /// store our token in redis cache which would be a black list
         /// basic idea is to keep track of deactivated tokens only 
-        /// and remove them from a cache when not needed anymore 
-        /// (meaning when the expiry time passed) – they will be no longer valid anyway.
+        /// stored as {"key":"token:XXXXXXX", "value":"deactivated"} in redis
+        /// AbsoluteExpirationRelativeToNow: remove them from a redis cache after certain time span 
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="token"></param>

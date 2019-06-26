@@ -19,7 +19,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
 
         public async Task AddAsync(User user)
         {
-            user.LastLogin = DateTime.UtcNow;
+            user.LastLogin = DateTime.Now;
             Add(user);
 
             await CommitChangesAsync();

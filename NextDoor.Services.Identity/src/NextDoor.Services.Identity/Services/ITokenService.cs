@@ -8,7 +8,8 @@ namespace NextDoor.Services.Identity.Services
     {
         Task<RefreshTokenDto> CreateNewRefreshTokenAsync(int userId);
         Task<JsonWebToken> CreateNewJwtAccessTokenAsync(int Uid, string Role, string refreshToken);
-        Task<JsonWebToken> RefreshExistedJwtAccessTokenAsync(string refreshToken);
+        Task<JsonWebToken> RenewExistedJwtAccessTokenAsync(string refreshToken);
         Task RevokeRefreshTokenAsync(string refreshToken, int userId);
+        Task RevokeAllExistedRefreshTokenAsync(int userId);
     }
 }

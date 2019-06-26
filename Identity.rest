@@ -1,10 +1,52 @@
-@url = http://localhost:5000
+@identityServiceUrl = http://localhost:5000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidW5pcXVlX25hbWUiOiIxIiwianRpIjoiZjJiMmI2OWYtZDhkZC00MGM1LTk1MmUtZmYxMzk4Mjk2YTljIiwiaWF0IjoiMTU2MTUxMjQ3NDY4OSIsImF1ZCI6Im5leHREb29yLWlkZW50aXR5LXNlcnZpY2UiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsIm5iZiI6MTU2MTUyNjg3NCwiZXhwIjoxNTYxNTI4Njc0LCJpc3MiOiJuZXh0RG9vci1pZGVudGl0eS1zZXJ2aWNlIn0.VgeDgh-F1A4L0-zycX6xwfyGZpOnuwfeminW5MrAN8w
+@refreshToken = AQAAAAEAACcQAAAAEMWpYw1yCPJi0ysWM0wiTH1vDrF4nbYHl3xnveCe3tcpygEWHZT4lhMN57YuEk2ag
+# ================= IDENTITY SERVICE START ======================= #
 
-### sign-up
-POST {{url}}/sign-up
+### Sign up as admin
+POST {{identityServiceUrl}}/sign-up
 Content-Type: application/json
 
 {
-	"email": "test@test.com",
-	"password": "testadmin123"
+	"email": "nd-admin@nextdoor.com",
+	"password": "ndadmin123",
+	"role": "admin"
 }
+
+### Sign in as admin
+POST {{identityServiceUrl}}/sign-in
+Content-Type: application/json
+
+{
+	"email": "nd-admin@nextdoor.com",
+	"password": "ndadmin321"
+}
+
+### Change password
+PUT {{identityServiceUrl}}/change-pwd
+authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+	"userId": 1,
+	"currentPassword": "ndadmin123",
+	"newPassword": "ndadmin321"
+}
+
+## Token Management
+### Renew Jwt Access Token
+POST {{identityServiceUrl}}/access-tokens/{{refreshToken}}/renew
+Content-Type: application/json
+
+### Cancel Jwt Access Token
+POST {{identityServiceUrl}}/access-tokens/cancel
+authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+### Refresh Refresh Token
+POST {{identityServiceUrl}}/refresh-tokens/{{refreshToken}}/revoke
+authorization: Bearer {{accessToken}}
+Content-Type: application/json
+# Once authenticated, copy the obtained accessToken and update the @accessToken parameter above.
+
+# ================= IDENTITY SERVICE END ======================= #

@@ -22,7 +22,7 @@ namespace NextDoor.Services.Identity.Infrastructure.Mongo
 
         public async Task RevokeAsync(RefreshToken token)
         {
-            token.RevokedAt = DateTime.UtcNow;
+            token.RevokedAt = DateTime.Now;
 
             await _repository.UpdateAsync(token);
         }

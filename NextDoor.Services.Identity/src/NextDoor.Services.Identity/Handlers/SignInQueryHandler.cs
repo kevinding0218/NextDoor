@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Handlers
 {
-    public class SignInHandler : IQueryHandler<SignInQuery, JsonWebToken>
+    public class SignInQueryHandler : IQueryHandler<SignInQuery, JsonWebToken>
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public SignInHandler(
+        public SignInQueryHandler(
             IUserRepository userRepository,
             ITokenService tokenService,
             IPasswordHasher<User> passwordHasher)
@@ -44,6 +44,7 @@ namespace NextDoor.Services.Identity.Handlers
                         "Invalid credentials.");
                 }
 
+                await _tokenService.RevokeAllExistedRefreshTokenAsync(userDomain.Id);
                 // Create New Refresh Token
                 var refreshTokenDto = await _tokenService.CreateNewRefreshTokenAsync(userDomain.Id);
 

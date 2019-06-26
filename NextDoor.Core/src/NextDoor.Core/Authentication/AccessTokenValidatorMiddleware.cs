@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿using Microsoft.AspNetCore.Http;
+using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace NextDoor.Core.Authentication
 {
@@ -22,7 +22,7 @@ namespace NextDoor.Core.Authentication
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-
+            // Check from Redis if stores any deactivate token
             if (await _accessTokenService.IsCurrentActiveToken())
             {
                 await next(context);

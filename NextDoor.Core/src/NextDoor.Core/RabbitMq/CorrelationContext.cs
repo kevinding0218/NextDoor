@@ -1,6 +1,6 @@
-using System;
 using Newtonsoft.Json;
 using NextDoor.Core.Common;
+using System;
 
 namespace NextDoor.Core.RabbitMq
 {
@@ -44,7 +44,7 @@ namespace NextDoor.Core.RabbitMq
             Culture = culture;
             Resource = resource;
             Retries = retries;
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.Now;
         }
 
         private static string GetName(string name)
@@ -53,14 +53,14 @@ namespace NextDoor.Core.RabbitMq
         #region Using "Factory Pattern" execute appropriate creation
         public static ICorrelationContext Empty
             => new CorrelationContext();
-        
+
         public static ICorrelationContext FromId(Guid id)
             => new CorrelationContext(id);
-        
+
         public static ICorrelationContext From<T>(ICorrelationContext context)
             => Create<T>(context.Id, context.UserId, context.ResourceId, context.TraceId, context.ConnectionId,
                 context.Origin, context.Culture, context.Resource);
-        
+
         public static ICorrelationContext Create<T>(Guid id, Guid userId, Guid resourceId, string origin,
             string traceId, string spanContext, string connectionId, string culture, string resource = "")
             => new CorrelationContext(id, userId, resourceId, traceId, spanContext, connectionId, string.Empty, typeof(T).Name, origin, culture, resource, 0);

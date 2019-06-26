@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Handlers
 {
-    public class SignUpHandler : ICommandHandler<SignUpCmd>
+    public class SignUpCommandHandler : ICommandHandler<SignUpCmd>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public SignUpHandler(IUserRepository userRepository,
+        public SignUpCommandHandler(IUserRepository userRepository,
             IUserMongoRepository userMongoRepository,
             IPasswordHasher<User> passwordHasher)
         {
@@ -34,9 +34,10 @@ namespace NextDoor.Services.Identity.Handlers
                     $"Email: '{command.Email}' is already in use.");
             }
 
+            userDomain = new User(command.Email, command.Role, string.Empty);
             userDomain.SetPassword(command.Password, _passwordHasher);
             await _userRepository.AddAsync(userDomain);
-            // await _userMongoRepository.AddAsync(userDomain);
+            await _userMongoRepository.AddAsync(userDomain);
         }
     }
 }
