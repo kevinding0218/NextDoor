@@ -28,7 +28,14 @@ namespace NextDoor.Core.Mongo
         public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate)
             => await this._collection.Find(predicate).ToListAsync();
 
-        public async Task AddAsync(TEntity entity) => await this._collection.InsertOneAsync(entity);
+        public async Task AddAsync(TEntity entity)
+        {
+            var guidEntity = entity as IGuidIdentifiable;
+            if (guidEntity.Guid == null)
+                guidEntity.Guid = Guid.NewGuid();
+
+            await this._collection.InsertOneAsync(entity);
+        }
         public async Task UpdateAsync(TEntity entity) => await this._collection.ReplaceOneAsync(e => e.Guid == entity.Guid, entity);
         public async Task DeleteAsync(Guid guid) => await this._collection.DeleteOneAsync(e => e.Guid == guid);
         #endregion
