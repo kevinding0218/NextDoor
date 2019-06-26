@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Handlers
 {
-    public class SignUpQueryHandler : ICommandHandler<SignUpCmd>
+    public class SignUpCommandHandler : ICommandHandler<SignUpCmd>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public SignUpQueryHandler(IUserRepository userRepository,
+        public SignUpCommandHandler(IUserRepository userRepository,
             IUserMongoRepository userMongoRepository,
             IPasswordHasher<User> passwordHasher)
         {
