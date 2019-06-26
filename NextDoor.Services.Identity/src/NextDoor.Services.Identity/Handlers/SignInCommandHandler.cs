@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Handlers
 {
-    public class SignInHandler : IQueryHandler<SignInQuery, JsonWebToken>
+    public class SignInCommandHandler : IQueryHandler<SignInQuery, JsonWebToken>
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public SignInHandler(
+        public SignInCommandHandler(
             IUserRepository userRepository,
             ITokenService tokenService,
             IPasswordHasher<User> passwordHasher)

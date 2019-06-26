@@ -15,7 +15,7 @@ namespace NextDoor.Services.Identity.Messages.Commands
 
         public string Email { get; }
         public string Password { get; }
-        public string Role { get; } = "user";
+        public string Role { get; }
 
         [JsonConstructor]
         public SignUpCmd(string email, string password, string role)
@@ -34,7 +34,7 @@ namespace NextDoor.Services.Identity.Messages.Commands
 
             Email = email;
             Password = password;
-            Role = role;
+            Role = role ?? "user";
         }
     }
 }
