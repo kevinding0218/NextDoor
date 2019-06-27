@@ -24,6 +24,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7423FD42-22A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDoor.Services.Identity", "NextDoor.Services.Identity\src\NextDoor.Services.Identity\NextDoor.Services.Identity.csproj", "{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NextDoor.ApiGateway", "NextDoor.ApiGateway", "{4733FE6B-0C56-4C83-9B0B-338EA9398BAF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{644101DF-D52C-4FA7-90F1-1EB9F7E28C88}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDoor.ApiGateway", "NextDoor.ApiGateway\src\NextDoor.ApiGateway\NextDoor.ApiGateway.csproj", "{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +76,18 @@ Global
 		{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6}.Release|x64.Build.0 = Release|Any CPU
 		{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6}.Release|x86.ActiveCfg = Release|Any CPU
 		{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6}.Release|x86.Build.0 = Release|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Debug|x64.Build.0 = Debug|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Debug|x86.Build.0 = Debug|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Release|x64.ActiveCfg = Release|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Release|x64.Build.0 = Release|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Release|x86.ActiveCfg = Release|Any CPU
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +99,8 @@ Global
 		{BDBA4F04-1EC6-410C-BC02-BE1330440668} = {5F8B0FF1-6D07-4578-B723-62F43A6A9DAF}
 		{7423FD42-22A6-41C1-A7D6-6C36F2F06048} = {CA68619C-7601-4683-8125-F0361879AE0C}
 		{20C5DCCD-92C8-4F18-8D4B-76D3AE2B97C6} = {7423FD42-22A6-41C1-A7D6-6C36F2F06048}
+		{644101DF-D52C-4FA7-90F1-1EB9F7E28C88} = {4733FE6B-0C56-4C83-9B0B-338EA9398BAF}
+		{8B50E9AA-1BCA-454B-953C-21EF7BC484D4} = {644101DF-D52C-4FA7-90F1-1EB9F7E28C88}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {478A69C5-64B4-4512-BFD9-2E6BDC9FDD39}

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace NextDoor.Services.Identity
+namespace NextDoor.ApiGateway
 {
     public class Program
     {
@@ -26,6 +26,5 @@ namespace NextDoor.Services.Identity
 
             return webHost;
         }
-
     }
 }

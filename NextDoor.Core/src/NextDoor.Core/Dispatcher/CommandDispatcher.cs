@@ -13,7 +13,9 @@ namespace NextDoor.Core.Dispatcher
         {
             _context = context;
         }
-        // Retrieve a service "ICommandHandler" from the context.
+        // Whenver this message comes through in-memory
+        // will look for the command handler "ICommandHandler" that is able to handle this command "TCommand" and try to handle it
+        // our command comes from our memory or within the same process where our app lives
         public async Task SendAsync<T>(T command) where T : ICommand
             => await _context.Resolve<ICommandHandler<T>>().HandleAsync(command, CorrelationContext.Empty);
     }
