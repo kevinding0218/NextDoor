@@ -12,6 +12,12 @@ namespace NextDoor.Services.Identity
             CreateWebHostBuilder(args).Build().Run();
         }
 
+        /// <summary>
+        /// configuring UseKestrel() which uses out-of-process
+        /// <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var config = new ConfigurationBuilder()
@@ -21,7 +27,8 @@ namespace NextDoor.Services.Identity
 
             var webHost = WebHost.CreateDefaultBuilder(args)
                 .UseUrls($"http://localhost:{config.GetValue<int>("host:port")}")
-                .UseKestrel()
+                //.UseKestrel()
+                .UseIISIntegration()
                 .UseStartup<Startup>();
 
             return webHost;

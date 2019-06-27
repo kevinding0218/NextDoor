@@ -98,6 +98,13 @@ $uniqueProjects | % { Invoke-Expression -Command "dotnet sln NextDoor.sln add ""
 	4. You can then check the certificate with dotnet dev-certs https --check but this returned nothing which I assume means everything is ok.
 	5. then ran dotnet run the project ran as expected.
 -------------------------------------------------------
+## Docker
+### Run development docker tool
+- Go into `NextDoor\NextDoor\Docker Compose`
+```
+docker-compose -f .\mongo-rabbit-redis.yml up -d
+```
+-------------------------------------------------------
 ## [Git Command](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 ### Show all remote and local branches
 ```
