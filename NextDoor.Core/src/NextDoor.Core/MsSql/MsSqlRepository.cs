@@ -22,12 +22,12 @@ namespace NextDoor.Core.MsSql
             this._collection = dbContext.Set<TEntity>();
         }
 
-        //public MsSqlRepository(DbContext dbContext, IUserInfo userInfo)
-        //{
-        //    _dbContext = dbContext;
-        //    this._collection = dbContext.Set<TEntity>();
-        //    _userInfo = userInfo;
-        //}
+        public MsSqlRepository(DbContext dbContext, IUserInfo userInfo)
+        {
+            _dbContext = dbContext;
+            this._collection = dbContext.Set<TEntity>();
+            _userInfo = userInfo;
+        }
         #region CRUD
         public async Task<TEntity> GetSingleAsync(int id) => await GetSingleAsync(selector: (TEntity) => TEntity, predicate: e => e.Id == id);
 
@@ -94,6 +94,23 @@ namespace NextDoor.Core.MsSql
         /// Update and Remove are the same as Add in as much as they only affect the internal tracking until you save the changes you've made.
         public void Add(TEntity entity)
         {
+            AttachAddProperty(entity);
+
+            this._collection.Add(entity);
+        }
+
+        public void AddRange(IEnumerable<TEntity> entities)
+        {
+            entities.ToList().ForEach(e =>
+            {
+                AttachAddProperty(e);
+            });
+
+            this._collection.AddRange(entities);
+        }
+
+        private void AttachAddProperty(TEntity entity)
+        {
             var guidEntity = entity as IGuidIdentifiable;
             if (guidEntity.Guid == null)
                 guidEntity.Guid = Guid.NewGuid();
@@ -102,22 +119,36 @@ namespace NextDoor.Core.MsSql
 
             if (auditEntity != null)
             {
-                auditEntity.CreatedBy = auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.CreatedBy : _userInfo.UID ?? auditEntity.CreatedBy;
-                auditEntity.CreatedOn = auditEntity.LastUpdatedOn = DateTime.Now;
+                auditEntity.CreatedBy = auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.CreatedBy : _userInfo.UID;
+                if (auditEntity.CreatedOn == null) auditEntity.CreatedOn = DateTime.Now;
+                if (auditEntity.LastUpdatedOn == null) auditEntity.LastUpdatedOn = DateTime.Now;
             }
-
-            this._collection.Add(entity);
         }
 
         public void Update(TEntity entity)
         {
+            AttachUpdateProperty(entity);
+            this._collection.Update(entity);
+        }
+
+        public void UpdateRange(IEnumerable<TEntity> entities)
+        {
+            entities.ToList().ForEach(e =>
+            {
+                AttachUpdateProperty(e);
+            });
+
+            this._collection.UpdateRange(entities);
+        }
+
+        private void AttachUpdateProperty(TEntity entity)
+        {
             var auditEntity = entity as IAuditableEntity;
             if (auditEntity != null)
             {
-                auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.LastUpdatedBy : _userInfo.UID ?? auditEntity.LastUpdatedBy;
-                auditEntity.LastUpdatedOn = DateTime.Now;
+                auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.LastUpdatedBy : _userInfo.UID;
+                if (auditEntity.LastUpdatedOn == null) auditEntity.LastUpdatedOn = DateTime.Now;
             }
-            this._collection.Update(entity);
         }
 
         ///If you dont want to query for it just create an entity through constructor, and then delete it.
@@ -130,6 +161,12 @@ namespace NextDoor.Core.MsSql
         }
 
         public void Delete(TEntity entity) => this._collection.Remove(entity);
+
+        /// <summary>
+        /// Deletes the specified entities.
+        /// </summary>
+        /// <param name="entities">The entities.</param>
+        public void DeleteRange(IEnumerable<TEntity> entities) => this._collection.RemoveRange(entities);
         #endregion
 
         #region Unit Of Work

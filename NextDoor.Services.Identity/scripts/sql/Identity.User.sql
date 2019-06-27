@@ -19,6 +19,7 @@ CREATE TABLE [Identity].[Users]
 	[CreatedOn] DATETIME NULL,
 	[LastUpdatedBy] INT NULL,
 	[LastUpdatedOn] DATETIME NULL,
+	[Guid]  NVARCHAR(150) NOT NULL,
 	PRIMARY KEY (UID),
 );
 GO
@@ -33,6 +34,7 @@ CREATE TABLE [Identity].[RefreshToken]
     [Token] NVARCHAR(200) NOT NULL,
 	[CreatedAt] DATETIME NOT NULL,
 	[RevokedAt] DATETIME NULL,
+	[Guid]  NVARCHAR(150) NOT NULL,
 	PRIMARY KEY (RefreshTokenID),
 );
 GO
@@ -42,3 +44,8 @@ VALUES ('test@test.com', 'Admin', '123ha89123ma1', GetDate())
 
 SELECT * FROM [Identity].[Users]
 SELECT * FROM [Identity].[RefreshToken]
+
+--AQAAAAEAACcQAAAAEBZ3lX+HfHloRhfltQjEyKuiwwbf2/51nfDIYCk5Kc+3tJlGOuNIsu3oI+gXVwZ75w==
+
+Truncate TABLE [Identity].[Users]
+Truncate TABLE [Identity].[RefreshToken]

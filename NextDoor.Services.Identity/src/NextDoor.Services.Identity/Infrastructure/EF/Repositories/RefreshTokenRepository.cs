@@ -16,7 +16,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
             => await GetSingleAsync(predicate: r => r.Token == token);
 
         public async Task<IEnumerable<RefreshToken>> GetListForActiveTokenAsync(int uid)
-            => await GetListAsync(predicate: r => r.Uid == uid && r.RevokedAt == null);
+            => await GetListAsync(predicate: r => r.UID == uid && r.RevokedAt == null);
 
         public async Task AddAsync(RefreshToken token)
         {
@@ -26,11 +26,19 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
             await CommitChangesAsync();
         }
 
-        public async Task RevokeAsync(RefreshToken token)
+        public async Task RevokeOneAsync(RefreshToken token)
         {
-            token.RevokedAt = DateTime.Now;
+            Delete(token);
 
-            Update(token);
+            await CommitChangesAsync();
+        }
+
+        public async Task RevokeListAsync(IEnumerable<RefreshToken> tokens)
+        {
+            //token.RevokedAt = DateTime.Now;
+
+            //Update(token);
+            DeleteRange(tokens);
 
             await CommitChangesAsync();
         }

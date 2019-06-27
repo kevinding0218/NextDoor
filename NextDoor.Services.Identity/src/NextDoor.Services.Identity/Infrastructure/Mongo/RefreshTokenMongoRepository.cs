@@ -1,6 +1,7 @@
 ﻿using NextDoor.Core.Mongo;
 using NextDoor.Services.Identity.Infrastructure.Domain;
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Infrastructure.Mongo
@@ -20,11 +21,17 @@ namespace NextDoor.Services.Identity.Infrastructure.Mongo
         public async Task AddAsync(RefreshToken token)
             => await _repository.AddAsync(token);
 
-        public async Task RevokeAsync(RefreshToken token)
+        public async Task RevokeOneAsync(RefreshToken token)
         {
-            token.RevokedAt = DateTime.Now;
+            //token.RevokedAt = DateTime.Now;
 
-            await _repository.UpdateAsync(token);
+            //await _repository.UpdateAsync(token);
+            await _repository.DeleteAsync(token.Guid);
+        }
+
+        public async Task RevokeListAsync(IEnumerable<RefreshToken> tokens)
+        {
+            await _repository.DeleteRangeAsync(tokens.ToList().Select(t => t.Guid));
         }
     }
 }

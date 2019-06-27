@@ -106,14 +106,14 @@ namespace NextDoor.Services.Identity.Services
 
         private async Task RevokeRefreshTokenAsync(RefreshToken refreshTokenDomain)
         {
-            await _refreshTokenRepository.RevokeAsync(refreshTokenDomain);
-            await _refreshTokenMongoRepository.RevokeAsync(refreshTokenDomain);
+            await _refreshTokenRepository.RevokeOneAsync(refreshTokenDomain);
+            await _refreshTokenMongoRepository.RevokeOneAsync(refreshTokenDomain);
         }
 
         public async Task RevokeRefreshTokenAsync(string token, int userId)
         {
             var refreshTokenDomain = await _refreshTokenRepository.GetAsync(token);
-            if (refreshTokenDomain == null || refreshTokenDomain.Uid != userId)
+            if (refreshTokenDomain == null || refreshTokenDomain.UID != userId)
             {
                 throw new NextDoorException(IdentityExceptionCode.RefreshTokenNotFound,
                     "Refresh token was not found.");
@@ -122,8 +122,8 @@ namespace NextDoor.Services.Identity.Services
             var refreshTokenDto = _mapper.Map<RefreshToken, RefreshTokenDto>(refreshTokenDomain);
             refreshTokenDto.Revoke();
 
-            await _refreshTokenRepository.RevokeAsync(refreshTokenDomain);
-            await _refreshTokenMongoRepository.RevokeAsync(refreshTokenDomain);
+            await _refreshTokenRepository.RevokeOneAsync(refreshTokenDomain);
+            await _refreshTokenMongoRepository.RevokeOneAsync(refreshTokenDomain);
         }
 
         public async Task RevokeAllExistedRefreshTokenAsync(int userId)
@@ -132,10 +132,8 @@ namespace NextDoor.Services.Identity.Services
 
             if (existedTokens != null)
             {
-                foreach (var token in existedTokens)
-                {
-                    await RevokeRefreshTokenAsync(token.Token, userId);
-                }
+                await _refreshTokenRepository.RevokeListAsync(existedTokens);
+                await _refreshTokenMongoRepository.RevokeListAsync(existedTokens);
             }
         }
     }
