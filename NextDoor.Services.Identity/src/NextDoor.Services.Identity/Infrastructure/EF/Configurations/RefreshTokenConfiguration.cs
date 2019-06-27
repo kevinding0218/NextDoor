@@ -17,7 +17,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Configurations
             builder.HasKey(r => r.Id);
 
             // Set mapping for columns
-            builder.Property(r => r.Uid).HasColumnType("int").IsRequired();
+            builder.Property(r => r.UID).HasColumnType("int").IsRequired();
             builder.Property(r => r.Token).HasColumnType("nvarchar(200)").IsRequired();
             builder.Property(r => r.CreatedAt).HasColumnType("datetime");
             builder.Property(r => r.RevokedAt).HasColumnType("datetime");

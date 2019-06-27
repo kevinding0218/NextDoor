@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NextDoor.Core.Types.Repository
@@ -6,8 +7,11 @@ namespace NextDoor.Core.Types.Repository
     {
         #region CREATE/UPDATE/DELETE
         void Add(TEntity entity);
+        void AddRange(IEnumerable<TEntity> entities);
         void Update(TEntity entity);
+        void UpdateRange(IEnumerable<TEntity> entities);
         void Delete(int id);
+        void DeleteRange(IEnumerable<TEntity> entities);
         Task<int> CommitChangesAsync();
         #endregion
     }

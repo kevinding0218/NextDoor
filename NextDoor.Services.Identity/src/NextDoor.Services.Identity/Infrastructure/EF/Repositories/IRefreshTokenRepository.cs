@@ -9,6 +9,7 @@ namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
         Task<RefreshToken> GetAsync(string token);
         Task<IEnumerable<RefreshToken>> GetListForActiveTokenAsync(int uid);
         Task AddAsync(RefreshToken token);
-        Task RevokeAsync(RefreshToken token);
+        Task RevokeOneAsync(RefreshToken token);
+        Task RevokeListAsync(IEnumerable<RefreshToken> tokens);
     }
 }

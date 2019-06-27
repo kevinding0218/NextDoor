@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using NextDoor.Core.Types;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NextDoor.Core.Mongo
 {
@@ -49,8 +49,8 @@ namespace NextDoor.Core.Mongo
             public IEnumerable<IConvention> Conventions => new List<IConvention>
             {
                 new IgnoreExtraElementsConvention(true),
-                new EnumRepresentationConvention(BsonType.String),
-                new CamelCaseElementNameConvention()
+                new EnumRepresentationConvention(BsonType.String)
+                //new CamelCaseElementNameConvention()
             };
         }
     }

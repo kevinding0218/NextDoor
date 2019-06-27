@@ -1,6 +1,6 @@
 @identityServiceUrl = http://localhost:5000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidW5pcXVlX25hbWUiOiIxIiwianRpIjoiZjJiMmI2OWYtZDhkZC00MGM1LTk1MmUtZmYxMzk4Mjk2YTljIiwiaWF0IjoiMTU2MTUxMjQ3NDY4OSIsImF1ZCI6Im5leHREb29yLWlkZW50aXR5LXNlcnZpY2UiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsIm5iZiI6MTU2MTUyNjg3NCwiZXhwIjoxNTYxNTI4Njc0LCJpc3MiOiJuZXh0RG9vci1pZGVudGl0eS1zZXJ2aWNlIn0.VgeDgh-F1A4L0-zycX6xwfyGZpOnuwfeminW5MrAN8w
-@refreshToken = AQAAAAEAACcQAAAAEMWpYw1yCPJi0ysWM0wiTH1vDrF4nbYHl3xnveCe3tcpygEWHZT4lhMN57YuEk2ag
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidW5pcXVlX25hbWUiOiIxIiwianRpIjoiODcyMTcyZWYtZTZhYi00YmY1LTllM2ItZmY0MTA2MzUzZjMzIiwiaWF0IjoiMTU2MTU3OTc2MzQ3MSIsImF1ZCI6Im5leHREb29yLWlkZW50aXR5LXNlcnZpY2UiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsIm5iZiI6MTU2MTU5NDE2MywiZXhwIjoxNTYxNTk1OTYzLCJpc3MiOiJuZXh0RG9vci1pZGVudGl0eS1zZXJ2aWNlIn0.w98PzWzYtVEtKnDStQQygWjsl6Fzr8lK9FJvWPp7qZU
+@refreshToken = AQAAAAEAACcQAAAAECAWIrJw6abl4zTCZ0JcUTxqwNbCQVeI8TJO00NuWZeJCKPuVdj18VfFceOFwLIw
 # ================= IDENTITY SERVICE START ======================= #
 
 ### Sign up as admin
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 {
 	"email": "nd-admin@nextdoor.com",
-	"password": "ndadmin123",
+	"password": "ndadmin321",
 	"role": "admin"
 }
 
@@ -29,7 +29,7 @@ Content-Type: application/json
 
 {
 	"userId": 1,
-	"currentPassword": "ndadmin123",
+	"currentPassword": "ndadmin124",
 	"newPassword": "ndadmin321"
 }
 
