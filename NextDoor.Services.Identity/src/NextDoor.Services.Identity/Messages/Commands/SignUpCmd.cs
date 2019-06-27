@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using NextDoor.Core.Messages;
 using NextDoor.Core.Types;
+using System;
 using System.Text.RegularExpressions;
 
 namespace NextDoor.Services.Identity.Messages.Commands
 {
     // Immutable
+    // Custom routing key: #.identity.sign_up_cmd
     public class SignUpCmd : ICommand
     {
         private static readonly Regex EmailRegex = new Regex(
@@ -13,6 +15,7 @@ namespace NextDoor.Services.Identity.Messages.Commands
             @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
+        public Guid Id { get; }
         public string Email { get; }
         public string Password { get; }
         public string Role { get; }

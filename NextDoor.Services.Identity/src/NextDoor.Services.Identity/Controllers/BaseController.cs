@@ -3,7 +3,7 @@ using System;
 
 namespace NextDoor.Services.Identity.Controllers
 {
-    public class BaseController : ControllerBase
+    public abstract class BaseController : ControllerBase
     {
         protected bool IsAdmin
             => User.IsInRole("admin");

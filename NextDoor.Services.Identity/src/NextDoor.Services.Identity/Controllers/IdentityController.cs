@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NextDoor.Core.Authentication;
+using NextDoor.Core.Common;
 using NextDoor.Core.Dispatcher;
 using NextDoor.Services.Identity.Messages.Commands;
 using NextDoor.Services.Identity.Messages.Queries;
@@ -35,7 +36,7 @@ namespace NextDoor.Services.Identity.Controllers
                 return BadRequest("Invalid");
             }
 
-            await _dispatcher.SendAsync(command);
+            await _dispatcher.SendAsync(command.BindId(c => c.Id));
 
             return NoContent();
         }

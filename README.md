@@ -1,4 +1,29 @@
-# Creae one Solution to include all projects
+## Create a web api project and solution
+### 1. Create web api project under _src_ subfolder
+```
+mkdir NextDoor.Services.Customers
+cd .\NextDoor.Services.Customers\
+mkdir src
+dotnet new webapi -n NextDoor.Services.Customers -o src\NextDoor.Services.Customers
+```
+### 2. Create new solution file and add above project inside solution
+```
+dotnet new sln --name NextDoor.Services.Customers
+dotnet sln add src/NextDoor.Services.Customers/NextDoor.Services.Customers.csproj
+```
+### 3. repeat above for additional micro services
+	- NextDoor.Services.Customers
+	- NextDoor.Services.Identity
+	- NextDoor.Services.Accounts (Later)
+	- NextDoor.Services.Billbooks (Later)
+	- NextDoor.Services.Transactions (Later)
+	- NextDoor.Services.Notifications (Later)
+### Re-organize a solution by adding all projects inside using Powershell script
+- Listing the projects in a solution file
+```
+dotnet sln list
+```
+## Create one Solution to include all projects
 - Create a shell script (one_solution.sh)
 ```
 #!/bin/bash

@@ -5,7 +5,6 @@ using NextDoor.Core.Common;
 using NextDoor.Core.Handlers;
 using NextDoor.Core.Messages;
 using NextDoor.Core.Types;
-using OpenTracing;
 using RawRabbit;
 using RawRabbit.Common;
 using RawRabbit.Configuration;
@@ -47,7 +46,6 @@ namespace NextDoor.Core.RabbitMq
             }).SingleInstance();
 
             var assembly = Assembly.GetCallingAssembly();
-
             // Similar with AddTransient()
             builder.RegisterAssemblyTypes(assembly)
                 .AsClosedTypesOf(typeof(IEventHandler<>))
@@ -55,8 +53,8 @@ namespace NextDoor.Core.RabbitMq
             builder.RegisterAssemblyTypes(assembly)
                 .AsClosedTypesOf(typeof(ICommandHandler<>))
                 .InstancePerDependency();
-            // builder.Register<Handler>().As<IHandler>()
-            //     .InstancePerDependency();
+            builder.RegisterType<Handler>().As<IHandler>()
+                .InstancePerDependency();
             builder.RegisterType<BusPublisher>().As<IBusPublisher>()
                 .InstancePerDependency();
             // builder.RegisterInstance(DShopDefaultTracer.Create()).As<ITracer>().SingleInstance()
@@ -72,7 +70,7 @@ namespace NextDoor.Core.RabbitMq
                 var options = context.Resolve<RabbitMqOptions>();
                 var configuration = context.Resolve<RawRabbitConfiguration>();
                 var namingConventions = new CustomNamingConventions(options.Namespace);
-                var tracer = context.Resolve<ITracer>();
+                //var tracer = context.Resolve<ITracer>();
 
                 return RawRabbitFactory.CreateInstanceFactory(
                     new RawRabbitOptions
@@ -82,7 +80,7 @@ namespace NextDoor.Core.RabbitMq
                             ioc.AddSingleton(options);
                             ioc.AddSingleton(configuration);
                             ioc.AddSingleton<INamingConventions>(namingConventions);
-                            ioc.AddSingleton(tracer);
+                            //ioc.AddSingleton(tracer);
                         },
                         Plugins = p => p
                             .UseAttributeRouting()
@@ -94,6 +92,7 @@ namespace NextDoor.Core.RabbitMq
                     }
                 );
             }).SingleInstance();
+            builder.Register(context => context.Resolve<IInstanceFactory>().Create());
         }
 
         private static IClientBuilder UpdateRetryInfo(this IClientBuilder clientBuilder)
@@ -109,27 +108,26 @@ namespace NextDoor.Core.RabbitMq
         {
             public CustomNamingConventions(string defaultNamespace)
             {
-                ExchangeNamingConvention = (Type type) => GetNamespace(type, defaultNamespace).ToLowerInvariant();
-                RoutingKeyConvention = (Type type) =>
+                ExchangeNamingConvention = type => GetNamespace(type, defaultNamespace).ToLowerInvariant();
+                RoutingKeyConvention = type =>
                     $"#.{GetRoutingKeyNamespace(type, defaultNamespace)}{type.Name.Underscore()}".ToLowerInvariant();
                 ErrorExchangeNamingConvention = () => $"{defaultNamespace}.error";
-                RetryLaterExchangeConvention = (TimeSpan span) => $"{defaultNamespace}.retry";
-                RetryLaterQueueNameConvetion = (string exchange, TimeSpan span) =>
+                RetryLaterExchangeConvention = span => $"{defaultNamespace}.retry";
+                RetryLaterQueueNameConvetion = (exchange, span) =>
                     $"{defaultNamespace}.retry_for_{exchange.Replace(".", "_")}_in_{span.TotalMilliseconds}_ms".ToLowerInvariant();
             }
-
 
             // Using "private static" so that the compiler will emit non-virtual call sites to these members. 
             // Emitting non-virtual call sites will prevent a check at runtime for each call that ensures that the current object pointer is non-null. 
             // This can result in a measurable performance gain for performance-sensitive code.
-            private static string GetNamespace(Type type, string defaultNamespace)
+            private static string GetRoutingKeyNamespace(Type type, string defaultNamespace)
             {
                 var @namespace = type.GetCustomAttribute<MessageNamespaceAttribute>()?.Namespace ?? defaultNamespace;
 
-                return string.IsNullOrWhiteSpace(@namespace) ? "#" : $"{@namespace}";
+                return string.IsNullOrWhiteSpace(@namespace) ? string.Empty : $"{@namespace}.";
             }
 
-            private static string GetRoutingKeyNamespace(Type type, string defaultNamespace)
+            private static string GetNamespace(Type type, string defaultNamespace)
             {
                 var @namespace = type.GetCustomAttribute<MessageNamespaceAttribute>()?.Namespace ?? defaultNamespace;
 

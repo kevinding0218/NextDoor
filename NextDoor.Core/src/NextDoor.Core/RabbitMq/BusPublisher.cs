@@ -1,9 +1,9 @@
-using System.Reflection;
-using System.Threading.Tasks;
 using NextDoor.Core.Common;
 using NextDoor.Core.Messages;
 using RawRabbit;
 using RawRabbit.Enrichers.MessageContext;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NextDoor.Core.RabbitMq
 {
@@ -29,7 +29,8 @@ namespace NextDoor.Core.RabbitMq
 
         private string GetRoutingKey<T>(T message)
         {
-            var @namespace = message.GetType().GetCustomAttribute<MessageNamespaceAttribute>()?.Namespace ?? _defaultNamespace;
+            var @namespace = message.GetType().GetCustomAttribute<MessageNamespaceAttribute>()?.Namespace ??
+                             _defaultNamespace;
             @namespace = string.IsNullOrWhiteSpace(@namespace) ? string.Empty : $"{@namespace}.";
 
             return $"{@namespace}{typeof(T).Name.Underscore()}".ToLowerInvariant();

@@ -1,5 +1,17 @@
 ## JsonConstructor
 - Let system know how to handle serialization for your constructor
+## RabbitMQ
+- we subscribe to particular message when the app actually starts,
+the app subscribes on the very beginning of its lifetime, the subscription leaves together with the particular micro service
+- when app starts, we can see there is a "TOPIC" exchange of "Identity" in RabbitMQ Exchange.
+- one application will be publishing messages, it can be our API publishing commands or it can be our services publishing other commands or events, and this command goes to the RabbitMQ, so called exchange. And then from this exchange depending on the queue that is its interested in this particular message type which is defined by the routing key, it just creates a queue and this messages that are currently leaving these actions are being published and pushed into the queues.
+- the default setup for the routing key in a rar rabbit is the message as assembly, that actually had to be changd in order to support messages that lives in two seperated assemblies.
+	- Right now, our "SignUpCmd" lives in the namespace dedicated to the identity service, and because we're not going to have any packages with our public contracts(meaning we're not writing an external contract that involving all command/event/query across all services)
+	- each micro service should only contain the messages that contained in the matter of the domain of the particular micro service.
+	- routing key by default: **namespace in appsettings  + command/event/query name** 
+		- e.g my routing key will be look like **#.identity.sign_up_cmd**
+	- routing key by customize: use ["MessageNamespace("anotherServiceNamespace")]: if I'm interested in a particular message that's not in my service which would publish it but another service that wants to subscribe to this type of message, use the annotation and set it as its routing key. (See Core.RabbitMq.Extensions.CustomNamingConventions)
+	- add same message to api gateway which will have different namespace, in order to get rid of the namespace routing key to make it work, we'd customized the namespace either in configuration or attribute of `MessageNamespace`
 ## [Use Docker for Sql Server 2017](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash)
 
 ### Using powershell
