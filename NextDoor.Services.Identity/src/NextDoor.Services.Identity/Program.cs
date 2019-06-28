@@ -14,10 +14,10 @@ namespace NextDoor.Services.Identity
 
         /// <summary>
         /// configuring UseKestrel() which uses out-of-process
-        /// <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+        ///     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+        /// configuring UseIISIntegration() which uses in-process
+        ///     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
         /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var config = new ConfigurationBuilder()

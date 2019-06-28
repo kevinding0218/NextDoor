@@ -21,7 +21,8 @@ namespace NextDoor.ApiGateway
 
             var webHost = WebHost.CreateDefaultBuilder(args)
                 .UseUrls($"http://localhost:{config.GetValue<int>("host:port")}")
-                .UseKestrel()
+                //.UseKestrel()
+                .UseIISIntegration()
                 .UseStartup<Startup>();
 
             return webHost;
