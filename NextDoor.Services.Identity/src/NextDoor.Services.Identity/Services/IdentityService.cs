@@ -1,18 +1,20 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using NextDoor.Core.Authentication;
+using NextDoor.Core.Common;
 using NextDoor.Core.Types;
 using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF.Repositories;
 using NextDoor.Services.Identity.Infrastructure.Mongo;
 using NextDoor.Services.Identity.Services.Dto;
+using System;
 using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Services
 {
     public class IdentityService : IIdentityService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserEFRepository _userEFRepository;
         private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<UserDto> _passwordHasher;
         private readonly IJwtHandler _jwtHandler;
@@ -21,7 +23,7 @@ namespace NextDoor.Services.Identity.Services
         private readonly IMapper _mapper;
 
         public IdentityService(
-            IUserRepository userRepository,
+            IUserEFRepository userEFRepository,
             IUserMongoRepository userMongoRepository,
             IPasswordHasher<UserDto> passwordHasher,
             IJwtHandler jwtHandler,
@@ -29,7 +31,7 @@ namespace NextDoor.Services.Identity.Services
             IOptionalClaimsProvider claimsProvider,
             IMapper mapper)
         {
-            _userRepository = userRepository;
+            _userEFRepository = userEFRepository;
             _userMongoRepository = userMongoRepository;
             _passwordHasher = passwordHasher;
             _jwtHandler = jwtHandler;
@@ -40,7 +42,16 @@ namespace NextDoor.Services.Identity.Services
 
         public async Task SignUpAsync(string email, string password, string role = "user")
         {
-            var userDomain = await _userRepository.GetAsync(email);
+            var userDomain = (User)null;
+            if (Shared.UseSql)
+            {
+                userDomain = await _userEFRepository.GetAsync(email);
+            }
+            else
+            {
+                userDomain = await _userMongoRepository.GetAsync(email);
+            }
+
             if (userDomain != null)
             {
                 throw new NextDoorException(IdentityExceptionCode.EmailInUse,
@@ -56,13 +67,27 @@ namespace NextDoor.Services.Identity.Services
             userDto.SetHashPassword(_passwordHasher);
             userDomain = _mapper.Map<UserDto, User>(userDto);
 
-            await _userRepository.AddAsync(userDomain);
-            await _userMongoRepository.AddAsync(userDomain);
+            if (Shared.UseSql)
+            {
+                await _userEFRepository.AddAsync(userDomain);
+            }
+            else
+            {
+                await _userMongoRepository.AddAsync(userDomain);
+            }
         }
 
         public async Task<JsonWebToken> SignInAsync(string email, string password)
         {
-            var userDomain = await _userRepository.GetAsync(email);
+            var userDomain = (User)null;
+            if (Shared.UseSql)
+            {
+                userDomain = await _userEFRepository.GetAsync(email);
+            }
+            else
+            {
+                userDomain = await _userMongoRepository.GetAsync(email);
+            }
 
             if (userDomain == null)
             {
@@ -91,9 +116,32 @@ namespace NextDoor.Services.Identity.Services
             }
         }
 
+        public async Task UpdateLastLogin(User userDomain)
+        {
+            userDomain.Bind((u => u.LastLogin), DateTime.Now);
+
+            if (Shared.UseSql)
+            {
+                await _userEFRepository.UpdateAsync(userDomain);
+            }
+            else
+            {
+                await _userMongoRepository.UpdateAsync(userDomain);
+            }
+        }
+
         public async Task ChangePasswordAsync(int userId, string currentPassword, string newPassword)
         {
-            var userDomain = await _userRepository.GetAsync(userId);
+            var userDomain = (User)null;
+            if (Shared.UseSql)
+            {
+                userDomain = await _userEFRepository.GetAsync(userId);
+            }
+            else
+            {
+                userDomain = await _userMongoRepository.GetAsync(userId);
+            }
+
             if (userDomain == null)
             {
                 throw new NextDoorException(IdentityExceptionCode.UserNotFound,
@@ -112,8 +160,14 @@ namespace NextDoor.Services.Identity.Services
             userDto.SetHashPassword(_passwordHasher);
             userDomain = _mapper.Map<UserDto, User>(userDto);
 
-            await _userRepository.UpdateAsync(userDomain);
-            await _userMongoRepository.UpdateAsync(userDomain);
+            if (Shared.UseSql)
+            {
+                await _userEFRepository.UpdateAsync(userDomain);
+            }
+            else
+            {
+                await _userMongoRepository.UpdateAsync(userDomain);
+            }
         }
     }
 }

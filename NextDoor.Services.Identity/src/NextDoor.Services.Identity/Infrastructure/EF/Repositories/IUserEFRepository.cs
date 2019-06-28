@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
 {
-    public interface IUserRepository
+    public interface IUserEFRepository
     {
         Task<User> GetAsync(int id);
         Task<User> GetAsync(string email);

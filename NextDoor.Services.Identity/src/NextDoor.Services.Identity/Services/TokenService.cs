@@ -12,39 +12,53 @@ namespace NextDoor.Services.Identity.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUserEFRepository _userEFRepository;
+        private readonly IRefreshTokenEFRepository _refreshTokenEFRepository;
+
+        private readonly IUserMongoRepository _userMongoRepository;
         private readonly IRefreshTokenMongoRepository _refreshTokenMongoRepository;
-        private readonly IUserRepository _userRepository;
+
         private readonly IJwtHandler _jwtHandler;
         private readonly IPasswordHasher<UserDto> _passwordHasher;
         private readonly IOptionalClaimsProvider _optionalClaimsProvider;
         private readonly IMapper _mapper;
 
         public TokenService(
-            IRefreshTokenRepository refreshTokenRepository,
+            IUserEFRepository userRepository,
+            IUserMongoRepository userMongoRepository,
+            IRefreshTokenEFRepository refreshTokenRepository,
             IRefreshTokenMongoRepository refreshTokenMongoRepository,
-            IUserRepository userRepository,
             IJwtHandler jwtHandler,
             IPasswordHasher<UserDto> passwordHasher,
             IOptionalClaimsProvider optionalClaimsProvider,
             IMapper mapper)
         {
-            _refreshTokenRepository = refreshTokenRepository;
+            _userEFRepository = userRepository;
+            _userMongoRepository = userMongoRepository;
+            _refreshTokenEFRepository = refreshTokenRepository;
             _refreshTokenMongoRepository = refreshTokenMongoRepository;
-            _userRepository = userRepository;
             _jwtHandler = jwtHandler;
             _passwordHasher = passwordHasher;
             _optionalClaimsProvider = optionalClaimsProvider;
             _mapper = mapper;
         }
 
-        public async Task<RefreshTokenDto> CreateNewRefreshTokenAsync(int userId)
+        public async Task<RefreshTokenDto> CreateNewRefreshTokenAsync(int Uid)
         {
-            var userDomain = await _userRepository.GetAsync(userId);
+            var userDomain = (User)null;
+            if (Shared.UseSql)
+            {
+                userDomain = await _userEFRepository.GetAsync(Uid);
+            }
+            else
+            {
+                userDomain = await _userMongoRepository.GetAsync(Uid);
+            }
+
             if (userDomain == null)
             {
                 throw new NextDoorException(IdentityExceptionCode.UserNotFound,
-                    $"User: '{userId}' was not found.");
+                    $"User was not found.");
             }
 
             // Get User Information to create hashed token for RefreshToken's Token
@@ -54,8 +68,14 @@ namespace NextDoor.Services.Identity.Services
 
             // Insert into Database
             var refreshTokenDomain = _mapper.Map<RefreshTokenDto, RefreshToken>(refreshTokenDto);
-            await _refreshTokenRepository.AddAsync(refreshTokenDomain);
-            await _refreshTokenMongoRepository.AddAsync(refreshTokenDomain);
+            if (Shared.UseSql)
+            {
+                await _refreshTokenEFRepository.AddAsync(refreshTokenDomain);
+            }
+            else
+            {
+                await _refreshTokenMongoRepository.AddAsync(refreshTokenDomain);
+            }
 
             return refreshTokenDto;
         }
@@ -77,7 +97,19 @@ namespace NextDoor.Services.Identity.Services
         public async Task<JsonWebToken> RenewExistedJwtAccessTokenAsync(string refreshToken)
         {
             #region Validate if received token existed or revoked
-            var refreshTokenDomain = await _refreshTokenRepository.GetAsync(refreshToken);
+            var refreshTokenDomain = (RefreshToken)null;
+            var userDomain = (User)null;
+            if (Shared.UseSql)
+            {
+                refreshTokenDomain = await _refreshTokenEFRepository.GetAsync(refreshToken);
+                userDomain = await _userEFRepository.GetAsync(refreshTokenDomain.UID);
+            }
+            else
+            {
+                refreshTokenDomain = await _refreshTokenMongoRepository.GetAsync(refreshToken);
+                userDomain = await _userMongoRepository.GetAsync(refreshTokenDomain.UID);
+            }
+
             if (refreshTokenDomain == null)
             {
                 throw new NextDoorException(IdentityExceptionCode.RefreshTokenNotFound,
@@ -106,13 +138,28 @@ namespace NextDoor.Services.Identity.Services
 
         private async Task RevokeRefreshTokenAsync(RefreshToken refreshTokenDomain)
         {
-            await _refreshTokenRepository.RevokeOneAsync(refreshTokenDomain);
-            await _refreshTokenMongoRepository.RevokeOneAsync(refreshTokenDomain);
+            if (Shared.UseSql)
+            {
+                await _refreshTokenEFRepository.RevokeOneAsync(refreshTokenDomain);
+            }
+            else
+            {
+                await _refreshTokenMongoRepository.RevokeOneAsync(refreshTokenDomain);
+            }
         }
 
         public async Task RevokeRefreshTokenAsync(string token, int userId)
         {
-            var refreshTokenDomain = await _refreshTokenRepository.GetAsync(token);
+            var refreshTokenDomain = (RefreshToken)null;
+            if (Shared.UseSql)
+            {
+                refreshTokenDomain = await _refreshTokenEFRepository.GetAsync(token);
+            }
+            else
+            {
+                refreshTokenDomain = await _refreshTokenMongoRepository.GetAsync(token);
+            }
+
             if (refreshTokenDomain == null || refreshTokenDomain.UID != userId)
             {
                 throw new NextDoorException(IdentityExceptionCode.RefreshTokenNotFound,
@@ -122,18 +169,30 @@ namespace NextDoor.Services.Identity.Services
             var refreshTokenDto = _mapper.Map<RefreshToken, RefreshTokenDto>(refreshTokenDomain);
             refreshTokenDto.Revoke();
 
-            await _refreshTokenRepository.RevokeOneAsync(refreshTokenDomain);
-            await _refreshTokenMongoRepository.RevokeOneAsync(refreshTokenDomain);
+            if (Shared.UseSql)
+            {
+                await _refreshTokenEFRepository.RevokeOneAsync(refreshTokenDomain);
+            }
+            else
+            {
+                await _refreshTokenMongoRepository.RevokeOneAsync(refreshTokenDomain);
+            }
         }
 
         public async Task RevokeAllExistedRefreshTokenAsync(int userId)
         {
-            var existedTokens = await _refreshTokenRepository.GetListForActiveTokenAsync(userId);
+            var existedTokens = await _refreshTokenEFRepository.GetListForActiveTokenAsync(userId);
 
             if (existedTokens != null)
             {
-                await _refreshTokenRepository.RevokeListAsync(existedTokens);
-                await _refreshTokenMongoRepository.RevokeListAsync(existedTokens);
+                if (Shared.UseSql)
+                {
+                    await _refreshTokenEFRepository.RevokeListAsync(existedTokens);
+                }
+                else
+                {
+                    await _refreshTokenMongoRepository.RevokeListAsync(existedTokens);
+                }
             }
         }
     }

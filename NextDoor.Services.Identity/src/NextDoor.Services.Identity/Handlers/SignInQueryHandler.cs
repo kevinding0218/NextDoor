@@ -4,6 +4,7 @@ using NextDoor.Core.Handlers;
 using NextDoor.Core.Types;
 using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF.Repositories;
+using NextDoor.Services.Identity.Infrastructure.Mongo;
 using NextDoor.Services.Identity.Messages.Queries;
 using NextDoor.Services.Identity.Services;
 using System.Threading.Tasks;
@@ -12,24 +13,38 @@ namespace NextDoor.Services.Identity.Handlers
 {
     public class SignInQueryHandler : IQueryHandler<SignInQuery, JsonWebToken>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserEFRepository _userEFRepository;
+        private readonly IUserMongoRepository _userMongoRepository;
         private readonly ITokenService _tokenService;
+        private readonly IIdentityService _identityService;
         private readonly IPasswordHasher<User> _passwordHasher;
 
         public SignInQueryHandler(
-            IUserRepository userRepository,
+            IUserEFRepository userRepository,
+            IUserMongoRepository userMongoRepository,
             ITokenService tokenService,
+            IIdentityService identityService,
             IPasswordHasher<User> passwordHasher)
         {
-            _userRepository = userRepository;
+            _userEFRepository = userRepository;
+            _userMongoRepository = userMongoRepository;
             _tokenService = tokenService;
+            _identityService = identityService;
             _passwordHasher = passwordHasher;
         }
 
 
         public async Task<JsonWebToken> HandleAsync(SignInQuery query)
         {
-            var userDomain = await _userRepository.GetAsync(query.Email);
+            var userDomain = (User)null;
+            if (Shared.UseSql)
+            {
+                userDomain = await _userEFRepository.GetAsync(query.Email);
+            }
+            else
+            {
+                userDomain = await _userMongoRepository.GetAsync(query.Email);
+            }
 
             if (userDomain == null)
             {
@@ -45,6 +60,7 @@ namespace NextDoor.Services.Identity.Handlers
                 }
 
                 await _tokenService.RevokeAllExistedRefreshTokenAsync(userDomain.Id);
+                await _identityService.UpdateLastLogin(userDomain);
                 // Create New Refresh Token
                 var refreshTokenDto = await _tokenService.CreateNewRefreshTokenAsync(userDomain.Id);
 

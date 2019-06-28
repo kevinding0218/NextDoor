@@ -43,6 +43,8 @@ namespace NextDoor.Services.Identity
             services.AddCustomMvc();
             services.AddJwt();
 
+            Shared.UseSql = Convert.ToBoolean(Configuration["datasource:useSql"]);
+
             #region EF MsSql DbContext
             services.Configure<MsSqlDbOptions>(Configuration.GetSection(ConfigOptions.mssqlSectionName));
             services.AddEntityFrameworkMsSql<NextDoorDbContext>();

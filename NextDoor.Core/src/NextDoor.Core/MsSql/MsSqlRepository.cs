@@ -115,9 +115,8 @@ namespace NextDoor.Core.MsSql
             if (guidEntity.Guid == null)
                 guidEntity.Guid = Guid.NewGuid();
 
-            var auditEntity = entity as IAuditableEntity;
 
-            if (auditEntity != null)
+            if (entity is IAuditableEntity auditEntity)
             {
                 auditEntity.CreatedBy = auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.CreatedBy : _userInfo.UID;
                 if (auditEntity.CreatedOn == null) auditEntity.CreatedOn = DateTime.Now;
@@ -143,8 +142,7 @@ namespace NextDoor.Core.MsSql
 
         private void AttachUpdateProperty(TEntity entity)
         {
-            var auditEntity = entity as IAuditableEntity;
-            if (auditEntity != null)
+            if (entity is IAuditableEntity auditEntity)
             {
                 auditEntity.LastUpdatedBy = _userInfo == null ? auditEntity.LastUpdatedBy : _userInfo.UID;
                 if (auditEntity.LastUpdatedOn == null) auditEntity.LastUpdatedOn = DateTime.Now;

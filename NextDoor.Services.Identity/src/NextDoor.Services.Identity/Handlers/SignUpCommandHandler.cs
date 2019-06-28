@@ -7,41 +7,36 @@ using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF.Repositories;
 using NextDoor.Services.Identity.Infrastructure.Mongo;
 using NextDoor.Services.Identity.Messages.Commands;
-using System;
 using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Handlers
 {
     public class SignUpCommandHandler : ICommandHandler<SignUpCmd>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserEFRepository _userEFRepository;
         private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly IConfiguration _configuration;
-        private bool _useNoSql = true;
 
-        public SignUpCommandHandler(IUserRepository userRepository,
+        public SignUpCommandHandler(IUserEFRepository userRepository,
             IUserMongoRepository userMongoRepository,
             IPasswordHasher<User> passwordHasher,
             IConfiguration configuration)
         {
-            _userRepository = userRepository;
+            _userEFRepository = userRepository;
             _userMongoRepository = userMongoRepository;
             _passwordHasher = passwordHasher;
-            _configuration = configuration;
-            _useNoSql = Convert.ToBoolean(_configuration["datasource:relational"]);
         }
 
         public async Task HandleAsync(SignUpCmd command, ICorrelationContext context)
         {
             var userDomain = (User)null;
-            if (_useNoSql)
+            if (Shared.UseSql)
             {
-                userDomain = await _userMongoRepository.GetAsync(command.Email);
+                userDomain = await _userEFRepository.GetAsync(command.Email);
             }
             else
             {
-                userDomain = await _userRepository.GetAsync(command.Email);
+                userDomain = await _userMongoRepository.GetAsync(command.Email);
             }
             if (userDomain != null)
             {
@@ -52,8 +47,14 @@ namespace NextDoor.Services.Identity.Handlers
             {
                 userDomain = new User(command.Email, command.Role, string.Empty);
                 userDomain.SetPassword(command.Password, _passwordHasher);
-                await _userRepository.AddAsync(userDomain);
-                await _userMongoRepository.AddAsync(userDomain);
+                if (Shared.UseSql)
+                {
+                    await _userEFRepository.AddAsync(userDomain);
+                }
+                else
+                {
+                    await _userMongoRepository.AddAsync(userDomain);
+                }
             }
         }
     }
