@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using NextDoor.Core.Handlers;
 using NextDoor.Core.RabbitMq;
 using NextDoor.Core.Types;
@@ -7,6 +6,7 @@ using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF.Repositories;
 using NextDoor.Services.Identity.Infrastructure.Mongo;
 using NextDoor.Services.Identity.Messages.Commands;
+using NextDoor.Services.Identity.Messages.Events;
 using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Handlers
@@ -16,15 +16,17 @@ namespace NextDoor.Services.Identity.Handlers
         private readonly IUserEFRepository _userEFRepository;
         private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IBusPublisher _busPublisher;
 
         public SignUpCommandHandler(IUserEFRepository userRepository,
             IUserMongoRepository userMongoRepository,
             IPasswordHasher<User> passwordHasher,
-            IConfiguration configuration)
+            IBusPublisher busPublisher)
         {
             _userEFRepository = userRepository;
             _userMongoRepository = userMongoRepository;
             _passwordHasher = passwordHasher;
+            _busPublisher = busPublisher;
         }
 
         public async Task HandleAsync(SignUpCmd command, ICorrelationContext context)
@@ -55,6 +57,9 @@ namespace NextDoor.Services.Identity.Handlers
                 {
                     await _userMongoRepository.AddAsync(userDomain);
                 }
+
+                // Notify some other service that sign up successed
+                await _busPublisher.PublishAsync(new SignUpSuccessEvent(userDomain.Email), context);
             }
         }
     }
