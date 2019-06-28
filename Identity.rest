@@ -1,4 +1,4 @@
-@identityServiceUrl = http://localhost:5201
+@identityServiceUrl = http://localhost:5200
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidW5pcXVlX25hbWUiOiIxIiwianRpIjoiODcyMTcyZWYtZTZhYi00YmY1LTllM2ItZmY0MTA2MzUzZjMzIiwiaWF0IjoiMTU2MTU3OTc2MzQ3MSIsImF1ZCI6Im5leHREb29yLWlkZW50aXR5LXNlcnZpY2UiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsIm5iZiI6MTU2MTU5NDE2MywiZXhwIjoxNTYxNTk1OTYzLCJpc3MiOiJuZXh0RG9vci1pZGVudGl0eS1zZXJ2aWNlIn0.w98PzWzYtVEtKnDStQQygWjsl6Fzr8lK9FJvWPp7qZU
 @refreshToken = AQAAAAEAACcQAAAAECAWIrJw6abl4zTCZ0JcUTxqwNbCQVeI8TJO00NuWZeJCKPuVdj18VfFceOFwLIw
 # ================= IDENTITY SERVICE START ======================= #
@@ -8,7 +8,7 @@ POST {{identityServiceUrl}}/sign-up
 Content-Type: application/json
 
 {
-	"email": "nd-admin2@nextdoor.com",
+	"email": "nd-admin3@nextdoor.com",
 	"password": "ndadmin321",
 	"role": "admin"
 }
