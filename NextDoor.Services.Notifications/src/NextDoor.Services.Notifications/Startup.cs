@@ -9,17 +9,17 @@ using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
 using System;
 
-namespace NextDoor.Services.Customers
+namespace NextDoor.Services.Notifications
 {
     public class Startup
     {
         public IContainer Container { get; private set; }
         public IConfiguration Configuration { get; }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)

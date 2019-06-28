@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace NextDoor.Services.Customers
 {
@@ -17,8 +10,15 @@ namespace NextDoor.Services.Customers
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var webHost = WebHost.CreateDefaultBuilder(args)
+                .UseUrls($"http://localhost:5202")
+                .UseStartup<Startup>()
+                .UseDefaultServiceProvider(options =>
+                    options.ValidateScopes = false);
+
+            return webHost;
+        }
     }
 }

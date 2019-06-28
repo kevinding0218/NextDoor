@@ -14,16 +14,26 @@ dotnet sln add src/NextDoor.Services.Customers/NextDoor.Services.Customers.cspro
 ### 3. repeat above for additional micro services
 	- NextDoor.Services.Customers
 	- NextDoor.Services.Identity
+	- NextDoor.ApiGateway (Done)
+	- NextDoor.Services.Notifications (Done)
 	- NextDoor.Services.Accounts (Later)
 	- NextDoor.Services.Billbooks (Later)
 	- NextDoor.Services.Transactions (Later)
-	- NextDoor.Services.Notifications (Later)
+
 ### Re-organize a solution by adding all projects inside using Powershell script
 - Listing the projects in a solution file
 ```
 dotnet sln list
 ```
 ## Create one Solution to include all projects
+- Run in Powershell Individually
+```
+dotnet new sln -n NextDoor
+dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Core\src\NextDoor.Core\NextDoor.Core.csproj
+dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Services.Identity\src\NextDoor.Services.Identity\NextDoor.Services.Identity.csproj
+dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Services.Customers\src\NextDoor.Services.Customers\NextDoor.Services.Customers.csproj
+dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Services.Notifications\src\NextDoor.Services.Notifications\NextDoor.Services.Notifications.csproj
+```
 - Create a shell script (one_solution.sh)
 ```
 #!/bin/bash
@@ -67,13 +77,6 @@ do
 done
 
 $SHELL
-```
-- Run in Powershell Individually
-```
-dotnet new sln -n NextDoor
-dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Core\src\NextDoor.Core\NextDoor.Core.csproj
-dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Services.Customers\src\NextDoor.Services.Customers\NextDoor.Services.Customers.csproj
-dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Services.Identity\src\NextDoor.Services.Identity\NextDoor.Services.Identity.csproj
 ```
 - Create a powershell script
 ```
