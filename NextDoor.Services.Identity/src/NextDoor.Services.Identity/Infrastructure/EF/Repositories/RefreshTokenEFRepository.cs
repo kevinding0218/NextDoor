@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
 {
-    public class RefreshTokenRepository : MsSqlRepository<RefreshToken>, IRefreshTokenRepository
+    public class RefreshTokenEFRepository : MsSqlRepository<RefreshToken>, IRefreshTokenEFRepository
     {
-        public RefreshTokenRepository(NextDoorDbContext dbContext) : base(dbContext)
+        public RefreshTokenEFRepository(NextDoorDbContext dbContext) : base(dbContext)
         {
         }
 

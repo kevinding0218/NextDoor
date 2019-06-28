@@ -17,6 +17,9 @@ namespace NextDoor.Services.Identity.Infrastructure.Mongo
         public async Task<User> GetAsync(Guid id)
             => await _repository.GetSingleAsync(id);
 
+        public async Task<User> GetAsync(int id)
+            => await _repository.GetSingleAsync(x => x.Id == id);
+
         public async Task<User> GetAsync(string email)
             => await _repository.GetSingleAsync(x => x.Email == email.ToLowerInvariant());
 

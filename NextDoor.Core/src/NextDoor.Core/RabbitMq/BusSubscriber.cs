@@ -6,6 +6,7 @@ using NextDoor.Core.Handlers;
 using NextDoor.Core.Messages;
 using NextDoor.Core.Types;
 using OpenTracing;
+using Polly;
 using RawRabbit;
 using RawRabbit.Common;
 using RawRabbit.Enrichers.MessageContext;
@@ -107,69 +108,67 @@ namespace NextDoor.Core.RabbitMq
             CorrelationContext correlationContext,
             Func<Task> handle, Func<TMessage, NextDoorException, IRejectedEvent> onError = null)
         {
-            await handle();
-            return new Ack();
-            //var currentRetry = 0;
-            //var retryPolicy = Policy
-            //    .Handle<Exception>()
-            //    .WaitAndRetryAsync(this._retries, i => TimeSpan.FromSeconds(this._retryInterval));
+            var currentRetry = 0;
+            var retryPolicy = Policy
+                .Handle<Exception>()
+                .WaitAndRetryAsync(this._retries, i => TimeSpan.FromSeconds(this._retryInterval));
 
-            //var messageName = message.GetType().Name;
+            var messageName = message.GetType().Name;
 
-            //return await retryPolicy.ExecuteAsync<Acknowledgement>(async () =>
-            //{
-            //    var scope = this._tracer
-            //        .BuildSpan("executing-handler")
-            //        .AsChildOf(this._tracer.ActiveSpan)
-            //        .StartActive(true);
+            return await retryPolicy.ExecuteAsync<Acknowledgement>(async () =>
+            {
+                //var scope = this._tracer
+                //    .BuildSpan("executing-handler")
+                //    .AsChildOf(this._tracer.ActiveSpan)
+                //    .StartActive(true);
 
-            //    using (scope)
-            //    {
-            //        var span = scope.Span;
+                //using (scope)
+                //{
+                //var span = scope.Span;
 
-            //        try
-            //        {
-            //            var retryMessage = currentRetry == 0 ? string.Empty : $"Retry: {currentRetry}'.";
+                try
+                {
+                    var retryMessage = currentRetry == 0 ? string.Empty : $"Retry: {currentRetry}'.";
 
-            //            var preLogMessage = $"Handling a message: '{messageName}' " +
-            //                                $"with correlation id: '{correlationContext.Id}'. {retryMessage}";
+                    var preLogMessage = $"Handling a message: '{messageName}' " +
+                                            $"with correlation id: '{correlationContext.Id}'. {retryMessage}";
 
-            //            this._logger.LogInformation(preLogMessage);
-            //            span.Log(preLogMessage);
+                    this._logger.LogInformation(preLogMessage);
+                    //span.Log(preLogMessage);
 
-            //            await handle();
+                    await handle();
 
-            //            var postLogMessage = $"Handled a message: '{messageName}' " +
-            //                                 $"with correlation id: '{correlationContext.Id}'. {retryMessage}";
-            //            this._logger.LogInformation(postLogMessage);
-            //            span.Log(postLogMessage);
+                    var postLogMessage = $"Handled a message: '{messageName}' " +
+                                             $"with correlation id: '{correlationContext.Id}'. {retryMessage}";
+                    this._logger.LogInformation(postLogMessage);
+                    //span.Log(postLogMessage);
 
-            //            return new Ack();
-            //        }
-            //        catch (Exception exception)
-            //        {
-            //            currentRetry++;
-            //            this._logger.LogError(exception, exception.Message);
-            //            span.Log(exception.Message);
-            //            span.SetTag(Tags.Error, true);
+                    return new Ack();
+                }
+                catch (Exception exception)
+                {
+                    currentRetry++;
+                    this._logger.LogError(exception, exception.Message);
+                    //span.Log(exception.Message);
+                    //span.SetTag(Tags.Error, true);
 
-            //            if (exception is NextDoorException nextDoorException && onError != null)
-            //            {
-            //                var rejectedEvent = onError(message, nextDoorException);
-            //                await this._busClient.PublishAsync(rejectedEvent, ctx => ctx.UseMessageContext(correlationContext));
-            //                this._logger.LogInformation($"Published a rejected event: '{rejectedEvent.GetType().Name}' " +
-            //                                            $"for the message: '{messageName}' with correlation id: '{correlationContext.Id}'.");
-            //                span.SetTag("error-type", "domain");
-            //                return new Ack();
-            //            }
+                    //if (exception is NextDoorException nextDoorException && onError != null)
+                    //{
+                    //    var rejectedEvent = onError(message, nextDoorException);
+                    //    await this._busClient.PublishAsync(rejectedEvent, ctx => ctx.UseMessageContext(correlationContext));
+                    //    this._logger.LogInformation($"Published a rejected event: '{rejectedEvent.GetType().Name}' " +
+                    //                                $"for the message: '{messageName}' with correlation id: '{correlationContext.Id}'.");
+                    //    span.SetTag("error-type", "domain");
+                    //    return new Ack();
+                    //}
 
-            //            span.SetTag("error-type", "infrastructure");
-            //            throw new Exception($"Unable to handle a message: '{messageName}' " +
-            //                                $"with correlation id: '{correlationContext.Id}', " +
-            //                                $"retry {currentRetry - 1}/{this._retries}...");
-            //        }
-            //    }
-            //});
+                    //span.SetTag("error-type", "infrastructure");
+                    throw new Exception($"Unable to handle a message: '{messageName}' " +
+                                            $"with correlation id: '{correlationContext.Id}', " +
+                                            $"retry {currentRetry - 1}/{this._retries}...");
+                }
+                //}
+            });
         }
 
         // RabbitMQ retry that will publish a message to the retry queue.

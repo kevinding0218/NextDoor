@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Infrastructure.EF.Repositories
 {
-    public class UserRepository : MsSqlRepository<User>, IUserRepository
+    public class UserEFRepository : MsSqlRepository<User>, IUserEFRepository
     {
-        public UserRepository(NextDoorDbContext dbContext) : base(dbContext)
+        public UserEFRepository(NextDoorDbContext dbContext) : base(dbContext)
         {
         }
 

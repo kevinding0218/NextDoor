@@ -7,6 +7,7 @@ namespace NextDoor.Services.Identity.Infrastructure.Mongo
     public interface IUserMongoRepository
     {
         Task<User> GetAsync(Guid id);
+        Task<User> GetAsync(int id);
         Task<User> GetAsync(string email);
         Task AddAsync(User user);
         Task UpdateAsync(User user);

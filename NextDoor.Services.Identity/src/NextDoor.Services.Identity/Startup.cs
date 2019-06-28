@@ -18,6 +18,7 @@ using NextDoor.Services.Identity.Infrastructure;
 using NextDoor.Services.Identity.Infrastructure.Domain;
 using NextDoor.Services.Identity.Infrastructure.EF;
 using NextDoor.Services.Identity.Messages.Commands;
+using NextDoor.Services.Identity.Messages.Events;
 using NextDoor.Services.Identity.Services.AutoMapper;
 using NextDoor.Services.Identity.Services.Dto;
 using System;
@@ -42,6 +43,8 @@ namespace NextDoor.Services.Identity
         {
             services.AddCustomMvc();
             services.AddJwt();
+
+            Shared.UseSql = Convert.ToBoolean(Configuration["datasource:useSql"]);
 
             #region EF MsSql DbContext
             services.Configure<MsSqlDbOptions>(Configuration.GetSection(ConfigOptions.mssqlSectionName));
@@ -139,7 +142,8 @@ namespace NextDoor.Services.Identity
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseRabbitMq()
-                .SubscribeCommand<SignUpCmd>();
+                .SubscribeCommand<SignUpCmd>(onError: (cmd, ex)
+                    => new SignUpRejectedEvent(cmd.Email, ex.Message, "signup_failed"));
             #endregion
 
             // be sure no application steps I will dispose my container

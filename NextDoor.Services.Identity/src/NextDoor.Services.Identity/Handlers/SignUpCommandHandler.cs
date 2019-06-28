@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using NextDoor.Core.Handlers;
 using NextDoor.Core.RabbitMq;
 using NextDoor.Core.Types;
@@ -12,32 +13,49 @@ namespace NextDoor.Services.Identity.Handlers
 {
     public class SignUpCommandHandler : ICommandHandler<SignUpCmd>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserEFRepository _userEFRepository;
         private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public SignUpCommandHandler(IUserRepository userRepository,
+        public SignUpCommandHandler(IUserEFRepository userRepository,
             IUserMongoRepository userMongoRepository,
-            IPasswordHasher<User> passwordHasher)
+            IPasswordHasher<User> passwordHasher,
+            IConfiguration configuration)
         {
-            _userRepository = userRepository;
+            _userEFRepository = userRepository;
             _userMongoRepository = userMongoRepository;
             _passwordHasher = passwordHasher;
         }
 
         public async Task HandleAsync(SignUpCmd command, ICorrelationContext context)
         {
-            var userDomain = await _userRepository.GetAsync(command.Email);
+            var userDomain = (User)null;
+            if (Shared.UseSql)
+            {
+                userDomain = await _userEFRepository.GetAsync(command.Email);
+            }
+            else
+            {
+                userDomain = await _userMongoRepository.GetAsync(command.Email);
+            }
             if (userDomain != null)
             {
                 throw new NextDoorException(IdentityExceptionCode.EmailInUse,
                     $"Email: '{command.Email}' is already in use.");
             }
-
-            userDomain = new User(command.Email, command.Role, string.Empty);
-            userDomain.SetPassword(command.Password, _passwordHasher);
-            await _userRepository.AddAsync(userDomain);
-            await _userMongoRepository.AddAsync(userDomain);
+            else
+            {
+                userDomain = new User(command.Email, command.Role, string.Empty);
+                userDomain.SetPassword(command.Password, _passwordHasher);
+                if (Shared.UseSql)
+                {
+                    await _userEFRepository.AddAsync(userDomain);
+                }
+                else
+                {
+                    await _userMongoRepository.AddAsync(userDomain);
+                }
+            }
         }
     }
 }

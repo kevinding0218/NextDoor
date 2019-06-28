@@ -6,7 +6,7 @@ namespace NextDoor.Services.Identity.Services
 {
     public interface ITokenService
     {
-        Task<RefreshTokenDto> CreateNewRefreshTokenAsync(int userId);
+        Task<RefreshTokenDto> CreateNewRefreshTokenAsync(int Uid);
         Task<JsonWebToken> CreateNewJwtAccessTokenAsync(int Uid, string Role, string refreshToken);
         Task<JsonWebToken> RenewExistedJwtAccessTokenAsync(string refreshToken);
         Task RevokeRefreshTokenAsync(string refreshToken, int userId);
