@@ -5,7 +5,7 @@ namespace NextDoor.Core.RabbitMq
     public interface ICorrelationContext
     {
         Guid Id { get; }
-        Guid UserId { get; }
+        int UserId { get; }
         Guid ResourceId { get; }
         string TraceId { get; }
         string SpanContext { get; }

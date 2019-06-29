@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NextDoor.Core.Authentication;
 using NextDoor.Core.Messages;
 using NextDoor.Core.RabbitMq;
 using NextDoor.Core.Types.Pagination;
@@ -10,7 +11,7 @@ namespace NextDoor.ApiGateway.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    // [JwtAuth]
+    [JwtAuth]
     public abstract class BaseController : ControllerBase
     {
         private static readonly string AcceptLanguageHeader = "accept-language";
@@ -30,10 +31,9 @@ namespace NextDoor.ApiGateway.Controllers
         protected bool IsAdmin
             => User.IsInRole("admin");
 
-        protected Guid UserId
-            => string.IsNullOrWhiteSpace(User?.Identity?.Name) ?
-                Guid.Empty :
-                Guid.Parse(User.Identity.Name);
+        protected int UserId
+             => string.IsNullOrWhiteSpace(User?.Identity?.Name) ?
+                 0 : Convert.ToInt32(User.Identity.Name);
         #endregion
 
         #region Message Broker
