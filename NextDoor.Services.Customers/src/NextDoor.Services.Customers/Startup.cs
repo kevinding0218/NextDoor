@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NextDoor.Core.Dispatcher;
 using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
+using NextDoor.Services.Customers.Messages.Events;
 using System;
 
 namespace NextDoor.Services.Customers
@@ -84,7 +85,8 @@ namespace NextDoor.Services.Customers
             //app.UseAccessTokenValidator();
             app.UseHttpsRedirection();
             app.UseMvc();
-            app.UseRabbitMq();
+            app.UseRabbitMq()
+                .SubscribeEvent<SignUpSuccessEvent>();
             #endregion
 
             // be sure no application steps I will dispose my container

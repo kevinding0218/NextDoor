@@ -16,6 +16,12 @@ namespace NextDoor.ApiGateway.Controllers
         {
         }
 
+        /// <summary>
+        /// Sign up command called first through our API Gateway and then published in rabbitmq with topic "identity"
+        /// Then "Indentity" service will recieve it and execute "SignUpCommandHandler"
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPost("sign-up")]
         public async Task<IActionResult> Post(SignUpCmd command)
             => await SendAsync(command.BindId(c => c.Id), resourceId: command.Id, resource: "identity");

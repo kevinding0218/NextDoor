@@ -8,7 +8,7 @@ POST {{identityServiceUrl}}/sign-up
 Content-Type: application/json
 
 {
-	"email": "nd-admin3@nextdoor.com",
+	"email": "nd-admin5@nextdoor.com",
 	"password": "ndadmin321",
 	"role": "admin"
 }

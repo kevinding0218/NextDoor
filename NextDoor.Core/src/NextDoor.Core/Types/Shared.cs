@@ -1,4 +1,4 @@
-﻿namespace NextDoor.Services.Identity
+﻿namespace NextDoor.Core.Types
 {
     public static class Shared
     {

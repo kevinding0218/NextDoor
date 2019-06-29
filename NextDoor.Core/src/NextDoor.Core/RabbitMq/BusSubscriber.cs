@@ -130,7 +130,7 @@ namespace NextDoor.Core.RabbitMq
                 {
                     var retryMessage = currentRetry == 0 ? string.Empty : $"Retry: {currentRetry}'.";
 
-                    var preLogMessage = $"Handling a message: '{messageName}' " +
+                    var preLogMessage = $"TryHandleAsync a message started: '{messageName}' " +
                                             $"with correlation id: '{correlationContext.Id}'. {retryMessage}";
 
                     this._logger.LogInformation(preLogMessage);
@@ -138,7 +138,7 @@ namespace NextDoor.Core.RabbitMq
 
                     await handle();
 
-                    var postLogMessage = $"Handled a message: '{messageName}' " +
+                    var postLogMessage = $"TryHandleAsync a message completed: '{messageName}' " +
                                              $"with correlation id: '{correlationContext.Id}'. {retryMessage}";
                     this._logger.LogInformation(postLogMessage);
                     //span.Log(postLogMessage);

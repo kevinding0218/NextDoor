@@ -5,27 +5,39 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NextDoor.Core.Dispatcher;
+using NextDoor.Core.Mongo;
+using NextDoor.Core.MSSQL;
 using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
-using NextDoor.Services.Notifications.Messages.Events;
+using NextDoor.Core.Types;
+using NextDoor.Services.Admin.Infrastructure.Domain;
+using NextDoor.Services.Admin.Infrastructure.EF;
 using System;
+using System.Reflection;
 
-namespace NextDoor.Services.Notifications
+namespace NextDoor.Services.Admin
 {
     public class Startup
     {
         public IContainer Container { get; private set; }
         public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCustomMvc();
+
+            Shared.UseSql = Convert.ToBoolean(Configuration["datasource:useSql"]);
+
+            #region EF MsSql DbContext
+            services.Configure<MsSqlDbOptions>(Configuration.GetSection(ConfigOptions.mssqlSectionName));
+            services.AddEntityFrameworkMsSql<NextDoorDbContext>();
+            #endregion
 
             #region CORS
             services.AddCors(options =>
@@ -46,11 +58,22 @@ namespace NextDoor.Services.Notifications
         {
             var builder = new ContainerBuilder();
 
+            // Register all the interfaces along with its default implementations
+            // within my assembly being Identity project
+            builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
+                .AsImplementedInterfaces();
+
             // Whenever registered by asp.net by default in this services object, move to our container builder
             builder.Populate(services);
 
             #region Register Dispatcher
             builder.AddDispatchers();
+            #endregion
+
+            #region Mongo Db
+            builder.AddMongo();
+            // Create Mongodb collection based on class
+            builder.AddMongoRepository<User>("Users");
             #endregion
 
             #region RabbitMq
@@ -85,8 +108,7 @@ namespace NextDoor.Services.Notifications
             //app.UseAccessTokenValidator();
             app.UseHttpsRedirection();
             app.UseMvc();
-            app.UseRabbitMq()
-                .SubscribeEvent<SignUpSuccessEvent>(); ;
+            app.UseRabbitMq();
             #endregion
 
             // be sure no application steps I will dispose my container
