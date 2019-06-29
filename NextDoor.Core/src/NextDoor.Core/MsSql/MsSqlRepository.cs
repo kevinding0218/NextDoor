@@ -112,7 +112,7 @@ namespace NextDoor.Core.MsSql
         private void AttachAddProperty(TEntity entity)
         {
             var guidEntity = entity as IGuidIdentifiable;
-            if (guidEntity.Guid == null)
+            if (guidEntity.Guid == Guid.Empty)
                 guidEntity.Guid = Guid.NewGuid();
 
 

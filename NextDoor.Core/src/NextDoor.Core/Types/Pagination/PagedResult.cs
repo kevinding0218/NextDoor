@@ -1,6 +1,6 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace NextDoor.Core.Types.Pagination
 {
@@ -10,7 +10,7 @@ namespace NextDoor.Core.Types.Pagination
     public class PagedResult<T> : PagedResultBase
     {
         public IEnumerable<T> Items { get; }
-        public bool IsEmpty => Items == null || Items.Any();
+        public bool IsEmpty => Items == null || !Items.Any();
         public bool IsNotEmpty => !IsEmpty;
 
         protected PagedResult()

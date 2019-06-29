@@ -56,7 +56,7 @@ namespace NextDoor.Core.Mongo
         private void AttachAddProperty(TEntity entity)
         {
             var guidEntity = entity as IGuidIdentifiable;
-            if (guidEntity.Guid == null)
+            if (guidEntity.Guid == Guid.Empty)
                 guidEntity.Guid = Guid.NewGuid();
 
             var auditEntity = entity as IAuditableEntity;

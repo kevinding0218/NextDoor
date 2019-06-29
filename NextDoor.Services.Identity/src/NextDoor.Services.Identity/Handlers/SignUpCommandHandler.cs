@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Identity.Handlers
 {
+    /// <summary>
+    /// After subscrbe from rabbitMQ with external api gateway or triggered by dispatch
+    /// will then publish another 'Event(SignUpSuccessEvent)' and let other services subscribe
+    /// </summary>
     public class SignUpCommandHandler : ICommandHandler<SignUpCmd>
     {
         private readonly IUserEFRepository _userEFRepository;

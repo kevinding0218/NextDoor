@@ -28,6 +28,11 @@ namespace NextDoor.Services.Identity.Controllers
         public IActionResult Get() => Content($"Your id: '{UserId:N}'.");
 
         #region Sign-up and Sign-In using Dispatcher
+        /// <summary>
+        /// // Locally dispatch using command / command handler
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp(SignUpCmd command)
         {
@@ -41,6 +46,7 @@ namespace NextDoor.Services.Identity.Controllers
             return NoContent();
         }
 
+        /// Locally dispatch using query / query handler
         [HttpPost("sign-in")]
         public async Task<ActionResult<JsonWebToken>> SignIn(SignInQuery query)
             => await _dispatcher.QueryAsync(query);
