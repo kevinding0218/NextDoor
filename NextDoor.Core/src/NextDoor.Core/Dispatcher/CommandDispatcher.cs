@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
 using Autofac;
 using NextDoor.Core.Handlers;
 using NextDoor.Core.Messages;
 using NextDoor.Core.RabbitMq;
+using System.Threading.Tasks;
 
 namespace NextDoor.Core.Dispatcher
 {
@@ -13,8 +13,9 @@ namespace NextDoor.Core.Dispatcher
         {
             _context = context;
         }
-        // Whenver this message comes through in-memory
-        // will look for the command handler "ICommandHandler" that is able to handle this command "TCommand" and try to handle it
+
+        // Whenver ICommand sent through in-memory/local dispatcher
+        // will look for the command handler "ICommandHandler" that is able to handle this command "TCommand" 
         // our command comes from our memory or within the same process where our app lives
         public async Task SendAsync<T>(T command) where T : ICommand
             => await _context.Resolve<ICommandHandler<T>>().HandleAsync(command, CorrelationContext.Empty);

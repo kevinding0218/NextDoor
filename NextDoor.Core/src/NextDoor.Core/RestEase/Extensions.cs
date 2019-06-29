@@ -10,6 +10,7 @@ namespace NextDoor.Core.RestEase
 {
     public static class Extensions
     {
+        // Depedency Injection for service class with appsetting
         public static void RegisterServiceForwarder<T>(this IServiceCollection services, string serviceName)
             where T : class
         {
@@ -61,6 +62,7 @@ namespace NextDoor.Core.RestEase
         //            new FabioMessageHandler(c.GetService<IOptions<FabioOptions>>(), serviceName));
         //}
 
+        // Build sub service server URL
         private static void ConfigureDefaultClient(IServiceCollection services, string clientName,
             string serviceName, RestEaseOptions options)
         {
