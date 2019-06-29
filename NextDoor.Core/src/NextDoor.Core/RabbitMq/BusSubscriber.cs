@@ -152,15 +152,15 @@ namespace NextDoor.Core.RabbitMq
                     //span.Log(exception.Message);
                     //span.SetTag(Tags.Error, true);
 
-                    //if (exception is NextDoorException nextDoorException && onError != null)
-                    //{
-                    //    var rejectedEvent = onError(message, nextDoorException);
-                    //    await this._busClient.PublishAsync(rejectedEvent, ctx => ctx.UseMessageContext(correlationContext));
-                    //    this._logger.LogInformation($"Published a rejected event: '{rejectedEvent.GetType().Name}' " +
-                    //                                $"for the message: '{messageName}' with correlation id: '{correlationContext.Id}'.");
-                    //    span.SetTag("error-type", "domain");
-                    //    return new Ack();
-                    //}
+                    if (exception is NextDoorException nextDoorException && onError != null)
+                    {
+                        var rejectedEvent = onError(message, nextDoorException);
+                        await this._busClient.PublishAsync(rejectedEvent, ctx => ctx.UseMessageContext(correlationContext));
+                        this._logger.LogInformation($"Published a rejected event: '{rejectedEvent.GetType().Name}' " +
+                                                    $"for the message: '{messageName}' with correlation id: '{correlationContext.Id}'.");
+                        //span.SetTag("error-type", "domain");
+                        return new Ack();
+                    }
 
                     //span.SetTag("error-type", "infrastructure");
                     throw new Exception($"Unable to handle a message: '{messageName}' " +

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NextDoor.Services.Admin.Controllers
 {
-    [Route("[controller]")]
+    [Route("users")]
     [ApiController]
     public class UsersController : ControllerBase
     {

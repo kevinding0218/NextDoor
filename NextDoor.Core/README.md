@@ -15,7 +15,7 @@ dotnet sln add src/NextDoor.Core/NextDoor.Core.csproj
 ```
 ## Packages Included
 ### dev-01-mssql-repository-design
-[Repository Design Related](https://deviq.com/repository-pattern/)
+[Repository Design Related](https://github.com/Arch/UnitOfWork/tree/master/UnitOfWork)
 #### Newtonsoft.Json
 ```
 dotnet add package Newtonsoft.Json

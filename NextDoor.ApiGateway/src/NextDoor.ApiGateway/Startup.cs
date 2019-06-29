@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NextDoor.ApiGateway.Services;
 using NextDoor.Core.Dispatcher;
 using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
+using NextDoor.Core.RestEase;
 using System;
 
 namespace NextDoor.ApiGateway
@@ -37,6 +39,13 @@ namespace NextDoor.ApiGateway
                             .AllowCredentials()
                             .WithExposedHeaders(Headers));
             });
+            #endregion
+
+            #region RestEase
+            services.RegisterServiceForwarder<IIdentityService>("identity-service");
+            services.RegisterServiceForwarder<ICustomersService>("customer-service");
+            services.RegisterServiceForwarder<IAdminService>("admin-service");
+            services.RegisterServiceForwarder<INotificationService>("notification-service");
             #endregion
 
             return BuilderContainer(services);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NextDoor.ApiGateway.Controllers
 {
-    [Route("")]
+    [Route("identity")]
     [ApiController]
     [AllowAnonymous]
     public class IdentityController : BaseController
