@@ -40,9 +40,11 @@ namespace NextDoor.Core.RabbitMq
             _retryInterval = options.RetryInterval > 0 ? options.RetryInterval : 2;
         }
 
-        // Based on the message type/command, create a new subscription
-        // Usage: busSubscriber.SubscribeCommand<UserCreated>();
-        // _busClient from RawRabbit 
+        /// <summary>
+        /// Subscribe a Command through RabbitMQ, look for ICommandHandler class to resolve
+        /// error handler - if there is exception, publish an IRejectedEvent through RabbitMQ
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
         public IBusSubscriber SubscribeCommand<TCommand>(string @namespace = null, string queueName = null,
             Func<TCommand, NextDoorException, IRejectedEvent> onError = null) where TCommand : ICommand
         {
@@ -64,8 +66,11 @@ namespace NextDoor.Core.RabbitMq
             return this;
         }
 
-        // Based on the message type/event, create a new subscription
-        // Usage: busSubscriber.SubscribeEvent<UserCreated>();
+        /// <summary>
+        /// Subscribe an Event through RabbitMQ, look for IEventHandler class to resolve
+        /// error handler - if there is exception, publish an IRejectedEvent through RabbitMQ
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
         public IBusSubscriber SubscribeEvent<TEvent>(string @namespace = null, string queueName = null,
             Func<TEvent, NextDoorException, IRejectedEvent> onError = null) where TEvent : IEvent
         {

@@ -1,6 +1,7 @@
 using System;
 namespace NextDoor.Core.Messages
 {
+    // Define a custom topic name for message in RabbitMQ
     [AttributeUsage(AttributeTargets.Class)]
     public class MessageNamespaceAttribute : Attribute
     {
