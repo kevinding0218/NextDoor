@@ -21,10 +21,10 @@ namespace NextDoor.Services.Identity.Services.Dto
 
         protected UserDto() { }
 
-        public UserDto(string email, string role, string passwordTyped)
+        public UserDto(string email, string passwordTyped)
         {
             Email = email;
-            Role = role;
+            Role = email.Contains("@nextdoor.com") ? "admin" : "client";
             PasswordTyped = passwordTyped;
         }
 

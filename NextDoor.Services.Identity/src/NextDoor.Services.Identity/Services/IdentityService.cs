@@ -40,7 +40,7 @@ namespace NextDoor.Services.Identity.Services
             _mapper = mapper;
         }
 
-        public async Task SignUpAsync(string email, string password, string role = "user")
+        public async Task SignUpAsync(string email, string password)
         {
             var userDomain = (User)null;
             if (Shared.UseSql)
@@ -58,12 +58,7 @@ namespace NextDoor.Services.Identity.Services
                     $"Email: '{email}' is already in use.");
             }
 
-            if (string.IsNullOrWhiteSpace(role))
-            {
-                role = RoleDto.User;
-            }
-
-            var userDto = new UserDto(email, role, password);
+            var userDto = new UserDto(email, password);
             userDto.SetHashPassword(_passwordHasher);
             userDomain = _mapper.Map<UserDto, User>(userDto);
 

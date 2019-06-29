@@ -42,17 +42,17 @@ namespace NextDoor.Services.Identity
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCustomMvc();
+
+            #region Jwt&Redis
             services.AddJwt();
+            services.AddRedis();
+            #endregion
 
             Shared.UseSql = Convert.ToBoolean(Configuration["datasource:useSql"]);
 
             #region EF MsSql DbContext
             services.Configure<MsSqlDbOptions>(Configuration.GetSection(ConfigOptions.mssqlSectionName));
             services.AddEntityFrameworkMsSql<NextDoorDbContext>();
-            #endregion
-
-            #region Redis
-            services.AddRedis();
             #endregion
 
             #region Seed Mongo

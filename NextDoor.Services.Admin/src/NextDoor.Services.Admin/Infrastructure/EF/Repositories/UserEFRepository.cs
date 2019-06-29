@@ -13,6 +13,15 @@ namespace NextDoor.Services.Admin.Infrastructure.EF.Repositories
         }
 
         public async Task<PagedResult<User>> BrowseAsync(BrowseUserQuery query)
-            => await BrowseAsync(u => u.Email.Contains(query.EmailDomain), query);
+        {
+            if (string.IsNullOrEmpty(query.EmailDomain))
+            {
+                return await BrowseAsync(u => 1 == 1, query);
+            }
+            else
+            {
+                return await BrowseAsync(u => u.Email.Contains(query.EmailDomain), query);
+            }
+        }
     }
 }

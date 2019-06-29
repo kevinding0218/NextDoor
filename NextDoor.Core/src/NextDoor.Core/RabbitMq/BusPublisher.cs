@@ -41,13 +41,14 @@ namespace NextDoor.Core.RabbitMq
             => await _busClient.PublishAsync(@event, ctx => ctx.UseMessageContext(context)
                 .UsePublishConfiguration(p => p.WithRoutingKey(GetRoutingKey(@event))));
 
+        /// <returns>Return Routing Key as Exchange.ICommand/IEvent(Class Name.Underscore()), e.g: #.identity.sign_up_cmd</returns>
         private string GetRoutingKey<T>(T message)
         {
-            var @namespace = message.GetType().GetCustomAttribute<MessageNamespaceAttribute>()?.Namespace ??
+            var ExchangeNamespace = message.GetType().GetCustomAttribute<ExchangeNamespaceAttribute>()?.Namespace ??
                              _defaultNamespace;
-            @namespace = string.IsNullOrWhiteSpace(@namespace) ? string.Empty : $"{@namespace}.";
+            ExchangeNamespace = string.IsNullOrWhiteSpace(ExchangeNamespace) ? string.Empty : $"{ExchangeNamespace}.";
 
-            return $"{@namespace}{typeof(T).Name.Underscore()}".ToLowerInvariant();
+            return $"{ExchangeNamespace}{typeof(T).Name.Underscore()}".ToLowerInvariant();
         }
     }
 }

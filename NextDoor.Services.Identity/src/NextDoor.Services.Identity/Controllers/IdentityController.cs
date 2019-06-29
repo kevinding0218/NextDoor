@@ -41,7 +41,7 @@ namespace NextDoor.Services.Identity.Controllers
                 return BadRequest("Invalid");
             }
 
-            await _dispatcher.SendAsync(command.BindId(c => c.Id));
+            await _dispatcher.SendAsync(command.BindId(c => c.CommandId));
 
             return NoContent();
         }
@@ -61,8 +61,7 @@ namespace NextDoor.Services.Identity.Controllers
                 return BadRequest("Invalid");
             }
 
-            await _identityService.SignUpAsync(dto.Email,
-                dto.Password, dto.Role);
+            await _identityService.SignUpAsync(dto.Email, dto.Password);
 
             return NoContent();
         }

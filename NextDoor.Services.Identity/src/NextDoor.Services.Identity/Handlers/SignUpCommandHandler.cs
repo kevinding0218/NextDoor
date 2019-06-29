@@ -15,14 +15,14 @@ namespace NextDoor.Services.Identity.Handlers
     /// After subscrbe from rabbitMQ with external api gateway or triggered by dispatch
     /// will then publish another 'Event(SignUpSuccessEvent)' and let other services subscribe
     /// </summary>
-    public class SignUpCommandHandler : ICommandHandler<SignUpCmd>
+    public class SignUpSubscribeCmdHandler : ICommandHandler<SignUpCmd>
     {
         private readonly IUserEFRepository _userEFRepository;
         private readonly IUserMongoRepository _userMongoRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IBusPublisher _busPublisher;
 
-        public SignUpCommandHandler(IUserEFRepository userRepository,
+        public SignUpSubscribeCmdHandler(IUserEFRepository userRepository,
             IUserMongoRepository userMongoRepository,
             IPasswordHasher<User> passwordHasher,
             IBusPublisher busPublisher)
@@ -51,7 +51,7 @@ namespace NextDoor.Services.Identity.Handlers
             }
             else
             {
-                userDomain = new User(command.Email, command.Role, string.Empty);
+                userDomain = new User(command.Email);
                 userDomain.SetPassword(command.Password, _passwordHasher);
                 if (Shared.UseSql)
                 {

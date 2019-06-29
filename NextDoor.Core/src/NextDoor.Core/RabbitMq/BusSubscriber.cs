@@ -41,7 +41,7 @@ namespace NextDoor.Core.RabbitMq
         }
 
         /// <summary>
-        /// Subscribe a Command through RabbitMQ, look for ICommandHandler class to resolve
+        /// Subscribe a Command through RabbitMQ's Queue, look for ICommandHandler class to resolve
         /// error handler - if there is exception, publish an IRejectedEvent through RabbitMQ
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
@@ -67,7 +67,7 @@ namespace NextDoor.Core.RabbitMq
         }
 
         /// <summary>
-        /// Subscribe an Event through RabbitMQ, look for IEventHandler class to resolve
+        /// Subscribe an Event through RabbitMQ's Queue, look for IEventHandler class to resolve
         /// error handler - if there is exception, publish an IRejectedEvent through RabbitMQ
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
@@ -87,13 +87,18 @@ namespace NextDoor.Core.RabbitMq
             return this;
         }
 
-        /* 
-        * Get full command path from top level
-        * Get the unique queues per instance of a different application that subscribes to the same event.
-        * Not just return a typeof(T).Name because on the regular server this pattern works just fine, 
-          but once you put .NET Core application into Docker container it will get the same Assembly name as the other applications 
-          (e.g. “app” depending on the WORKDIR)
-        */
+        /// <summary>
+        /// Get full command path from top level
+        /// Get the unique queues per instance of a different application that subscribes to the same event.
+        /// Not just return a typeof(T).Name because on the regular server this pattern works just fine,
+        /// but once you put.NET Core application into Docker container it will get the same Assembly name as the other applications
+        /// (e.g. “app” depending on the WORKDIR)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="namespace"></param>
+        /// <param name="name"></param>
+        /// <returns>format as [projectName/Exchange.ICommand/IEvent(Class Name.Underscore())]
+        /// e.g: nextdoor.services.identity/identity.sign_up_cmd</returns>
         private string GetQueueName<T>(string @namespace = null, string name = null)
         {
             @namespace = string.IsNullOrWhiteSpace(@namespace)

@@ -152,3 +152,7 @@ git push origin :old-name new-name
 git push origin -u new-name
 ```
 -------------------------------------------------------
+## Create a bash script to run all instances
+- Turn Windows features On or Off
+	- Windows sub system for Linux
+- Go to root directory and run `.\dotnet-run-all.sh`

@@ -3,7 +3,7 @@ export ASPNETCORE_ENVIRONMENT=local
 DOTNET_RUN=./scripts/dotnet-run.sh
 PREFIX=NextDoor
 SERVICE=$PREFIX.Services
-REPOSITORIES=($PREFIX.ApiGateway $SERVICE.Identity)
+REPOSITORIES=($PREFIX.ApiGateway $SERVICE.Admin $SERVICE.Customers $SERVICE.Identity $SERVICE.Notifications)
 
 for REPOSITORY in ${REPOSITORIES[*]}
 do
@@ -12,7 +12,7 @@ do
 	 echo ========================================================
 	 echo cd $REPOSITORY
      cd $REPOSITORY
-	 echo bash $DOTNET_RUN &
-     bash $DOTNET_RUN &
+	 echo $DOTNET_RUN &
+     $DOTNET_RUN &
      cd ..
 done

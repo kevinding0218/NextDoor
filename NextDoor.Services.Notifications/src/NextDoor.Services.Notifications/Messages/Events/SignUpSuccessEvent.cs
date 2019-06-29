@@ -4,7 +4,7 @@ using NextDoor.Core.Messages;
 namespace NextDoor.Services.Notifications.Messages.Events
 {
     // Immutable
-    [MessageNamespace("identity")]
+    [ExchangeNamespace("identity")]
     public class SignUpSuccessEvent : IEvent
     {
         public string Email { get; }

@@ -27,6 +27,6 @@ namespace NextDoor.ApiGateway.Controllers
         /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] BrowseUserQuery query)
-            => Collection(await _adminService.BrowseAsync(query));
+            => Collection(await _adminService.BrowseUsersAsync(query));
     }
 }

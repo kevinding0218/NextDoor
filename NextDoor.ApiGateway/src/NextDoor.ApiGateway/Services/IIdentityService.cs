@@ -9,7 +9,7 @@ namespace NextDoor.ApiGateway.Services
     public interface IIdentityService
     {
         /// <summary>
-        /// called to localhost:5203/users
+        /// called to localhost:5201/sign-in
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>

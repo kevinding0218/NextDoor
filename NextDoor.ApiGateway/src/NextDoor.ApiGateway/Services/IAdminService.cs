@@ -10,12 +10,12 @@ namespace NextDoor.ApiGateway.Services
     public interface IAdminService
     {
         /// <summary>
-        /// called to localhost:5203/users
+        /// called to Admin.Service at localhost:5203/users
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
         [AllowAnyStatusCode]
         [Get("users")]
-        Task<PagedResult<UserDto>> BrowseAsync([Query] BrowseUserQuery query);
+        Task<PagedResult<UserDto>> BrowseUsersAsync([Query] BrowseUserQuery query);
     }
 }

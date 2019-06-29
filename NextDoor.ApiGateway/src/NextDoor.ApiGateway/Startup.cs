@@ -10,6 +10,7 @@ using NextDoor.Core.Dispatcher;
 using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
 using NextDoor.Core.RestEase;
+using NextDoor.Core.src.NextDoor.Core.Redis;
 using System;
 
 namespace NextDoor.ApiGateway
@@ -29,7 +30,17 @@ namespace NextDoor.ApiGateway
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCustomMvc();
+
+            #region Jwt&Redis
             services.AddJwt();
+            services.AddRedis();
+            #endregion
+
+            #region Policy Based Authorization
+            // Will be used by Core.Authentication.AdminAuthAttribute class 
+            // and [AdminAuth] as Authorization Filter
+            services.AddAuthorization(auth => auth.AddPolicy("admin", policy => policy.RequireRole("admin")));
+            #endregion
 
             #region CORS
             services.AddCors(options =>
