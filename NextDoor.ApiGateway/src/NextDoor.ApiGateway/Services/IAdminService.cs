@@ -1,5 +1,5 @@
 ﻿using NextDoor.ApiGateway.Dto.Admin;
-using NextDoor.ApiGateway.Messages.Queries;
+using NextDoor.ApiGateway.Messages.Queries.Admin;
 using NextDoor.Core.Types.Pagination;
 using RestEase;
 using System.Threading.Tasks;

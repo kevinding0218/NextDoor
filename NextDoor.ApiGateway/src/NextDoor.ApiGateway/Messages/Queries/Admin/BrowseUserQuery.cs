@@ -1,6 +1,6 @@
 ﻿using NextDoor.Core.Types.Pagination;
 
-namespace NextDoor.ApiGateway.Messages.Queries
+namespace NextDoor.ApiGateway.Messages.Queries.Admin
 {
     public class BrowseUserQuery : PagedQueryBase
     {

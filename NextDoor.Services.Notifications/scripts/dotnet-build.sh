@@ -6,5 +6,5 @@ case "$TRAVIS_BRANCH" in
     ;;
 esac
 
-cd ../src/NextDoor.Services.Identity
+cd ../src/NextDoor.Services.Notifications
 dotnet build -c Release --no-cache

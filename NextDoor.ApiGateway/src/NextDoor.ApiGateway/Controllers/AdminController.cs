@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using NextDoor.ApiGateway.Messages.Queries;
+﻿using Microsoft.AspNetCore.Mvc;
+using NextDoor.ApiGateway.Messages.Queries.Admin;
 using NextDoor.ApiGateway.Services;
+using NextDoor.Core.Authentication;
 using NextDoor.Core.RabbitMq;
 using System.Threading.Tasks;
 
@@ -9,7 +9,7 @@ namespace NextDoor.ApiGateway.Controllers
 {
     [Route("admin")]
     [ApiController]
-    [AllowAnonymous]
+    [AdminAuth]
     public class AdminController : BaseController
     {
         private readonly IAdminService _adminService;

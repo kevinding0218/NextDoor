@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NextDoor.ApiGateway.Services;
+using NextDoor.Core.Authentication;
 using NextDoor.Core.Dispatcher;
 using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
@@ -28,6 +29,7 @@ namespace NextDoor.ApiGateway
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCustomMvc();
+            services.AddJwt();
 
             #region CORS
             services.AddCors(options =>
@@ -91,8 +93,9 @@ namespace NextDoor.ApiGateway
             app.UseCors("CorsPolicy");
             app.UseAllForwardedHeader();
             app.UseErrorHandler();
-            //app.UseAuthentication();
-            //app.UseAccessTokenValidator();
+            app.UseAuthentication();
+            app.UseAccessTokenValidator();
+            app.UseServiceId();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseRabbitMq();

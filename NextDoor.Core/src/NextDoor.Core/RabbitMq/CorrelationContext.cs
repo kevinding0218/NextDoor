@@ -7,7 +7,7 @@ namespace NextDoor.Core.RabbitMq
     public class CorrelationContext : ICorrelationContext
     {
         public Guid Id { get; }
-        public Guid UserId { get; }
+        public int UserId { get; }
         public Guid ResourceId { get; }
         public string TraceId { get; }
         public string SpanContext { get; }
@@ -29,7 +29,7 @@ namespace NextDoor.Core.RabbitMq
         }
 
         [JsonConstructor]
-        private CorrelationContext(Guid id, Guid userId, Guid resourceId, string traceId, string spanContext,
+        private CorrelationContext(Guid id, int userId, Guid resourceId, string traceId, string spanContext,
             string connectionId, string executionId, string name, string origin, string culture, string resource, int retries)
         {
             Id = id;
@@ -61,7 +61,7 @@ namespace NextDoor.Core.RabbitMq
             => Create<T>(context.Id, context.UserId, context.ResourceId, context.TraceId, context.ConnectionId,
                 context.Origin, context.Culture, context.Resource);
 
-        public static ICorrelationContext Create<T>(Guid id, Guid userId, Guid resourceId, string origin,
+        public static ICorrelationContext Create<T>(Guid id, int userId, Guid resourceId, string origin,
             string traceId, string spanContext, string connectionId, string culture, string resource = "")
             => new CorrelationContext(id, userId, resourceId, traceId, spanContext, connectionId, string.Empty, typeof(T).Name, origin, culture, resource, 0);
         #endregion
