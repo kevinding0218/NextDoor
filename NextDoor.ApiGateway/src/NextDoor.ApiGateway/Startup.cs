@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NextDoor.ApiGateway.Services;
 using NextDoor.Core.Authentication;
 using NextDoor.Core.Dispatcher;
@@ -11,6 +12,7 @@ using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
 using NextDoor.Core.RestEase;
 using NextDoor.Core.src.NextDoor.Core.Redis;
+using Serilog;
 using System;
 
 namespace NextDoor.ApiGateway
@@ -23,6 +25,8 @@ namespace NextDoor.ApiGateway
 
         public Startup(IConfiguration configuration)
         {
+            // Init Serilog configuration
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
             Configuration = configuration;
         }
 
@@ -88,7 +92,7 @@ namespace NextDoor.ApiGateway
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            IApplicationLifetime applicationLifetime)
+            IApplicationLifetime applicationLifetime, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -108,6 +112,8 @@ namespace NextDoor.ApiGateway
             app.UseAccessTokenValidator();
             app.UseServiceId();
             app.UseHttpsRedirection();
+            // logging
+            loggerFactory.AddSerilog();
             app.UseMvc();
             app.UseRabbitMq();
             #endregion

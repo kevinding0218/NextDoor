@@ -17,3 +17,77 @@
         => Ok(await _dispatcher.QueryAsync(query));
 	```
 	- Then same approach of local dispatch will be executed within identity.service and return our IEnumerable<UserDto>.
+## Using Serilog
+### Installation
+- Serilog.AspNetCore enables Serilog for ASP.NET Core, you have to add 
+- Serilog.Settings.Configuration if you need to enable configuration from appsettings.json
+- Serilog.Sinks.RollingFile enables you to log into rolling files your logs
+```
+dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Settings.Configuration
+dotnet add package Serilog.Sinks.RollingFile
+```
+### Configure appsetting.json
+```
+{
+ "Serilog": {
+    "MinimumLevel": "Information",
+    "WriteTo": [
+    {
+       "Name": "RollingFile",
+       "Args": {
+          "pathFormat": "C:\\Temp\\log-{Date}.txt",
+          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}"
+       }
+    }
+   ],
+   "Properties": {
+      "Application": "Common feature in WebApi demo"
+   }
+ }
+```
+### Configuring Startup.cs
+- read the configuration from appsettings.json
+```c#
+public Startup(IConfiguration configuration)
+{
+   // Init Serilog configuration
+   Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
+   Configuration = configuration;
+}
+```
+- add Serilog to the LoggerFactory in the Configure method, so that Serilog override the default Microsoft Logger provided by the assembly: Microsoft.Extensions.Logging
+```c#
+public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+{
+   // logging
+   loggerFactory.AddSerilog();
+   app.UseMvc();
+ }
+```
+- Create logging example
+```c#
+public class DemoExceptionController : ControllerBase
+{
+   private readonly ILogger<DemoExceptionController> _logger;
+   public DemoExceptionController(ILogger<DemoExceptionController> logger)
+   {
+      _logger = logger;
+   }
+
+   [HttpGet]
+   public IEnumerable<string> Get()
+   {
+      try
+      {
+         _logger.LogInformation("Could break here :(");
+         throw new Exception("bohhhh very bad error");
+      }
+      catch (Exception e)
+      {
+         _logger.LogError(e, "It broke :(");
+      }
+      return new string[] { "value1", "value2" };
+   }
+}
+```
