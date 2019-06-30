@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\NextDoor.Core\src\NextDoor.Core\NextDoor.Core.csproj" />
-    <ProjectReference Include="..\..\..\NextDoor.Services.Identity\src\NextDoor.Services.Identity\NextDoor.Services.Identity.csproj" />
   </ItemGroup>
 
 </Project>
