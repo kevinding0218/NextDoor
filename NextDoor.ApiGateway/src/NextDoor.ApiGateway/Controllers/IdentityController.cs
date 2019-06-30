@@ -38,7 +38,6 @@ namespace NextDoor.ApiGateway.Controllers
         [HttpPost("sign-in")]
         [AllowAnonymous]
         public async Task<ActionResult<object>> SignIn(SignInQuery query)
-            //=> Single(await _identityService.SignInAsync(query));
-            => await _identityService.SignInAsync(query);
+            => Result(await _identityService.SignInAsync(query));
     }
 }

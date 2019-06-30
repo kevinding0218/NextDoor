@@ -18,6 +18,7 @@ Content-Type: application/json
 }
 
 ### Sign in as admin
+# POST {{identityServiceUrl}}/sign-in
 POST {{identityServiceUrl}}/sign-in
 Content-Type: application/json
 

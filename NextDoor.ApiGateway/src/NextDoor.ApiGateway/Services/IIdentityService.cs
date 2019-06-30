@@ -1,11 +1,10 @@
-﻿using Microsoft.IdentityModel.JsonWebTokens;
-using NextDoor.ApiGateway.Messages.Queries.Identity;
+﻿using NextDoor.ApiGateway.Messages.Queries.Identity;
 using RestEase;
 using System.Threading.Tasks;
 
 namespace NextDoor.ApiGateway.Services
 {
-    [SerializationMethods(Query = QuerySerializationMethod.Serialized)]
+    [SerializationMethods(Body = BodySerializationMethod.Serialized)]
     public interface IIdentityService
     {
         /// <summary>
@@ -15,6 +14,7 @@ namespace NextDoor.ApiGateway.Services
         /// <returns></returns>
         [AllowAnyStatusCode]
         [Post("sign-in")]
-        Task<JsonWebToken> SignInAsync([Query] SignInQuery query);
+        //Task<JsonWebToken> SignInAsync([Body] SignInQuery query);
+        Task<object> SignInAsync([Body] SignInQuery query);
     }
 }

@@ -70,7 +70,7 @@ namespace NextDoor.Core.MSSQL
         /// <param name="parameters">The parameters.</param>
         /// <returns>An <see cref="IQueryable{T}" /> that contains elements that satisfy the condition specified by raw SQL.</returns>
         public static IQueryable<T> FromSql<T>(this DbContext _dbContext, string sql, params SqlParameter[] parameters) where T : class
-            => _dbContext.Set<T>().FromSql(sql, parameters);
+            => _dbContext.Query<T>().FromSql(sql, parameters);
 
         public static IEnumerable<ChangeLog> GetChanges(this DbContext dbContext, IUserInfo userInfo)
         {

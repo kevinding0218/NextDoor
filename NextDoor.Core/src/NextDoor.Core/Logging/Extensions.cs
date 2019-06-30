@@ -48,7 +48,7 @@ namespace NextDoor.Core.Logging
             // Enable writeing log events to one or more text files.
             if (serilogOptions.FileEnabled)
             {
-                loggerConfiguration.WriteTo.File("log.txt", rollingInterval: RollingInterval.Day);
+                loggerConfiguration.WriteTo.File("log_.txt", rollingInterval: RollingInterval.Hour, retainedFileCountLimit: null);
             }
         }
     }

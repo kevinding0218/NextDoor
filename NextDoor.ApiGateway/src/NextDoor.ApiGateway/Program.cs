@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using NextDoor.Core.Logging;
 
 namespace NextDoor.ApiGateway
 {
@@ -26,6 +27,7 @@ namespace NextDoor.ApiGateway
             var webHost = WebHost.CreateDefaultBuilder(args)
                 .UseUrls($"http://localhost:5200")
                 .UseStartup<Startup>()
+                .UseSeriLogging()
                 .UseDefaultServiceProvider(options =>
                     options.ValidateScopes = false);
 

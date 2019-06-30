@@ -22,6 +22,9 @@ namespace NextDoor.Core.Mvc
 
         public async Task Invoke(HttpContext context)
         {
+            var httpRequest = $"ErrorHandlerMiddleware Invoking: [{context.Request.Method}] {context.Request.Scheme}://{context.Request.Host}{context.Request.Path}";
+            _logger.LogInformation(httpRequest);
+
             try
             {
                 await this._next(context);

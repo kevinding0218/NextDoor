@@ -25,10 +25,28 @@
 	- Inside the `QueryDispatcher.QueryAsync` method, will automatically look for any Query Handler for the corresponding type of `IQuery<TResult>`, here is our `IQueryHandler<SignInQuery, JsonWebToken>` which resolve the incoming request in `HandleAsync` and consume it.
 - Using Api Gateway and RestEase
 	- Create a new Api Gateway Service, also create a `IIdentityService` interface which will be used as our RestEase redirection, define the way of Http Action and return type as same as what we will be used later on in our internal service.
+	- Here we're passing parameter through **Body** not **Query**
 	```
-	[AllowAnyStatusCode]
-    [Post("sign-in")]
-    Task<JsonWebToken> SignInAsync([Query] SignInQuery query);
+	[SerializationMethods(Query = QuerySerializationMethod.Serialized)]
+    public interface IIdentityService
+    {
+        /// <summary>
+        /// called to localhost:5201/sign-in
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [AllowAnyStatusCode]
+        [Post("sign-in")]
+        Task<JsonWebToken> SignInAsync([Query] SignInQuery query);
+    }
+	```
+	- Create Api Gateway Controller Method
+	- **Attention to the gate way return type of object here**
+	```
+	[HttpPost("sign-in")]
+    [AllowAnonymous]
+    public async Task<ActionResult<object>> SignIn(SignInQuery query)
+        => Result(await _identityService.SignInAsync(query));
 	```
 	- RestEase will look for the appsettings.json config for where the service name mapping to which host and port, then in StartUp class, register the `IIdentityService` with the config we defined `restEase.services.identity-service`
 	```
@@ -37,12 +55,11 @@
 	- Inside of its controller action, define a action method by injecting and using `IIdentityService`, whenever a http call reaches our API gateway, it will then redirect to our IdentityService http post method of sign-in.
 	```
 	[HttpPost("sign-in")]
-    [AllowAnonymous]
-    public async Task<ActionResult<object>> SignIn(SignInQuery query)
-        //=> Single(await _identityService.SignInAsync(query));
-        => await _identityService.SignInAsync(query);
+    public async Task<ActionResult<JsonWebToken>> SignInFromGateway(SignInQuery query)
+        => await _dispatcher.QueryAsync(query);
 	```
 	- Then same approach of local dispatch will be executed within identity.service and return our JwtToken.
+	- For now, if you need to get response from internal service, must use **HTTPGet** instead of **HTTPPost**.
 ## RabbitMQ
 - we subscribe to particular message when the app actually starts,
 the app subscribes on the very beginning of its lifetime, the subscription leaves together with the particular micro service
