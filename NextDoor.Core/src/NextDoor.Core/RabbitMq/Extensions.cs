@@ -106,9 +106,18 @@ namespace NextDoor.Core.RabbitMq
         #region nested private class "CustomNamingConventions"
         private class CustomNamingConventions : NamingConventions
         {
+            /// <summary>
+            /// - Exchange: Customized with name defined in ExchangeNamespaceAttribute, e.g: [ExchangeNamespace("identity")]
+            /// otherwise by default would be RabbitMqOptions.NameSpace which defined in appsettings.json rabbitMq.namespace
+            /// - Routing Key: format as #.Exchange.ICommand/IEvent(Class Name.Underscore()), e.g: #.identity.sign_up_cmd
+            /// - Error Exchange: format as Exchange.error
+            /// - Retry Exchange: format as Exchange.retry
+            /// - Retry Queue: format as "Exchange.retry_for_xxxx
+            /// </summary>
+            /// <param name="defaultNamespace">RabbitMqOptions.NameSpace which defined in appsettings.json rabbitMq.namespace</param>
             public CustomNamingConventions(string defaultNamespace)
             {
-                ExchangeNamingConvention = type => GetNamespace(type, defaultNamespace).ToLowerInvariant();
+                ExchangeNamingConvention = type => GetExchangeNamespace(type, defaultNamespace).ToLowerInvariant();
                 RoutingKeyConvention = type =>
                     $"#.{GetRoutingKeyNamespace(type, defaultNamespace)}{type.Name.Underscore()}".ToLowerInvariant();
                 ErrorExchangeNamingConvention = () => $"{defaultNamespace}.error";
@@ -122,14 +131,14 @@ namespace NextDoor.Core.RabbitMq
             // This can result in a measurable performance gain for performance-sensitive code.
             private static string GetRoutingKeyNamespace(Type type, string defaultNamespace)
             {
-                var @namespace = type.GetCustomAttribute<MessageNamespaceAttribute>()?.Namespace ?? defaultNamespace;
+                var @namespace = type.GetCustomAttribute<ExchangeNamespaceAttribute>()?.Namespace ?? defaultNamespace;
 
                 return string.IsNullOrWhiteSpace(@namespace) ? string.Empty : $"{@namespace}.";
             }
 
-            private static string GetNamespace(Type type, string defaultNamespace)
+            private static string GetExchangeNamespace(Type type, string defaultNamespace)
             {
-                var @namespace = type.GetCustomAttribute<MessageNamespaceAttribute>()?.Namespace ?? defaultNamespace;
+                var @namespace = type.GetCustomAttribute<ExchangeNamespaceAttribute>()?.Namespace ?? defaultNamespace;
 
                 return string.IsNullOrWhiteSpace(@namespace) ? "#" : $"{@namespace}";
             }

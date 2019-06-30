@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NextDoor.Core.Authentication;
 using NextDoor.Core.Dispatcher;
 using NextDoor.Core.Mongo;
 using NextDoor.Core.MSSQL;
 using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
+using NextDoor.Core.src.NextDoor.Core.Redis;
 using NextDoor.Core.Types;
 using NextDoor.Services.Admin.Infrastructure.Domain;
 using NextDoor.Services.Admin.Infrastructure.EF;
@@ -31,6 +33,11 @@ namespace NextDoor.Services.Admin
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCustomMvc();
+
+            #region Jwt&Redis
+            services.AddJwt();
+            services.AddRedis();
+            #endregion
 
             Shared.UseSql = Convert.ToBoolean(Configuration["datasource:useSql"]);
 
@@ -104,8 +111,8 @@ namespace NextDoor.Services.Admin
             app.UseCors("CorsPolicy");
             app.UseAllForwardedHeader();
             app.UseErrorHandler();
-            //app.UseAuthentication();
-            //app.UseAccessTokenValidator();
+            app.UseAuthentication();
+            app.UseAccessTokenValidator();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseRabbitMq();

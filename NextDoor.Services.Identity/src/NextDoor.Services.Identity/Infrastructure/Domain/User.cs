@@ -23,11 +23,10 @@ namespace NextDoor.Services.Identity.Infrastructure.Domain
         {
         }
 
-        public User(string email, string role, string passwordHash)
+        public User(string email)
         {
             Email = email;
-            Role = role;
-            PasswordHash = passwordHash;
+            Role = email.Contains("@nextdoor.com") ? "admin" : "client";
         }
 
         public void SetPassword(string passwordTyped, IPasswordHasher<User> passwordHasher)

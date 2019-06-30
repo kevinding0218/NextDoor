@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using NextDoor.ApiGateway.Messages.Commands.Identity;
 using NextDoor.ApiGateway.Messages.Queries.Identity;
 using NextDoor.ApiGateway.Services;
-using NextDoor.Core.Authentication;
 using NextDoor.Core.Common;
 using NextDoor.Core.RabbitMq;
 using System.Threading.Tasks;
@@ -12,7 +11,6 @@ namespace NextDoor.ApiGateway.Controllers
 {
     [Route("identity")]
     [ApiController]
-    [JwtAuth]
     public class IdentityController : BaseController
     {
         private IIdentityService _identityService;
@@ -30,7 +28,7 @@ namespace NextDoor.ApiGateway.Controllers
         [HttpPost("sign-up")]
         [AllowAnonymous]
         public async Task<IActionResult> SignUp(SignUpCmd command)
-            => await SendAsync(command.BindId(c => c.Id), resourceId: command.Id, resource: "identity");
+            => await SendAsync(command.BindId(c => c.CommandId), resourceId: command.CommandId, resource: "identity");
 
         /// <summary>
         /// Redirect API Call to internal API Service
@@ -38,7 +36,8 @@ namespace NextDoor.ApiGateway.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost("sign-in")]
-        public async Task<IActionResult> SignIn(SignInQuery query)
-            => Single(await _identityService.SignInAsync(query));
+        [AllowAnonymous]
+        public async Task<ActionResult<object>> SignIn(SignInQuery query)
+            => Result(await _identityService.SignInAsync(query));
     }
 }

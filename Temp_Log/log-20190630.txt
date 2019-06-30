@@ -1,0 +1,10 @@
+2019-06-30 02:19:19.905 -04:00 [Information] Request starting HTTP/1.1 GET http://localhost:5200/  
+2019-06-30 02:19:19.935 -04:00 [Information] ErrorHandlerMiddleware Invoking: [GET] http://localhost:5200/
+2019-06-30 02:19:19.948 -04:00 [Information] AccessTokenValidatorMiddleware Invoking: [GET] http://localhost:5200/
+2019-06-30 02:19:20.107 -04:00 [Warning] Failed to determine the https port for redirect.
+2019-06-30 02:19:20.286 -04:00 [Information] Route matched with "{action = \"Get\", controller = \"Home\"}". Executing action "NextDoor.ApiGateway.Controllers.HomeController.Get (NextDoor.ApiGateway)"
+2019-06-30 02:19:20.307 -04:00 [Information] Executing action method "NextDoor.ApiGateway.Controllers.HomeController.Get (NextDoor.ApiGateway)" - Validation state: Valid
+2019-06-30 02:19:20.312 -04:00 [Information] Executed action method "NextDoor.ApiGateway.Controllers.HomeController.Get (NextDoor.ApiGateway)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 1.1641ms.
+2019-06-30 02:19:20.339 -04:00 [Information] Executing ObjectResult, writing value of type '"System.String"'.
+2019-06-30 02:19:20.358 -04:00 [Information] Executed action "NextDoor.ApiGateway.Controllers.HomeController.Get (NextDoor.ApiGateway)" in 67.1391ms
+2019-06-30 02:19:20.365 -04:00 [Information] Request finished in 464.1989ms 200 text/plain; charset=utf-8

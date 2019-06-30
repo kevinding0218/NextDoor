@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NextDoor.Core.Authentication;
 using NextDoor.Core.Dispatcher;
 using NextDoor.Core.Mvc;
 using NextDoor.Core.RabbitMq;
+using NextDoor.Core.src.NextDoor.Core.Redis;
 using NextDoor.Services.Customers.Messages.Events;
 using System;
 
@@ -26,6 +28,11 @@ namespace NextDoor.Services.Customers
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCustomMvc();
+
+            #region Jwt&Redis
+            services.AddJwt();
+            services.AddRedis();
+            #endregion
 
             #region CORS
             services.AddCors(options =>
@@ -81,8 +88,8 @@ namespace NextDoor.Services.Customers
             app.UseCors("CorsPolicy");
             app.UseAllForwardedHeader();
             app.UseErrorHandler();
-            //app.UseAuthentication();
-            //app.UseAccessTokenValidator();
+            app.UseAuthentication();
+            app.UseAccessTokenValidator();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseRabbitMq()

@@ -1,5 +1,65 @@
 ## JsonConstructor
 - Let system know how to handle serialization for your constructor
+## Multiple ways of Sign Up
+- Using traditional Service Layer and Dto and DI in Controller
+- Using local dispatch
+	- Create a Command Type class of `SignUpSubscribeCmd` which inherites from `ICommand`, the `SignUpSubscribeCmd` would be used as our Dto model
+	- Create a Command Handler class of `SignUpSubscribeCmdHandler` which inherites from `ICommandHandler<SignUpCmd>`, this would be our local handler to use Repository to perform business logic.
+	- In `IdentityController`, use `_dispatcher.SendAsync(command.BindId(c => c.CommandId));` to send incoming request/command of `SignUpSubscribeCmd`, 
+	- Inside the `CommandDispatcher.SendAsync` method, will automatically look for any Command Handler for the corresponding type of `ICommand`, here is our `ICommandHandler<SignUpCmd>` which resolve the incoming request in `HandleAsync` and consume it.
+- Using Api Gateway and RabbitMQ
+	- Create a new Api Gateway Service, inside of its controller action, call `await SendAsync(command.BindId(c => c.CommandId), resourceId: command.CommandId, resource: "identity");` to send the command in RabbitMQ with Routing key formatted as **Exchange.ICommand/IEvent(Class Name.Underscore())**, e.g: `#.identity.sign_up_cmd`
+	- Right now the message which also contains the `SignUpCmd` model has been sent to RabbitMQ with defined Routing Key, we need to register the consumer to handle this published event.
+	- Create a Subscriber with same Command Name as middleware in `IdentityService`, the `SubscribeCommand` method will use the same `ICommandHandler<SignUpCmd>` to handle this command
+	```
+	app.UseRabbitMq()
+		.SubscribeCommand<SignUpCmd>();
+	```
+## Multiple ways of Sign In
+- Using traditional Service Layer and Dto and DI in Controller
+- Using local dispatch
+	- Since Sign In requires to return something as in response such like JwtToken, we need to use query and query handler to perform this.
+	- Create a Query Type class of `SignInQuery` which inherites from `IQuery<JsonWebToken>`, the `SignInQuery` would be used as our Dto model
+	- Create a Query Handler class of `SignInQueryHandler` which inherites from `IQueryHandler<SignInQuery, JsonWebToken>`, this would be our local handler to use Repository to perform business logic. 
+	- In `IdentityController`, use `await _dispatcher.QueryAsync(query);` to send incoming request/query of `SignInQuery`, 
+	- Inside the `QueryDispatcher.QueryAsync` method, will automatically look for any Query Handler for the corresponding type of `IQuery<TResult>`, here is our `IQueryHandler<SignInQuery, JsonWebToken>` which resolve the incoming request in `HandleAsync` and consume it.
+- Using Api Gateway and RestEase
+	- Create a new Api Gateway Service, also create a `IIdentityService` interface which will be used as our RestEase redirection, define the way of Http Action and return type as same as what we will be used later on in our internal service.
+	- Here we're passing parameter through **Body** not **Query**
+	```
+	[SerializationMethods(Query = QuerySerializationMethod.Serialized)]
+    public interface IIdentityService
+    {
+        /// <summary>
+        /// called to localhost:5201/sign-in
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [AllowAnyStatusCode]
+        [Post("sign-in")]
+        Task<JsonWebToken> SignInAsync([Query] SignInQuery query);
+    }
+	```
+	- Create Api Gateway Controller Method
+	- **Attention to the gate way return type of object here**
+	```
+	[HttpPost("sign-in")]
+    [AllowAnonymous]
+    public async Task<ActionResult<object>> SignIn(SignInQuery query)
+        => Result(await _identityService.SignInAsync(query));
+	```
+	- RestEase will look for the appsettings.json config for where the service name mapping to which host and port, then in StartUp class, register the `IIdentityService` with the config we defined `restEase.services.identity-service`
+	```
+	services.RegisterServiceForwarder<IIdentityService>("identity-service");
+	```
+	- Inside of its controller action, define a action method by injecting and using `IIdentityService`, whenever a http call reaches our API gateway, it will then redirect to our IdentityService http post method of sign-in.
+	```
+	[HttpPost("sign-in")]
+    public async Task<ActionResult<JsonWebToken>> SignInFromGateway(SignInQuery query)
+        => await _dispatcher.QueryAsync(query);
+	```
+	- Then same approach of local dispatch will be executed within identity.service and return our JwtToken.
+	- For now, if you need to get response from internal service, must use **HTTPGet** instead of **HTTPPost**.
 ## RabbitMQ
 - we subscribe to particular message when the app actually starts,
 the app subscribes on the very beginning of its lifetime, the subscription leaves together with the particular micro service
@@ -12,71 +72,3 @@ the app subscribes on the very beginning of its lifetime, the subscription leave
 		- e.g my routing key will be look like **#.identity.sign_up_cmd**
 	- routing key by customize: use ["MessageNamespace("anotherServiceNamespace")]: if I'm interested in a particular message that's not in my service which would publish it but another service that wants to subscribe to this type of message, use the annotation and set it as its routing key. (See Core.RabbitMq.Extensions.CustomNamingConventions)
 	- add same message to api gateway which will have different namespace, in order to get rid of the namespace routing key to make it work, we'd customized the namespace either in configuration or attribute of `MessageNamespace`
-## [Use Docker for Sql Server 2017](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash)
-
-### Using powershell
-- Pull the SQL Server 2017 Linux container image from Microsoft Container Registry.
-	```
-	docker pull mcr.microsoft.com/mssql/server:2017-latest
-	```
-	- If you want to pull a specific image, you add a colon and the tag name, for example, `mcr.microsoft.com/mssql/server:2017-GA-ubuntu`
-- Run the container image with Docker
-	```
-	docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' -p 1433:1433 --name sql1 -d mcr.microsoft.com/mssql/server:2017-latest
-	```
-	- **-e 'ACCEPT_EULA=Y'**: (Required) Set the ACCEPT_EULA variable to any value to confirm your acceptance of the End-User Licensing Agreement.
-	- **-e 'SA_PASSWORD=<YourStrong!Passw0rd>'**: (Required) Specify your own strong password that is at least 8 characters and meets the SQL Server password requirements.
-	- **-p 1433:1433**: Map a TCP port on the host environment (first value) with a TCP port in the container (second value). In this example, SQL Server is listening on TCP 1433 in the container and this is exposed to the port, 1433, on the host.
-	- **--name sql1**: Specify a custom name for the container rather than a randomly generated one. If you run more than one container, you cannot reuse this same name.
-	- **mcr.microsoft.com/mssql/server:2017-latest**: The SQL Server 2017 Linux container image.
-- To view your Docker containers
-	```
-	docker ps -a
-	```
-- Status
-	- If the STATUS column shows a status of Up, then SQL Server is running in the container and listening on the port specified in the PORTS column.
-	- If the STATUS column for your SQL Server container shows Exited, need to troubleshoot
-- Troubleshoot
-	- make sure Docker service is running
-	- error: failed to create endpoint CONTAINER_NAME on network bridge. Error starting proxy: listen tcp 0.0.0.0:1433 bind: address already in use
-		- This can happen if you're running SQL Server locally on the host machine.
-		- It can also happen if you start two SQL Server containers and try to map them both to the same host port.
-		- If this happens, use the -p parameter to map the container port 1433 to a different host port.
-		- For example:
-			```
-			docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YourStrong!Passw0rd>" -p 1400:1433 -d mcr.microsoft.com/mssql/server:2017-latest
-			```
-	- check container log	
-		```
-		docker logs YOUR_CONTAINER_ID
-		```
-- Connect to local Azure Data Studio or SSMS using `192.168.1.79,1433` and SA/Password
-- Check local ip address through `ipconfig` --> Wireless LAN IPv4 Address
-### Using docker-compose
-- Create a docker-compose.yml file
-	- This file defines the `web` and `db` micro-services, their relationship, the ports they are using, and their specific environment variables.
-		```docker
-		version: "3"
-		services:
-		    web:
-		        build: .
-		        ports:
-		            - "8000:80"
-		        depends_on:
-		            - db
-		    db:
-		        image: "mcr.microsoft.com/mssql/server:2017-latest"
-		        ports:
-			        - "1433:1433"
-		        environment:
-		            SA_PASSWORD: "Your_password123"
-		            ACCEPT_EULA: "Y"
-		        container_name: db1
-		```
-- Use correct [version](https://docs.docker.com/compose/compose-file/)
-- Check validity using `docker-compose config`
-- Run docker-compose.yml file using `docker-compose up -d`
-	- **-d**: start in detach mode
-- Stop the container using `docker-compose down`
-- Scale services: 
-	- Scale four database services using`docker-compose up -d --scale database=4`

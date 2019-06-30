@@ -7,18 +7,23 @@
 POST {{identityServiceUrl}}/sign-up
 Content-Type: application/json
 
+# {
+# 	"email": "nd-admin@nextdoor.com",
+# 	"password": "ndadmin321"
+# }
 {
-	"email": "nd-admin5@nextdoor.com",
-	"password": "ndadmin321",
+	"email": "nd-client@gmail.com",
+	"password": "ndclient321",
 	"role": "admin"
 }
 
 ### Sign in as admin
+# POST {{identityServiceUrl}}/sign-in
 POST {{identityServiceUrl}}/sign-in
 Content-Type: application/json
 
 {
-	"email": "nd-admin@nextdoor.com",
+	"email": "nd-admin4@nextdoor.com",
 	"password": "ndadmin321"
 }
 
