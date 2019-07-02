@@ -91,3 +91,14 @@ public class DemoExceptionController : ControllerBase
    }
 }
 ```
+## Service discovery & Load balancing with Consul + Fabio
+### Why
+- Avoid putting too large objects on a RabbitMQ, try to keep them as small as possible, pass only information that's actually necessary for the other service to identity that something will not change or was created
+### Consul
+- Service registration centralized,each of the micro service will actually register to the consul, in `StartUp` we'll add some logic that says whenever our micro service is up, we want to call consul and register our micro service with particular data. If you scale your services horinzontally, like 10 or 50 instances, consul will randomly pick one of your service instances and hit that service to get the data.
+- IP addresses is not a concern of our micro services, but a concern of the service registry.
+```
+//dotnet add package Consul
+docker-compose -f docker-compose-consul-vault.yml up
+// Consul will start at localhost:8500/ui
+```
