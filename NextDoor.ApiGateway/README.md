@@ -102,3 +102,13 @@ public class DemoExceptionController : ControllerBase
 docker-compose -f docker-compose-consul-vault.yml up
 // Consul will start at localhost:8500/ui
 ```
+## Handling Async Requests
+- In our API gateway BaseController, we have the `SendAsync` had the `GetContext<T>`, and what it does is to when you send the request to the API Gateway and create a new context, passes the new Guid as its Id. 
+- Then we will use `await _busPublisher.SendAsync(command, context);` to send our command with the context we created to RabbitMQ and publish it. 
+- ICorrelationContext is nothing more but the metadata that comes with the message
+- Then our command or event handler will get this ICorrelationContext, to make it further will attach it in RabbitMQ publisher when your handler finishes the work.
+### Handling error exception by IRejectedEvent
+- Create a class that implement IRejectedEvent
+- Create a seperate service that will subscribe to all such events. Once an event which might be either success or rejected, simply get the operation object from Database, let data access layer update its state so we would say that was a pending operation, now it's like rejected or successful.
+- Within my `GenericEventHandler` we're listening down below to either rejected events or general event, so we know something failed or successful. 
+

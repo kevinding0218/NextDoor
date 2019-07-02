@@ -42,6 +42,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C8804D8C-C0B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDoor.Services.Admin", "NextDoor.Services.Admin\src\NextDoor.Services.Admin\NextDoor.Services.Admin.csproj", "{2509D5F6-3938-4CB3-B875-F5EAD9647CEF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NextDoor.Services.Operations", "NextDoor.Services.Operations", "{B652BD95-3ECB-4F00-97D3-CBE385C76F0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{31F2056A-BF1F-4FCB-A385-4DAC588471E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDoor.Services.Operations", "NextDoor.Services.Operations\src\NextDoor.Services.Operations\NextDoor.Services.Operations.csproj", "{8A43180A-E621-427D-91C7-EF92ABC41658}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +130,18 @@ Global
 		{2509D5F6-3938-4CB3-B875-F5EAD9647CEF}.Release|x64.Build.0 = Release|Any CPU
 		{2509D5F6-3938-4CB3-B875-F5EAD9647CEF}.Release|x86.ActiveCfg = Release|Any CPU
 		{2509D5F6-3938-4CB3-B875-F5EAD9647CEF}.Release|x86.Build.0 = Release|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Debug|x64.Build.0 = Debug|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Debug|x86.Build.0 = Debug|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Release|x64.ActiveCfg = Release|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Release|x64.Build.0 = Release|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Release|x86.ActiveCfg = Release|Any CPU
+		{8A43180A-E621-427D-91C7-EF92ABC41658}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +159,8 @@ Global
 		{800E2E62-B7B6-4EF7-B861-0A5580953AF4} = {03EA2EA1-3379-4A9E-BBC5-DF79B14834B6}
 		{C8804D8C-C0B0-48DC-B63A-D59457C4FB56} = {D8B9AADD-D283-4D08-A831-9830BF8F89D2}
 		{2509D5F6-3938-4CB3-B875-F5EAD9647CEF} = {C8804D8C-C0B0-48DC-B63A-D59457C4FB56}
+		{31F2056A-BF1F-4FCB-A385-4DAC588471E8} = {B652BD95-3ECB-4F00-97D3-CBE385C76F0A}
+		{8A43180A-E621-427D-91C7-EF92ABC41658} = {31F2056A-BF1F-4FCB-A385-4DAC588471E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {478A69C5-64B4-4512-BFD9-2E6BDC9FDD39}

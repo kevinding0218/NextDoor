@@ -56,6 +56,9 @@ namespace NextDoor.ApiGateway.Controllers
             return Accepted(context);
         }
 
+        // Return "operations/context.Id" in Response Header, 
+        // it could be a relative or absolute endpoint which points to operations/our correlationcontext id
+        // which would be same for all of your request
         protected IActionResult Accepted(ICorrelationContext context)
         {
             Response.Headers.Add(OperationHeader, $"operations/{context.Id}");
@@ -67,6 +70,7 @@ namespace NextDoor.ApiGateway.Controllers
             return base.Accepted();
         }
 
+        // Create a new Context with new generated Guid as Id when any Post/Put async request comes in.
         protected ICorrelationContext GetContext<T>(Guid? resourceId = null, string resource = "") where T : ICommand
         {
             if (!string.IsNullOrWhiteSpace(resource))
