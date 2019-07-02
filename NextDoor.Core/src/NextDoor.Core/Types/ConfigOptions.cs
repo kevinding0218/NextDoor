@@ -10,5 +10,7 @@
         public static readonly string jwtSectionName = "jwt";
         public static readonly string rabbitMqSectionName = "rabbitMq";
         public static readonly string redisMqSectionName = "redis";
+        public static readonly string consulSectionName = "consul";
+        public static readonly string fabioSectionName = "fabio";
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Consul;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +43,7 @@ namespace NextDoor.Services.Identity
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCustomMvc();
+            // services.AddConsul();
 
             #region Jwt&Redis
             services.AddJwt();
@@ -121,7 +123,7 @@ namespace NextDoor.Services.Identity
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // Inject IApplicationLifetime
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            IApplicationLifetime applicationLifetime)
+            IApplicationLifetime applicationLifetime, IConsulClient consulClient)
         {
             if (env.IsDevelopment() || env.IsEnvironment("local"))
             {
@@ -144,12 +146,18 @@ namespace NextDoor.Services.Identity
             app.UseRabbitMq()
                 .SubscribeCommand<SignUpCmd>(onError: (cmd, ex)
                     => new SignUpRejectedEvent(cmd.Email, ex.Message, "signup_failed"));
+            // var serviceId = app.UseConsul();
             #endregion
 
             // be sure no application steps I will dispose my container
             // so if there will be any external connections or our files being opened
             // I wouldn't like them to be to get locked.
-            applicationLifetime.ApplicationStopped.Register(() => Container.Dispose());
+            applicationLifetime.ApplicationStopped.Register(() =>
+            {
+                // if our application becomes offline, it will remove itself from the consul
+                // consulClient.Agent.ServiceDeregister(serviceId);
+                Container.Dispose();
+            });
         }
     }
 }
