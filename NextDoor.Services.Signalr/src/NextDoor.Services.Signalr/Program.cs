@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace NextDoor.ApiGateway
+namespace NextDoor.Services.Signalr
 {
     public class Program
     {
@@ -12,19 +12,8 @@ namespace NextDoor.ApiGateway
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            //var config = new ConfigurationBuilder()
-            //    .SetBasePath(Directory.GetCurrentDirectory())
-            //    .AddJsonFile("appsettings.json", optional: false)
-            //    .Build();
-
-            //var webHost = WebHost.CreateDefaultBuilder(args)
-            //    .UseUrls($"http://localhost:{config.GetValue<int>("host:port")}")
-            //    //.UseKestrel()
-            //    .UseIISIntegration()
-            //    .UseStartup<Startup>();
-
             var webHost = WebHost.CreateDefaultBuilder(args)
-                .UseUrls($"http://localhost:5200")
+                .UseUrls($"http://localhost:5210")
                 .UseStartup<Startup>()
                 .UseDefaultServiceProvider(options =>
                     options.ValidateScopes = false);

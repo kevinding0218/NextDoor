@@ -283,8 +283,8 @@ NuGet.config
 appsettings.local.json
 NextDoor.Core/obj/
 NextDoor.Core/bin/
-NextDoor.Services.Billbook/obj/
-NextDoor.Services.Billbook/bin/
+Temp_Log
+Temp_Log/
 
 NextDoor.Core/obj/NextDoor.Core.csproj.nuget.cache
 NextDoor.Core/obj/NextDoor.Core.csproj.nuget.cache

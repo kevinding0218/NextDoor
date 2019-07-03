@@ -46,8 +46,12 @@ namespace NextDoor.Services.Identity.Handlers
             }
             if (userDomain != null)
             {
-                throw new NextDoorException(IdentityExceptionCode.EmailInUse,
-                    $"Email: '{command.Email}' is already in use.");
+                //throw new NextDoorException(IdentityExceptionCode.EmailInUse,
+                //    $"Email: '{command.Email}' is already in use.");
+
+                await _busPublisher.PublishAsync(new SignUpRejectedEvent(command.Email,
+                    $"Email: '{command.Email}' is already in use.",
+                    "email_already_in_use"), context);
             }
             else
             {

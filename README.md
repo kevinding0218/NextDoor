@@ -1,3 +1,14 @@
+## Port and Services
+### List of Micro services (continuing) and port number
+| Micro Service | Port |
+|--|--|
+| API Gateway | 5200 |
+| Identity | 5201 |
+| Customer | 5202 |
+| Admin | 5203 |
+| Notification | 5209 |
+| SignalR | 5210 |
+| Operation(unused) | 5207 |
 ## Create a web api project and solution
 ### 1. Create web api project under _src_ subfolder
 ```
@@ -30,9 +41,6 @@ dotnet sln list
 ```
 dotnet new sln -n NextDoor
 dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Core\src\NextDoor.Core\NextDoor.Core.csproj
-dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Services.Identity\src\NextDoor.Services.Identity\NextDoor.Services.Identity.csproj
-dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Services.Customers\src\NextDoor.Services.Customers\NextDoor.Services.Customers.csproj
-dotnet sln NextDoor.sln add H:\MyGithub\NextDoor\NextDoor.Services.Notifications\src\NextDoor.Services.Notifications\NextDoor.Services.Notifications.csproj
 ```
 - Create a shell script (one_solution.sh)
 ```

@@ -4,6 +4,7 @@ using NextDoor.Core.Messages;
 namespace NextDoor.Services.Identity.Messages.Events
 {
     // Immutable
+    [ExchangeNamespace("signalr")]
     public class SignUpRejectedEvent : IRejectedEvent
     {
         public string Email { get; }
